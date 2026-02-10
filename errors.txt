@@ -1,0 +1,23 @@
+src/App.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/components/layout/AppLayout.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/components/layout/Footer.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/components/layout/Navigation.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/components/layout/Navigation.tsx(3,24): error TS6133: 'User' is declared but its value is never read.
+src/components/layout/Navigation.tsx(6,40): error TS2307: Cannot find module '../store' or its corresponding type declarations.
+src/components/layout/Navigation.tsx(7,24): error TS2307: Cannot find module './ui/Button' or its corresponding type declarations.
+src/components/ui/Button.tsx(32,14): error TS2322: Type '{ children: (string | number | boolean | Element | Iterable<ReactNode> | null | undefined)[]; disabled?: boolean | undefined; form?: string | undefined; ... 273 more ...; className: string; }' is not assignable to type 'Omit<HTMLMotionProps<"button">, "ref">'.
+  Types of property 'onAnimationStart' are incompatible.
+    Type 'AnimationEventHandler<HTMLButtonElement> | undefined' is not assignable to type '((definition: AnimationDefinition) => void) | undefined'.
+      Type 'AnimationEventHandler<HTMLButtonElement>' is not assignable to type '(definition: AnimationDefinition) => void'.
+        Types of parameters 'event' and 'definition' are incompatible.
+          Type 'AnimationDefinition' is not assignable to type 'AnimationEvent<HTMLButtonElement>'.
+            Type 'string' is not assignable to type 'AnimationEvent<HTMLButtonElement>'.
+src/components/ui/Card.tsx(50,10): error TS2322: Type '{ children: (false | Element)[]; defaultChecked?: boolean | undefined; defaultValue?: string | number | readonly string[] | undefined; suppressContentEditableWarning?: boolean | undefined; ... 259 more ...; className: string; }' is not assignable to type 'Omit<HTMLMotionProps<"div">, "ref">'.
+  Types of property 'onAnimationStart' are incompatible.
+    Type 'AnimationEventHandler<HTMLDivElement> | undefined' is not assignable to type '((definition: AnimationDefinition) => void) | undefined'.
+      Type 'AnimationEventHandler<HTMLDivElement>' is not assignable to type '(definition: AnimationDefinition) => void'.
+        Types of parameters 'event' and 'definition' are incompatible.
+          Type 'AnimationDefinition' is not assignable to type 'AnimationEvent<HTMLDivElement>'.
+            Type 'string' is not assignable to type 'AnimationEvent<HTMLDivElement>'.
+src/pages/Placeholders.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/routes/AppRoutes.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
