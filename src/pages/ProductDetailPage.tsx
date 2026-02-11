@@ -74,7 +74,7 @@ const ProductDetailPage = () => {
                 {/* Image Gallery Section */}
                 <div className="viewer-area">
                     <ProductImageGallery
-                        images={selectedProduct.images}
+                        image={selectedProduct.image}
                         productName={selectedProduct.name}
                     />
                 </div>

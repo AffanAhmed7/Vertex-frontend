@@ -9,12 +9,9 @@ export const allProducts: Product[] = [
         price: 1199,
         rating: 4.9,
         category: 'Electronics',
-        image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -37,10 +34,7 @@ export const allProducts: Product[] = [
         category: 'Electronics',
         image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -62,10 +56,7 @@ export const allProducts: Product[] = [
         category: 'Electronics',
         image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -88,10 +79,7 @@ export const allProducts: Product[] = [
         category: 'Electronics',
         image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1561154464-82e9aab73b2a?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -112,11 +100,9 @@ export const allProducts: Product[] = [
         price: 329,
         rating: 4.5,
         category: 'Electronics',
-        image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1617043786394-f977fa12eddf?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -138,9 +124,7 @@ export const allProducts: Product[] = [
         category: 'Electronics',
         image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1558089687-f282ffcbc126?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -155,27 +139,27 @@ export const allProducts: Product[] = [
     },
     {
         id: '7',
-        name: 'Kindle Paperwhite',
-        description: 'The thinnest, lightest Kindle Paperwhite yet with a 6.8" display, adjustable warm light, and 10 weeks of battery.',
-        price: 139,
-        rating: 4.7,
+        name: 'Vertex Cinematic 49" Curved OLED',
+        description: 'Redefine your field of view with the Vertex Cinematic 49. Featuring a massive 32:9 ultra-wide curved OLED panel with a 240Hz refresh rate and 0.03ms response time. Perfect for immersive gaming, professional color-accurate editing, and multi-window productivity. The sleek titanium-alloy stand and customizable ambient lighting sync perfectly with your environment.',
+        price: 1499,
+        rating: 4.9,
         category: 'Electronics',
-        image: 'https://images.unsplash.com/photo-1594377157609-5c996118ac7f?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1594377157609-5c996118ac7f?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1544716278-e513176f20b5?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=800',
+            'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'storage', label: 'Storage', options: ['8GB', '16GB'] },
-            { type: 'color', label: 'Color', options: ['Black', 'Denim', 'Agave Green'] }
+            { type: 'size', label: 'Display Size', options: ['49" Curved OLED', '57" Dual-UHD Pro'] },
+            { type: 'color', label: 'Finish', options: ['Titanium Silver', 'Obsidian Black'] }
         ],
         specs: [
-            { label: 'Display', value: '6.8" Glare-Free' },
-            { label: 'Battery', value: 'Up to 10 weeks' },
-            { label: 'Water Resistance', value: 'IPX8' },
-            { label: 'Storage', value: '8GB or 16GB' }
+            { label: 'Resolution', value: '5120 x 1440 (Dual QHD)' },
+            { label: 'Refresh Rate', value: '240Hz / 0.03ms GtG' },
+            { label: 'Panel', value: 'Quantum Dot OLED / 1800R' },
+            { label: 'Color Gamut', value: '99.3% DCI-P3' },
+            { label: 'Ports', value: '2x HDMI 2.1, 1x DP 1.4, USB-C 90W' }
         ]
     },
     {
@@ -187,9 +171,7 @@ export const allProducts: Product[] = [
         category: 'Electronics',
         image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1586349906319-47f5b9a13292?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -211,11 +193,9 @@ export const allProducts: Product[] = [
         price: 89,
         rating: 4.6,
         category: 'Apparel',
-        image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1598033129183-c4f50c736c10?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -236,11 +216,9 @@ export const allProducts: Product[] = [
         price: 65,
         rating: 4.5,
         category: 'Apparel',
-        image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
@@ -257,347 +235,334 @@ export const allProducts: Product[] = [
     {
         id: '11',
         name: 'Merino Wool Crewneck Sweater',
-        description: 'Ultra-soft merino wool sweater with temperature-regulating properties. Lightweight yet warm for layering.',
-        price: 120,
-        rating: 4.7,
+        description: 'Ultra-soft, sustainably sourced merino wool sweater with temperature-regulating properties. This lightweight yet warm knit features a timeless crewneck silhouette, ribbed cuffs, and a premium finish that resists pilling. Ideal for sophisticated layering or as a standout solo piece in any refined wardrobe.',
+        price: 145,
+        rating: 4.8,
         category: 'Apparel',
-        image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1434389677669-e08b4cda3a7d?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=800',
+            'https://images.unsplash.com/photo-1610812382601-08104860b719?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'size', label: 'Size', options: ['S', 'M', 'L', 'XL'] },
-            { type: 'color', label: 'Color', options: ['Charcoal', 'Navy', 'Burgundy', 'Forest Green'] }
+            { type: 'size', label: 'Size', options: ['S', 'M', 'L', 'XL', 'XXL'] },
+            { type: 'color', label: 'Color', options: ['Charcoal', 'Navy', 'Burgundy', 'Forest Green', 'Camel'] }
         ],
         specs: [
-            { label: 'Material', value: '100% Merino Wool' },
-            { label: 'Fit', value: 'Regular' },
-            { label: 'Care', value: 'Hand Wash / Dry Clean' },
-            { label: 'Season', value: 'Fall / Winter' }
+            { label: 'Material', value: '100% Extra-Fine Merino Wool' },
+            { label: 'Knit Type', value: '12-Gauge Fine Knit' },
+            { label: 'Origin', value: 'Ethically Sourced (Australia)' },
+            { label: 'Care', value: 'Hand Wash Cold / Dry Flat' },
+            { label: 'Fit', value: 'Regular / Modern Silhouette' }
         ]
     },
     {
         id: '12',
         name: 'Running Sneakers Pro',
-        description: 'Lightweight performance running shoes with responsive cushioning and breathable mesh upper for daily runs.',
-        price: 130,
-        rating: 4.6,
+        description: 'Elite performance running shoes engineered with responsive kinetic cushioning and a dual-density midsole. The breathable hyper-mesh upper provides dynamic support, while the high-traction rubber outsole ensures stability on various terrains. Designed for marathon-distance comfort and everyday agility.',
+        price: 160,
+        rating: 4.9,
         category: 'Apparel',
         image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800',
         images: [
             'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&q=80&w=800',
             'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'size', label: 'Size (US)', options: ['7', '8', '9', '10', '11', '12'] },
-            { type: 'color', label: 'Color', options: ['Black/White', 'Red/Black', 'Blue/Gray'] }
+            { type: 'size', label: 'Size (US)', options: ['7', '8', '9', '10', '11', '12', '13'] },
+            { type: 'color', label: 'Color', options: ['Electric Red', 'Phantom Black', 'Cyber Blue'] }
         ],
         specs: [
-            { label: 'Upper', value: 'Breathable Mesh' },
-            { label: 'Sole', value: 'Rubber with EVA Foam' },
-            { label: 'Drop', value: '8mm' },
-            { label: 'Weight', value: '280g (US 9)' }
+            { label: 'Cushioning', value: 'Kinetic Foam Technology' },
+            { label: 'Upper', value: 'Engineered Hyper-Mesh' },
+            { label: 'Outsole', value: 'High-Traction Carbon Rubber' },
+            { label: 'Arch Support', value: 'Neutral to Stability' },
+            { label: 'Weight', value: '275g (US Size 9)' }
         ]
     },
     {
         id: '13',
-        name: 'Waterproof Winter Jacket',
-        description: 'Insulated waterproof jacket with sealed seams and adjustable hood. Built for harsh weather conditions.',
-        price: 245,
-        rating: 4.8,
+        name: 'Waterproof Winter Parka',
+        description: 'A heavy-duty alpine-grade parka built for extreme cold. Featuring a DWR-treated waterproof shell and 800-fill power responsible down insulation. The adjustable snorkel hood and fleece-lined pockets provide ultimate protection against wind and snow, making it the perfect companion for harsh urban or wilderness winters.',
+        price: 395,
+        rating: 4.9,
         category: 'Apparel',
-        image: 'https://images.unsplash.com/photo-1544923246-77307dd270cf?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1544923246-77307dd270cf?auto=format&fit=crop&q=80&w=800',
             'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1545591938-e436f58246ca?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
             { type: 'size', label: 'Size', options: ['S', 'M', 'L', 'XL', 'XXL'] },
-            { type: 'color', label: 'Color', options: ['Black', 'Navy', 'Olive', 'Dark Red'] }
+            { type: 'color', label: 'Color', options: ['Onyx Black', 'Arctic Navy', 'Saffron', 'Sage'] }
         ],
         specs: [
-            { label: 'Material', value: 'Nylon with DWR Coating' },
-            { label: 'Insulation', value: 'Synthetic Down' },
-            { label: 'Waterproof Rating', value: '10,000mm' },
-            { label: 'Features', value: 'Adjustable Hood, Sealed Seams' }
+            { label: 'Shell', value: '3-Layer Ripstop Nylon' },
+            { label: 'Insulation', value: '800-Fill Power Goose Down' },
+            { label: 'Waterproof Rating', value: '20,000mm Hydrostatic Head' },
+            { label: 'Closure', value: 'YKK AquaGuard Zippers' },
+            { label: 'Interior', value: 'Recycled Polyester Taffeta' }
         ]
     },
     {
         id: '14',
-        name: 'Cotton Jogger Pants',
-        description: 'Premium French terry joggers with tapered leg and elastic cuffs. Ultimate comfort for lounging or casual outings.',
-        price: 55,
-        rating: 4.4,
+        name: 'Premium French Terry Joggers',
+        description: 'Luxury loungewear crafted from 450gsm heavyweight French terry cotton. Featuring a tailored tapered fit, bartacked stress points, and reinforced metal aglets. These joggers offer a structured aesthetic with the absolute comfort of high-quality knit fabric, suitable for refined casual outings or home relaxation.',
+        price: 85,
+        rating: 4.7,
         category: 'Apparel',
         image: 'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1515586000433-45406d8e6662?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'size', label: 'Size', options: ['S', 'M', 'L', 'XL'] },
-            { type: 'color', label: 'Color', options: ['Heather Gray', 'Black', 'Navy'] }
+            { type: 'size', label: 'Size', options: ['XS', 'S', 'M', 'L', 'XL'] },
+            { type: 'color', label: 'Color', options: ['Heather Gray', 'Pitch Black', 'Mid-Shift Blue'] }
         ],
         specs: [
-            { label: 'Material', value: '80% Cotton, 20% Polyester' },
-            { label: 'Fit', value: 'Tapered' },
-            { label: 'Care', value: 'Machine Washable' },
-            { label: 'Features', value: 'Elastic Waist, Zippered Pockets' }
+            { label: 'Weight', value: '450gsm Heavyweight' },
+            { label: 'Material', value: '100% GOTS Certified Organic Cotton' },
+            { label: 'Cuffs', value: 'Premium 1x1 Ribbed' },
+            { label: 'Waistband', value: 'Flat Knit Drawcord' },
+            { label: 'Pockets', value: 'Deep Side Welt + Hidden Back' }
         ]
     },
     {
         id: '15',
-        name: 'Graphic Crew T-Shirt',
-        description: 'Soft ring-spun cotton tee with a modern relaxed fit. Screen-printed graphics that won\'t fade after washing.',
-        price: 35,
-        rating: 4.3,
+        name: 'Essential Graphic T-Shirt',
+        description: 'A modern classic, our heavyweight graphic tee is made from long-staple combed cotton for a smooth, substantial hand-feel. Featuring limited-edition modular artwork screen-printed with eco-friendly inks, this shirt maintains its shape and vibrant print through countless cycles. A centerpiece for any streetwear ensemble.',
+        price: 45,
+        rating: 4.5,
         category: 'Apparel',
         image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
             { type: 'size', label: 'Size', options: ['S', 'M', 'L', 'XL', 'XXL'] },
-            { type: 'color', label: 'Color', options: ['White', 'Black', 'Gray'] }
+            { type: 'color', label: 'Color', options: ['Optic White', 'Ink Black', 'Cement'] }
         ],
         specs: [
-            { label: 'Material', value: '100% Ring-Spun Cotton' },
-            { label: 'Fit', value: 'Relaxed' },
-            { label: 'Care', value: 'Machine Washable' },
-            { label: 'Print', value: 'Screen-Printed (Fade Resistant)' }
+            { label: 'Fabric', value: '250gsm Combed Cotton' },
+            { label: 'Print Method', value: 'Water-Based Screen Print' },
+            { label: 'Collar', value: 'Tight-Knit Rib' },
+            { label: 'Fit', value: 'Boxy / Dropped Shoulder' },
+            { label: 'Treatment', value: 'Pre-Shrunk & Bio-Washed' }
         ]
     },
     {
         id: '16',
-        name: 'Denim Jacket Classic',
-        description: 'Timeless denim jacket with a modern silhouette. Durable cotton denim with subtle distressed details.',
-        price: 95,
-        rating: 4.5,
+        name: 'Heritage Denim Jacket',
+        description: 'Tribute to 1950s workwear, our Heritage Denim Jacket is crafted from 14oz raw selvedge denim. Over time, it will develop a unique character based on your movements. Featuring shank button closures, double-needle stitching, and a classic boxy silhouette, this is a multi-generational piece built to last decades.',
+        price: 185,
+        rating: 4.8,
         category: 'Apparel',
         image: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1543076447-215ad9ba6923?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
             { type: 'size', label: 'Size', options: ['S', 'M', 'L', 'XL'] },
-            { type: 'color', label: 'Wash', options: ['Light Wash', 'Medium Wash', 'Dark Wash'] }
+            { type: 'color', label: 'Wash', options: ['Indigo Raw', 'Stonewashed', 'Acid Wash'] }
         ],
         specs: [
-            { label: 'Material', value: '100% Cotton Denim' },
-            { label: 'Fit', value: 'Regular' },
-            { label: 'Care', value: 'Machine Washable Cold' },
-            { label: 'Closure', value: 'Metal Button Front' }
+            { label: 'Denim', value: '14oz Selvedge (Japanese)' },
+            { label: 'Thread', value: 'High-Strength Core-Spun' },
+            { label: 'Hardware', value: 'Custom Embossed Metal' },
+            { label: 'Detail', value: 'Internal Selvedge ID' },
+            { label: 'Reinforcement', value: 'Copper Rivets at Stress Points' }
         ]
     },
 
     // ——— ACCESSORIES (8 products) ———
     {
         id: '17',
-        name: 'Leather Bifold Wallet',
-        description: 'Handcrafted full-grain leather wallet with RFID protection. Slim profile fits comfortably in any pocket.',
-        price: 75,
-        rating: 4.7,
+        name: 'Full-Grain Leather Bifold',
+        description: 'Architecturally designed for the modern minimalist. Hand-stitched from Italian vegetable-tanned leather, this bifold features an ultra-slim profile without compromising on capacity. The dedicated RFID-shielded liner protects your digital assets, while the leather develops a rich patina over time.',
+        price: 95,
+        rating: 4.8,
         category: 'Accessories',
         image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1606503153255-59d8b8b82176?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'color', label: 'Color', options: ['Brown', 'Black', 'Tan'] }
+            { type: 'color', label: 'Color', options: ['Cognac', 'Espresso', 'Midnight Black'] }
         ],
         specs: [
-            { label: 'Material', value: 'Full-Grain Leather' },
-            { label: 'Card Slots', value: '8' },
-            { label: 'RFID Protection', value: 'Yes' },
-            { label: 'Dimensions', value: '4.5" x 3.5" x 0.5"' }
+            { label: 'leather', value: 'Certified Veg-Tanned Italian' },
+            { label: 'Capacity', value: '8 Card Slots + Cash Sleeve' },
+            { label: 'Protection', value: 'Integrated RFID Shield' },
+            { label: 'Stitching', value: 'Saddle-Stitched Waxed Thread' },
+            { label: 'Dimensions', value: '11cm x 9cm x 1cm' }
         ]
     },
     {
         id: '18',
-        name: 'Aviator Sunglasses',
-        description: 'Classic aviator sunglasses with polarized lenses and lightweight metal frames. 100% UV protection.',
-        price: 159,
-        rating: 4.6,
+        name: 'Technical Aviator Sunglasses',
+        description: 'A futuristic rebuild of the iconic aviator. Precision-engineered from aerospace-grade titanium with high-definition polarized lenses. Featuring anti-reflective coating and 100% UVA/UVB protection, these frames offer a weightless feel and crystal-clear optics for the discerning pilot or urban explorer.',
+        price: 225,
+        rating: 4.9,
         category: 'Accessories',
         image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'color', label: 'Lens Color', options: ['Green', 'Blue Mirror', 'Brown Gradient'] }
+            { type: 'color', label: 'Lens Tech', options: ['G15 Polarized', 'Sapphire Mirror', 'Photochromic'] }
         ],
         specs: [
-            { label: 'Frame', value: 'Lightweight Metal' },
-            { label: 'Lens', value: 'Polarized Glass' },
-            { label: 'UV Protection', value: '100% UVA/UVB' },
-            { label: 'Includes', value: 'Leather Case + Cloth' }
+            { label: 'Frame', value: 'Grade 5 Titanium' },
+            { label: 'Lens', value: 'Nylon HD Polarized' },
+            { label: 'Coating', value: 'Hydrophobic & Oleophobic' },
+            { label: 'Hinge', value: 'Screwless Flex-Hinge' },
+            { label: 'Weight', value: '18g' }
         ]
     },
     {
         id: '19',
-        name: 'Canvas Tote Bag',
-        description: 'Durable organic cotton canvas tote with reinforced handles and interior pocket. Perfect for daily errands.',
-        price: 45,
-        rating: 4.4,
+        name: 'Modular Canvas Tote',
+        description: 'The ultimate utility carry-all. Constructed from 18oz waxed military-grade canvas with vegetable-tanned leather handles. Featuring a modular interior with padded laptop sleeve and multiple organization pockets. Water-resistant and highly durable, this tote transitions seamlessly from grocery runs to executive meetings.',
+        price: 65,
+        rating: 4.6,
         category: 'Accessories',
-        image: 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800',
             'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'color', label: 'Color', options: ['Natural', 'Black', 'Navy'] }
+            { type: 'color', label: 'Color', options: ['Olive Drab', 'Deep Navy', 'Heritage Tan'] }
         ],
         specs: [
-            { label: 'Material', value: 'Organic Cotton Canvas' },
-            { label: 'Capacity', value: '15L' },
-            { label: 'Closure', value: 'Magnetic Snap' },
-            { label: 'Features', value: 'Interior Pocket, Reinforced Base' }
+            { label: 'Canvas', value: '18oz Heavy-Weight Waxed' },
+            { label: 'Handles', value: 'Full-Grain English Bridle Leather' },
+            { label: 'Laptop', value: 'Padded Compartment (up to 14")' },
+            { label: 'Hardware', value: 'Solid Brass Rivets' },
+            { label: 'Capacity', value: '22 Liters' }
         ]
     },
     {
         id: '20',
-        name: 'Stainless Steel Water Bottle',
-        description: 'Double-wall vacuum insulated bottle keeps drinks cold 24hrs or hot 12hrs. Leak-proof lid with carry loop.',
-        price: 35,
+        name: 'Insulated Kinetic Flask',
+        description: 'Advanced hydration technology for the summit or the street. Double-wall vacuum insulation keeps liquids ice-cold for 36 hours or steaming hot for 18. The scratch-resistant powder coat finish and leak-proof wide-mouth lid ensure reliability in any environment. BPA-free and 100% recyclable.',
+        price: 45,
         rating: 4.8,
         category: 'Accessories',
         image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1570831739435-6601aa3fa4fb?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'color', label: 'Color', options: ['Matte Black', 'White', 'Ocean Blue', 'Rose Gold'] }
+            { type: 'color', label: 'Finish', options: ['Matte Stealth', 'Gloss White', 'Electric Teal', 'Rose Copper'] }
         ],
         specs: [
-            { label: 'Capacity', value: '750ml / 25oz' },
-            { label: 'Material', value: '18/8 Stainless Steel' },
-            { label: 'Insulation', value: 'Cold 24hrs / Hot 12hrs' },
-            { label: 'BPA Free', value: 'Yes' }
+            { label: 'Material', value: '18/8 Pro-Grade Stainless Steel' },
+            { label: 'Insulation', value: 'TempShield™ Dual Wall' },
+            { label: 'Volume', value: '24oz / 710ml' },
+            { label: 'Exterior', value: 'Proprietary Powder Coat' },
+            { label: 'Lid', value: 'Insulated Honeycomb™ Wide-Mouth' }
         ]
     },
     {
         id: '21',
-        name: 'Automatic Chronograph Watch',
-        description: 'Swiss-made automatic movement with sapphire crystal and exhibition caseback. Water resistant to 100m.',
-        price: 2450,
+        name: 'Chrono-Titanium Automatic',
+        description: 'A masterpiece of precision engineering and horological tradition. Featuring a Swiss-made mechanical movement with 42-hour power reserve, housed in a sandblasted titanium case. The sapphire crystal with multi-layer anti-reflective coating protects a dial inspired by aerospace instrumentation. Waterproof to 100 meters.',
+        price: 2850,
         rating: 4.9,
         category: 'Accessories',
-        image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1539874754764-5a96559165b0?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'material', label: 'Strap', options: ['Leather', 'Stainless Steel', 'NATO'] }
+            { type: 'material', label: 'Strap', options: ['Titanium Link', 'FKM Rubber', 'Cordura Hybrid'] }
         ],
         specs: [
-            { label: 'Movement', value: 'Swiss Automatic' },
-            { label: 'Crystal', value: 'Sapphire' },
-            { label: 'Water Resistance', value: '100m' },
-            { label: 'Case', value: '42mm Titanium' }
+            { label: 'Movement', value: 'Caliber SW200-1 Automatic' },
+            { label: 'Case', value: '42mm Grade 5 Titanium' },
+            { label: 'Crystal', value: 'Domed Sapphire AR' },
+            { label: 'Lume', value: 'Super-LumiNova® Grade X1' },
+            { label: 'WR', value: '10 ATM (100m)' }
         ]
     },
     {
         id: '22',
-        name: 'Travel Backpack 40L',
-        description: 'Expandable carry-on backpack with laptop compartment, organization panels, and luggage pass-through.',
-        price: 189,
-        rating: 4.7,
+        name: 'Nomad Travel Backpack 40L',
+        description: 'Engineered for the global traveler, the Nomad is a carry-on compatible powerhouse. Featuring a 180-degree clamshell opening for easy packing, a dedicated TSA-compliant tech compartment, and hidden security pockets. Made from recycled X-Pac fabric, it\'s lightweight, waterproof, and virtually indestructible.',
+        price: 245,
+        rating: 4.8,
         category: 'Accessories',
         image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1581605405669-fcdf81165bc0?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'color', label: 'Color', options: ['Black', 'Sage Green', 'Navy'] }
+            { type: 'color', label: 'Color', options: ['Stealth Black', 'Alpine Grey', 'Desert Sand'] }
         ],
         specs: [
-            { label: 'Capacity', value: '40L (expandable)' },
-            { label: 'Laptop', value: 'Fits up to 16"' },
-            { label: 'Material', value: 'Recycled Polyester' },
-            { label: 'Carry-On', value: 'Yes (most airlines)' }
+            { label: 'Fabric', value: 'VX42 X-Pac® Sailcloth' },
+            { label: 'Tech Space', value: 'Padded 16" MacBook Pro Compartment' },
+            { label: 'Hardware', value: 'Fidlock® Magnetic Buckles' },
+            { label: 'Zippers', value: 'YKK® RC-Coil (Lockable)' },
+            { label: 'Weight', value: '1.45kg' }
         ]
     },
     {
         id: '23',
-        name: 'Ceramic Coffee Mug Set',
-        description: 'Set of 4 handmade ceramic mugs with matte glaze finish. Microwave and dishwasher safe.',
-        price: 48,
-        rating: 4.5,
+        name: 'Artisan Ceramic Mug Set',
+        description: 'Individually hand-thrown by master potters using high-fire stoneware. Each set of 4 features a unique reactive glaze finish that ensures no two mugs are exactly alike. With a sturdy weighted base and ergonomic handle, these mugs bring a tactile elegance to your daily coffee or tea ritual.',
+        price: 68,
+        rating: 4.7,
         category: 'Accessories',
         image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1572119865084-43c285814d63?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'color', label: 'Set Color', options: ['Earth Tones', 'Ocean Blues', 'Monochrome'] }
+            { type: 'color', label: 'Glaze Set', options: ['Volcanic Ash', 'Celestial Blue', 'Dunes'] }
         ],
         specs: [
-            { label: 'Capacity', value: '350ml / 12oz each' },
-            { label: 'Material', value: 'Handmade Ceramic' },
-            { label: 'Quantity', value: '4 mugs per set' },
-            { label: 'Care', value: 'Microwave & Dishwasher Safe' }
+            { label: 'Material', value: 'High-Fire Stoneware' },
+            { label: 'Quantity', value: 'Set of 4' },
+            { label: 'Volume', value: '14oz / 415ml' },
+            { label: 'Finish', value: 'Individual Reactive Glaze' },
+            { label: 'Rating', value: 'Food, Dishwasher, Microwave Safe' }
         ]
     },
     {
         id: '24',
-        name: 'Minimalist Desk Lamp',
-        description: 'LED desk lamp with adjustable arm, touch dimming, and wireless charging base. Warm to cool light modes.',
-        price: 79,
-        rating: 4.6,
+        name: 'Vertex Smart Desk Lamp',
+        description: 'A revolutionary workspace light featuring circadian-sync technology. The Vertex adjusts its color temperature automatically throughout the day to support your natural rhythm. With a precise CRI of 98, it reveals colors in their true form, while the integrated Qi 2.0 base provides rapid wireless charging for your mobile devices.',
+        price: 129,
+        rating: 4.9,
         category: 'Accessories',
-        image: 'https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1534105615256-13940a56ff44?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1534105615256-13940a56ff44?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'color', label: 'Color', options: ['Matte Black', 'White', 'Walnut'] }
+            { type: 'color', label: 'Chassis', options: ['Brushed Platinum', 'Obsidian', 'Champagne'] }
         ],
         specs: [
-            { label: 'Light', value: 'LED (2700K - 6500K)' },
-            { label: 'Dimming', value: 'Touch Control (5 Levels)' },
-            { label: 'Charging', value: 'Qi Wireless + USB-C' },
-            { label: 'Power', value: '12W' }
+            { label: 'Optical', value: '98 CRI High-Fidelity LED' },
+            { label: 'Charging', value: '15W Qi 2.0 Wireless + USB-C PD' },
+            { label: 'Control', value: 'Touch-Slide Dimming + App Sync' },
+            { label: 'Range', value: '2700K to 6500K' },
+            { label: 'Construction', value: 'Aluminum & Recycled Polycarbonate' }
         ]
     },
 
@@ -605,145 +570,139 @@ export const allProducts: Product[] = [
     {
         id: '25',
         name: 'Adobe Creative Cloud Annual',
-        description: 'Full suite of 20+ creative apps including Photoshop, Illustrator, Premiere Pro, and After Effects.',
+        description: 'Unlock your professional creative potential with the world\'s leading design suite. This annual subscription provides full access to 20+ desktop and mobile apps, including Photoshop, Illustrator, and Premiere Pro. Includes 1TB of cloud storage, Adobe Fonts, and the latest Generative AI features powered by Adobe Firefly.',
         price: 599,
         rating: 4.7,
         category: 'Digital',
         image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1572044162444-ad60f128bdea?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'license', label: 'Plan', options: ['Individual', 'Team (per user)', 'Student'] }
+            { type: 'license', label: 'Plan', options: ['Creative Cloud All Apps', 'Single App', 'Team Member'] }
         ],
         specs: [
-            { label: 'Apps', value: '20+ Creative Apps' },
-            { label: 'Storage', value: '100GB Cloud Storage' },
-            { label: 'Duration', value: '1 Year Subscription' },
-            { label: 'Platforms', value: 'Windows + macOS' }
+            { label: 'Softwares', value: 'Photoshop, Illustrator, Premiere + 20 more' },
+            { label: 'Storage', value: '1TB Adobe Cloud Storage' },
+            { label: 'Services', value: 'Adobe Fonts, Behance, Portfolio' },
+            { label: 'AI', value: 'Adobe Firefly Integration' },
+            { label: 'Deployment', value: 'Instant Digital Key' }
         ]
     },
     {
         id: '26',
         name: 'Spotify Premium Family Plan',
-        description: 'Ad-free music streaming for up to 6 family members. Includes offline listening and Spotify Kids.',
+        description: 'The ultimate audio experience for the whole household. Spotify Premium Family offers 6 individual accounts, each with their own library and personalized recommendations. Enjoy completely ad-free music, offline playback on all devices, and the specialized Spotify Kids app for the younger listeners in your family.',
         price: 179,
         rating: 4.8,
         category: 'Digital',
         image: 'https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1611339555312-e607c8352fd7?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'license', label: 'Plan', options: ['Individual', 'Duo', 'Family (6 users)'] }
+            { type: 'license', label: 'Duration', options: ['12 Months Prepaid', '24 Months Bundle'] }
         ],
         specs: [
-            { label: 'Audio Quality', value: 'Up to 320kbps' },
-            { label: 'Offline', value: 'Yes (up to 10,000 songs)' },
-            { label: 'Duration', value: '1 Year' },
-            { label: 'Devices', value: 'All platforms' }
+            { label: 'Users', value: 'Up to 6 Individual Accounts' },
+            { label: 'Audio', value: 'Very High Quality (320kbps)' },
+            { label: 'Features', value: 'Spotify Kids, Family Mix' },
+            { label: 'Offline', value: 'Yes (Unlimited Downloads)' },
+            { label: 'Region', value: 'Global Compatibility' }
         ]
     },
     {
         id: '27',
         name: 'Notion Pro Workspace',
-        description: 'All-in-one workspace for notes, docs, projects, and wikis. Unlimited blocks and advanced permissions.',
+        description: 'Empower your team with a unified digital headquarters. Notion Pro Workspace combines documents, project tracking, wikis, and an advanced relational database system into a single, intuitive interface. This plan includes unlimited file uploads, unlimited collaborators, and early access to Notion AI to accelerate your workflow.',
         price: 96,
-        rating: 4.6,
+        rating: 4.9,
         category: 'Digital',
-        image: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=800',
+        image: 'https://images.unsplash.com/photo-1547489432-cf93fa6c71ee?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1547489432-cf93fa6c71ee?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'license', label: 'Plan', options: ['Personal Pro', 'Team', 'Enterprise'] }
+            { type: 'license', label: 'Workspace', options: ['Plus Plan', 'Business Plan', 'Enterprise'] }
         ],
         specs: [
-            { label: 'Blocks', value: 'Unlimited' },
-            { label: 'File Upload', value: 'Unlimited' },
-            { label: 'Duration', value: '1 Year' },
-            { label: 'API Access', value: 'Yes' }
+            { label: 'Blocks', value: 'Unlimited Storage & Pages' },
+            { label: 'History', value: '30-Day Version History' },
+            { label: 'Security', value: 'Advanced Permission Controls' },
+            { label: 'Integration', value: 'Slack, GitHub, Jira + API' },
+            { label: 'AI', value: 'Notion AI (Optional Add-on)' }
         ]
     },
     {
         id: '28',
-        name: 'Online Photography Course',
-        description: 'Master photography from basics to advanced techniques. 40+ hours of HD video, RAW files, and presets included.',
-        price: 199,
-        rating: 4.5,
+        name: 'Apex Photography Masterclass',
+        description: 'Go from amateur to expert with 60+ hours of modular video instruction from world-renowned photographers. This masterclass covers everything from cinematic lighting and manual camera control to high-level post-processing in Lightroom and Capture One. Includes a massive library of 500+ RAW files and custom preset packs.',
+        price: 249,
+        rating: 4.9,
         category: 'Digital',
         image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'license', label: 'Access', options: ['Lifetime Access', 'Monthly'] }
+            { type: 'license', label: 'Access', options: ['Standard (Lifetime)', 'Pro (Inc. Coaching)'] }
         ],
         specs: [
-            { label: 'Content', value: '40+ Hours HD Video' },
-            { label: 'Includes', value: '200+ RAW Files + Presets' },
-            { label: 'Level', value: 'Beginner to Advanced' },
-            { label: 'Certificate', value: 'Yes (on completion)' }
+            { label: 'Curriculum', value: '45 Modules / 250+ Lessons' },
+            { label: 'Assets', value: '500+ Professional RAW Files' },
+            { label: 'Tools', value: '100+ Lightroom Presets' },
+            { label: 'Community', value: 'Discord Private Access' },
+            { label: 'Certificate', value: 'Industry Recognized' }
         ]
     },
     {
         id: '29',
-        name: 'VPN Premium Annual',
-        description: 'Fast, secure VPN with 5,500+ servers in 60 countries. No-logs policy and CyberSec threat protection.',
-        price: 59,
-        rating: 4.4,
+        name: 'Vertex Ghost VPN Premium',
+        description: 'Complete digital anonymity with zero compromise on speed. Vertex Ghost VPN utilizes proprietary tunneling protocols to provide military-grade encryption across all your devices. With 5,000+ ultra-fast servers in 94 countries, you can bypass censorship, secure your traffic on public Wi-Fi, and stream content globally without buffering.',
+        price: 79,
+        rating: 4.7,
         category: 'Digital',
         image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'license', label: 'Plan', options: ['1 Year', '2 Years', 'Monthly'] }
+            { type: 'license', label: 'Subscription', options: ['12 Months', '24 Months (Best Value)'] }
         ],
         specs: [
-            { label: 'Servers', value: '5,500+ in 60 countries' },
-            { label: 'Devices', value: '6 simultaneous' },
-            { label: 'Protocol', value: 'NordLynx / OpenVPN' },
-            { label: 'No-Logs', value: 'Verified by PwC audit' }
+            { label: 'Encryption', value: 'AES-256-GCM Military Grade' },
+            { label: 'Network', value: '5,000+ Servers (10Gbps Capable)' },
+            { label: 'Devices', value: 'Up to 10 Simultaneous Connections' },
+            { label: 'Policy', value: 'Verified No-Logs Architecture' },
+            { label: 'Kill Switch', value: 'Automatic System-Level' }
         ]
     },
     {
         id: '30',
-        name: 'Cloud Storage 2TB Plan',
-        description: 'Secure cloud storage with end-to-end encryption, file versioning, and automatic device sync across all platforms.',
-        price: 99,
-        rating: 4.5,
+        name: 'Vertex Cloud 10TB Pro',
+        description: 'The ultimate secure storage solution for creative professionals and enterprises. Vertex Cloud provides a centralized, encrypted repository for all your massive files. Featuring intelligent block-level sync, real-time collaboration tools, and advanced ransomware protection. Your data is mirrored across three global data centers for maximum redundancy.',
+        price: 149,
+        rating: 4.8,
         category: 'Digital',
         image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=800',
         images: [
-            'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800',
-            'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800'
+            'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=800'
         ],
         isAvailable: true,
         variants: [
-            { type: 'storage', label: 'Storage', options: ['200GB', '2TB', '6TB Family'] }
+            { type: 'storage', label: 'Storage', options: ['10TB Individual', '50TB Team', 'Custom Enterprise'] }
         ],
         specs: [
-            { label: 'Storage', value: 'Up to 6TB' },
-            { label: 'Encryption', value: 'End-to-End AES-256' },
-            { label: 'Sync', value: 'All Devices' },
-            { label: 'Duration', value: '1 Year' }
+            { label: 'Capacity', value: '10TB High-Speed SSD Storage' },
+            { label: 'Security', value: 'Zero-Knowledge End-to-End Encryption' },
+            { label: 'Transfer', value: 'Unlimited Bandwidth' },
+            { label: 'Backup', value: '3-2-1 Redundancy Arch' },
+            { label: 'Compliance', value: 'GDPR / HIPAA Ready' }
         ]
     }
 ];
