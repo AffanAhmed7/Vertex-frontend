@@ -1,62 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-    /* Core Palette - Dark Mode Primary */
-    --background: 240 10% 4%;
+    /* Core Palette - Vertex Slate & Teal */
+    --background: 240 10% 2%;
+    /* Deep Slate */
     --foreground: 0 0% 98%;
 
-    --card: 240 10% 6%;
+    --card: 240 10% 4%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 240 10% 4%;
+    --popover: 240 10% 2%;
     --popover-foreground: 0 0% 98%;
 
-    /* Emerald / Mint Accent */
-    --primary: 160 84% 39%;
-    --primary-foreground: 160 84% 10%;
+    /* Vibrant Cyan / Teal Accent */
+    --primary: 181 100% 50%;
+    /* #00f2ff */
+    --primary-foreground: 181 100% 10%;
 
-    --secondary: 180 100% 50%;
-    /* Electric Cyan */
-    --secondary-foreground: 180 100% 10%;
+    --secondary: 171 66% 50%;
+    /* #2dd4bf */
+    --secondary-foreground: 171 66% 10%;
 
-    --muted: 240 4% 16%;
+    --muted: 240 4% 12%;
     --muted-foreground: 240 5% 65%;
 
     --accent: 38 92% 50%;
-    /* Copper/Gold for high-end contrast */
+    /* Keeping gold for high-end feel */
     --accent-foreground: 38 92% 10%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 4% 16%;
-    --input: 240 4% 16%;
-    --ring: 160 84% 39%;
+    --border: 240 4% 12%;
+    --input: 240 4% 12%;
+    --ring: 181 100% 50%;
 
     --radius: 0.75rem;
 
     /* Glassmorphism Defaults */
-    --glass-bg: rgba(10, 10, 12, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-blur: 16px;
+    --glass-bg: rgba(5, 5, 5, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-blur: 24px;
 }
 
 .light {
     --background: 0 0% 100%;
-    --foreground: 240 10% 4%;
+    --foreground: 240 10% 2%;
 
     --card: 0 0% 99%;
-    --card-foreground: 240 10% 4%;
+    --card-foreground: 240 10% 2%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 4%;
+    --popover-foreground: 240 10% 2%;
 
-    --primary: 160 84% 33%;
+    --primary: 181 84% 33%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 180 100% 40%;
+    --secondary: 171 66% 40%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 240 5% 96%;
@@ -70,7 +71,7 @@
 
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 160 84% 33%;
+    --ring: 181 84% 33%;
 
     --glass-bg: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(0, 0, 0, 0.06);

@@ -7,21 +7,24 @@ const AppLayout = () => {
     const location = useLocation();
 
     return (
-        <div className="min-h-screen flex flex-col bg-background selection:bg-primary selection:text-primary-foreground">
+        <div className="min-h-screen flex flex-col bg-[#050505] selection:bg-[#00f2ff] selection:text-black">
+            {/* Global Background Depth Overlay */}
+            <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(0,242,255,0.03)_0%,_transparent_50%)] pointer-events-none" />
+
             {/* Navigation */}
             <Navigation />
 
             {/* Main Content */}
-            <main className="flex-grow pt-24 md:pt-32">
+            <main className="flex-grow">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={location.pathname}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
+                        initial={{ opacity: 0, scale: 0.99 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.01 }}
                         transition={{
-                            duration: 0.4,
-                            ease: [0.22, 1, 0.36, 1]
+                            duration: 0.8,
+                            ease: [0.16, 1, 0.3, 1]
                         }}
                         className="w-full h-full"
                     >
@@ -33,9 +36,9 @@ const AppLayout = () => {
             {/* Footer */}
             <Footer />
 
-            {/* Global Ambient Glows */}
-            <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-            <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-[120px] pointer-events-none" />
+            {/* High-End Ambient Glows */}
+            <div className="fixed top-[-20%] left-[-10%] w-[60%] h-[60%] bg-[#00f2ff]/5 rounded-full blur-[160px] pointer-events-none" />
+            <div className="fixed bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-[#2dd4bf]/5 rounded-full blur-[160px] pointer-events-none" />
         </div>
     );
 };

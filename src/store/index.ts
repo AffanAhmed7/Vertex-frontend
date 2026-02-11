@@ -26,11 +26,14 @@ const uiSlice = createSlice({
     },
 });
 
+import productReducer from './slices/productSlice';
+
 export const { toggleTheme, setTheme, toggleCart } = uiSlice.actions;
 
 export const store = configureStore({
     reducer: {
         ui: uiSlice.reducer,
+        products: productReducer,
     },
 });
 
