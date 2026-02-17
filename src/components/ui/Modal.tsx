@@ -8,9 +8,11 @@ interface ModalProps {
     onClose: () => void;
     title?: string;
     children: React.ReactNode;
+    maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+    showCloseButton?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidth = 'lg', showCloseButton = true }) => {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -46,18 +48,27 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        className="relative w-full max-w-lg overflow-hidden glass-panel rounded-2xl shadow-2xl"
+                        className={`relative w-full overflow-hidden glass-panel rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 ${maxWidth === 'sm' ? 'max-w-sm' :
+                            maxWidth === 'md' ? 'max-w-md' :
+                                maxWidth === 'lg' ? 'max-w-lg' :
+                                    maxWidth === 'xl' ? 'max-w-xl' :
+                                        'max-w-2xl'
+                            }`}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-white/10">
-                            <h2 className="text-xl font-semibold text-foreground">{title}</h2>
-                            <button
-                                onClick={onClose}
-                                className="p-2 transition-colors rounded-full hover:bg-white/10 text-muted-foreground hover:text-foreground"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
+                        {title && (
+                            <div className="flex items-center justify-between p-8 pb-4">
+                                <h2 className="text-2xl font-light tracking-[0.2em] uppercase text-white/90">{title}</h2>
+                                {showCloseButton && (
+                                    <button
+                                        onClick={onClose}
+                                        className="p-2 transition-all duration-300 rounded-full hover:bg-white/10 text-white/30 hover:text-white"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                )}
+                            </div>
+                        )}
 
                         {/* Body */}
                         <div className="p-6">

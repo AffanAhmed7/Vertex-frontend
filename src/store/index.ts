@@ -27,6 +27,9 @@ const uiSlice = createSlice({
 });
 
 import productReducer from './slices/productSlice';
+import cartReducer from './slices/cartSlice';
+import userReducer from './slices/userSlice';
+import adminReducer from './slices/adminSlice';
 
 export const { toggleTheme, setTheme, toggleCart } = uiSlice.actions;
 
@@ -34,6 +37,9 @@ export const store = configureStore({
     reducer: {
         ui: uiSlice.reducer,
         products: productReducer,
+        cart: cartReducer,
+        user: userReducer,
+        admin: adminReducer,
     },
 });
 

@@ -7,7 +7,13 @@ interface ProductInfoProps {
     product: Product;
 }
 
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { addToCart } from '../../store/slices/cartSlice';
+
 const ProductInfo = ({ product }: ProductInfoProps) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(() => {
         const defaults: Record<string, string> = {};
         product.variants?.forEach(v => {
@@ -18,6 +24,21 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
     const handleVariantSelect = (type: string, value: string) => {
         setSelectedVariants(prev => ({ ...prev, [type]: value }));
+    };
+
+    const handleAddToCart = () => {
+        dispatch(addToCart({
+            ...product,
+            quantity: 1,
+            selectedVariants
+        }));
+        // Optional: Navigate to cart or show a subtle feedback
+        // navigate('/cart');
+    };
+
+    const handleBuyNow = () => {
+        handleAddToCart();
+        navigate('/cart');
     };
 
     return (
@@ -81,10 +102,14 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                         className="btn-buy-now"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        onClick={handleBuyNow}
                     >
                         {product.category === 'Digital' ? 'Subscribe Now' : 'Buy Now'}
                     </motion.button>
-                    <button className="btn-add-cart-outline flex items-center justify-center gap-3">
+                    <button
+                        className="btn-add-cart-outline flex items-center justify-center gap-3 transition-all active:scale-95"
+                        onClick={handleAddToCart}
+                    >
                         <ShoppingCart size={20} />
                         Add to Cart
                     </button>

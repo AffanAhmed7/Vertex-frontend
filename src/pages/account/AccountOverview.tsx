@@ -1,0 +1,141 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
+import { Package, MapPin, Star, User } from 'lucide-react';
+import { RootState } from '../../store';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Link } from 'react-router-dom';
+
+const AccountOverview: React.FC = () => {
+    const { currentUser, orders, addresses } = useSelector((state: RootState) => state.user);
+    const recentOrder = orders[0];
+    const defaultAddress = addresses.find(a => a.isDefault);
+
+    const stats = [
+        { label: 'Total Orders', value: orders.length, icon: Package, color: 'text-primary' },
+        { label: 'Saved Locations', value: addresses.length, icon: MapPin, color: 'text-secondary' },
+        { label: 'Pending Reviews', value: '2', icon: Star, color: 'text-yellow-400' },
+    ];
+
+    return (
+        <div className="space-y-12">
+            {/* Header */}
+            <header className="space-y-2">
+                <h1 className="text-3xl font-black tracking-tight text-foreground uppercase italic underline decoration-primary decoration-4 underline-offset-8">
+                    Account <span className="text-primary italic">Overview</span>
+                </h1>
+                <p className="text-muted-foreground">Welcome back, {currentUser?.name}. Manage your infrastructure and account data here.</p>
+            </header>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {stats.map((stat, i) => (
+                    <motion.div
+                        key={stat.label}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                    >
+                        <Card className="p-6 bg-card/40 border-white/5" glass>
+                            <div className="flex items-center gap-4">
+                                <div className={`w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center ${stat.color}`}>
+                                    <stat.icon size={24} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</p>
+                                    <p className="text-2xl font-black text-foreground">{stat.value}</p>
+                                </div>
+                            </div>
+                        </Card>
+                    </motion.div>
+                ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Recent Order Preview */}
+                <section className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-bold uppercase italic tracking-tight">Recent Order</h2>
+                        <Link to="/account/orders" className="text-xs font-bold text-primary hover:underline">View All &rarr;</Link>
+                    </div>
+                    {recentOrder ? (
+                        <Card className="p-6 bg-card/40 border-white/5 space-y-4">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <p className="text-xs font-bold font-mono text-muted-foreground">{recentOrder.id}</p>
+                                    <p className="text-sm font-medium">{new Date(recentOrder.date).toLocaleDateString()}</p>
+                                </div>
+                                <span className="px-2 py-0.5 rounded bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-tight">
+                                    {recentOrder.status}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+                                <div className="w-12 h-12 rounded-lg bg-white/5 overflow-hidden">
+                                    <img src={recentOrder.items[0].image} alt="" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="flex-grow min-w-0">
+                                    <p className="text-sm font-bold truncate">{recentOrder.items[0].name}</p>
+                                    <p className="text-xs text-muted-foreground">{recentOrder.items.length > 1 ? `+ ${recentOrder.items.length - 1} more items` : '1 Item'}</p>
+                                </div>
+                                <p className="text-sm font-black">${recentOrder.total}</p>
+                            </div>
+                        </Card>
+                    ) : (
+                        <Card className="p-8 bg-card/40 border-white/5 text-center italic text-muted-foreground text-sm">
+                            No recent orders found.
+                        </Card>
+                    )}
+                </section>
+
+                {/* Default Address Preview */}
+                <section className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-bold uppercase italic tracking-tight">Shipping Default</h2>
+                        <Link to="/account/addresses" className="text-xs font-bold text-primary hover:underline">Manage &rarr;</Link>
+                    </div>
+                    {defaultAddress ? (
+                        <Card className="p-6 bg-card/40 border-white/5 space-y-4">
+                            <div className="flex items-center gap-3 text-primary">
+                                <MapPin size={18} />
+                                <span className="text-xs font-bold uppercase tracking-widest">Master Node Address</span>
+                            </div>
+                            <div>
+                                <p className="text-sm font-bold">{defaultAddress.fullName}</p>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {defaultAddress.street}<br />
+                                    {defaultAddress.city}, {defaultAddress.postalCode}<br />
+                                    {defaultAddress.country}
+                                </p>
+                            </div>
+                        </Card>
+                    ) : (
+                        <Card className="p-8 bg-card/40 border-white/5 text-center italic text-muted-foreground text-sm">
+                            No default address saved.
+                        </Card>
+                    )}
+                </section>
+            </div>
+
+            {/* Account Status Card */}
+            <Card className="p-8 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/20 transition-colors" />
+                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-8">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-primary">
+                            <User size={18} />
+                            <span className="text-xs font-bold tracking-[0.2em] uppercase">Membership Tier</span>
+                        </div>
+                        <h3 className="text-2xl font-black italic uppercase">Vertex {currentUser?.status} Infrastructure</h3>
+                        <p className="text-muted-foreground text-sm max-w-md">Your account is currently in high-performance mode. Enjoy exclusive partner perks, priority shipping, and 24/7 technical support.</p>
+                    </div>
+                    <Button size="lg" variant="outline" className="shrink-0 border-white/10 hover:border-primary/40">
+                        View Membership Perks
+                    </Button>
+                </div>
+            </Card>
+        </div>
+    );
+};
+
+export default AccountOverview;

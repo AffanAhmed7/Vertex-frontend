@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTheme, RootState } from '../../store';
 import { Button } from '../ui/Button';
+import { AuthModals } from '../auth/AuthModals';
 
 const Navigation = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -12,6 +13,9 @@ const Navigation = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const theme = useSelector((state: RootState) => state.ui.theme);
+    const { currentUser } = useSelector((state: RootState) => state.user);
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
     useEffect(() => {
         const handleScroll = () => {
@@ -86,12 +90,37 @@ const Navigation = () => {
                         </Link>
 
                         <div className="hidden md:flex items-center gap-3">
-                            <Button variant="ghost" size="sm" className="px-5 text-white/70 hover:text-white hover:bg-white/5 font-semibold tracking-wider text-[12px] uppercase text-nowrap">
-                                Login
-                            </Button>
-                            <Button size="sm" className="px-6 bg-[#00f2ff] text-black hover:bg-white transition-all duration-500 font-bold tracking-wider text-[12px] uppercase rounded-full text-nowrap">
-                                Join Now
-                            </Button>
+                            {currentUser ? (
+                                <Link to="/account">
+                                    <Button variant="ghost" size="sm" className="px-5 text-[#00f2ff] hover:text-white hover:bg-[#00f2ff]/10 font-semibold tracking-wider text-[12px] uppercase text-nowrap rounded-full border border-[#00f2ff]/20">
+                                        Account
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="px-5 text-white/70 hover:text-white hover:bg-white/5 font-semibold tracking-wider text-[12px] uppercase text-nowrap"
+                                        onClick={() => {
+                                            setAuthMode('login');
+                                            setIsAuthModalOpen(true);
+                                        }}
+                                    >
+                                        Login
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        className="px-6 bg-[#00f2ff] text-black hover:bg-white transition-all duration-500 font-bold tracking-wider text-[12px] uppercase rounded-full text-nowrap"
+                                        onClick={() => {
+                                            setAuthMode('signup');
+                                            setIsAuthModalOpen(true);
+                                        }}
+                                    >
+                                        Join Now
+                                    </Button>
+                                </>
+                            )}
                         </div>
 
                         {/* Mobile Menu Toggle */}
@@ -129,13 +158,38 @@ const Navigation = () => {
                             </div>
                             <div className="h-px bg-white/5 w-full" />
                             <div className="grid grid-cols-2 gap-4">
-                                <Button variant="ghost" className="text-white border border-white/10 uppercase tracking-widest py-6">Login</Button>
-                                <Button className="bg-[#00f2ff] text-black font-bold uppercase tracking-widest py-6">Register</Button>
+                                <Button
+                                    variant="ghost"
+                                    className="text-white border border-white/10 uppercase tracking-widest py-6"
+                                    onClick={() => {
+                                        setAuthMode('login');
+                                        setIsAuthModalOpen(true);
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                >
+                                    Login
+                                </Button>
+                                <Button
+                                    className="bg-[#00f2ff] text-black font-bold uppercase tracking-widest py-6"
+                                    onClick={() => {
+                                        setAuthMode('signup');
+                                        setIsAuthModalOpen(true);
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                >
+                                    Register
+                                </Button>
                             </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <AuthModals
+                isOpen={isAuthModalOpen}
+                onClose={() => setIsAuthModalOpen(false)}
+                initialMode={authMode}
+            />
         </nav>
     );
 };
