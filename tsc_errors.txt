@@ -1,0 +1,23 @@
+src/components/admin/AdminTopBar.tsx(6,26): error TS2614: Module '"../../store/slices/adminSlice"' has no exported member 'clearNotifications'. Did you mean to use 'import clearNotifications from "../../store/slices/adminSlice"' instead?
+src/components/admin/AdminTopBar.tsx(6,46): error TS2614: Module '"../../store/slices/adminSlice"' has no exported member 'markNotificationAsRead'. Did you mean to use 'import markNotificationAsRead from "../../store/slices/adminSlice"' instead?
+src/components/admin/OrderDetailPanel.tsx(3,13): error TS6133: 'User' is declared but its value is never read.
+src/components/admin/OrderDetailPanel.tsx(3,19): error TS6133: 'Mail' is declared but its value is never read.
+src/pages/admin/AdminAnalytics.tsx(65,22): error TS2741: Property 'sparkline' is missing in type '{ isLoading: boolean; id: string; label: string; value: string; change: number; trend: "up" | "down" | "neutral"; icon: string; key: string; }' but required in type 'AnalyticsKPIProps'.
+src/pages/admin/AdminOverview.tsx(12,13): error TS2339: Property 'stats' does not exist on type 'AdminState'.
+src/pages/admin/AdminOverview.tsx(12,20): error TS2339: Property 'recentOrders' does not exist on type 'AdminState'.
+src/pages/admin/AdminOverview.tsx(12,34): error TS2339: Property 'recentActivity' does not exist on type 'AdminState'.
+src/pages/admin/AdminOverview.tsx(29,36): error TS7006: Parameter 'o' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(35,36): error TS7006: Parameter 'o' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(53,44): error TS7006: Parameter 'stat' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(61,32): error TS7006: Parameter 'o' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(69,33): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(93,49): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(93,54): error TS7006: Parameter 'o' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(94,54): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(94,59): error TS7006: Parameter 'o' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(106,41): error TS7006: Parameter 'stat' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(172,36): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(172,46): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(361,54): error TS7006: Parameter 'order' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(395,47): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+src/pages/admin/AdminOverview.tsx(395,57): error TS7006: Parameter 'i' implicitly has an 'any' type.

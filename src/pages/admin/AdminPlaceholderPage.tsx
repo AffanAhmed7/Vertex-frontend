@@ -14,7 +14,7 @@ const AdminPlaceholderPage: React.FC<{ title: string }> = ({ title }) => {
             </motion.div>
 
             <div className="space-y-2">
-                <h1 className="text-3xl font-black italic tracking-tighter uppercase text-white">
+                <h1 className="text-3xl font-black tracking-tighter uppercase text-white">
                     {title} <span className="text-primary">Module</span>
                 </h1>
                 <p className="text-muted-foreground max-w-md mx-auto text-sm uppercase tracking-widest">

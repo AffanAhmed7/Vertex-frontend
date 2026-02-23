@@ -10,8 +10,7 @@ import {
     Settings,
     ChevronLeft,
     ChevronRight,
-    LogOut,
-    Shield
+    LogOut
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -40,8 +39,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, clas
             {/* Logo Section */}
             <div className="h-20 flex items-center px-6 border-b border-white/5 shrink-0">
                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#00f2ff]/10 border border-[#00f2ff]/20 flex items-center justify-center text-[#00f2ff]">
-                        <Shield size={18} />
+                    <div className="w-8 h-8 rounded-lg bg-[#00f2ff]/10 border border-[#00f2ff]/20 flex items-center justify-center overflow-hidden">
+                        <img src="/logo.svg" alt="Vertex Logo" className="w-5 h-5 object-contain filter drop-shadow-[0_0_6px_rgba(0,242,255,0.3)]" />
                     </div>
                     {!isCollapsed && (
                         <motion.div

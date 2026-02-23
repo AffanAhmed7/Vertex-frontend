@@ -20,22 +20,22 @@ const AnalyticsInsights: React.FC<AnalyticsInsightsProps> = ({ data }) => {
     ];
 
     return (
-        <div className="bg-[#111114] border border-white/5 rounded-2xl p-6 space-y-8">
+        <div className="bg-[#111114] border border-white/5 rounded-2xl p-6 space-y-8 h-full">
             <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
                     <Sparkles size={18} />
                 </div>
-                <h3 className="text-sm font-bold text-white uppercase tracking-widest">Executive Insights</h3>
+                <h3 className="text-sm font-medium text-white">Executive Insights</h3>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-4">
                 {panels.map((panel) => (
-                    <div key={panel.label} className="bg-white/[0.02] border border-white/5 rounded-xl p-4 space-y-3">
+                    <div key={panel.label} className="bg-white/[0.02] border border-white/5 rounded-xl p-4 space-y-3 hover:bg-white/[0.04] transition-all group">
                         <div className="flex items-center justify-between">
-                            <panel.icon size={16} className={panel.color} />
-                            <span className="text-xs font-bold text-white italic">{panel.value}</span>
+                            <panel.icon size={16} className={`${panel.color} group-hover:scale-110 transition-transform`} />
+                            <span className="text-sm font-semibold text-white tracking-tighter">{panel.value}</span>
                         </div>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black leading-tight">
+                        <p className="text-sm text-muted-foreground font-medium leading-tight">
                             {panel.label}
                         </p>
                     </div>
@@ -45,13 +45,13 @@ const AnalyticsInsights: React.FC<AnalyticsInsightsProps> = ({ data }) => {
             <div className="pt-6 border-t border-white/5 space-y-3">
                 <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Priority Observation</span>
+                    <span className="text-xs font-semibold text-primary">Priority Observation</span>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground font-medium leading-relaxed">
                     {data.insightText}
                 </p>
                 <div className="pt-2">
-                    <button className="text-[10px] font-black uppercase tracking-widest text-white hover:text-primary transition-colors flex items-center gap-2">
+                    <button className="text-sm font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-2">
                         View Detailed Report <TrendingUp size={12} className="inline" />
                     </button>
                 </div>

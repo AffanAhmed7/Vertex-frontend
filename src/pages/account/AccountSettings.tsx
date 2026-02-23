@@ -24,8 +24,8 @@ const AccountSettings: React.FC = () => {
         <div className="space-y-12">
             {/* Header */}
             <header className="space-y-2">
-                <h1 className="text-3xl font-black tracking-tight text-foreground uppercase italic underline decoration-primary decoration-4 underline-offset-8">
-                    Profile <span className="text-primary italic">Settings</span>
+                <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">
+                    Profile <span className="text-primary">Settings</span>
                 </h1>
                 <p className="text-muted-foreground">Manage your personal infrastructure and security protocols.</p>
             </header>
@@ -35,7 +35,7 @@ const AccountSettings: React.FC = () => {
                 <Card className="p-8 border-white/5" glass>
                     <div className="flex items-center gap-3 mb-8 text-primary">
                         <User size={20} />
-                        <h2 className="text-lg font-bold uppercase italic tracking-tight">Personal Information</h2>
+                        <h2 className="text-lg font-medium text-white">Personal Information</h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input label="Full Name" defaultValue={currentUser?.name} />
@@ -59,7 +59,7 @@ const AccountSettings: React.FC = () => {
                 <Card className="p-8 border-white/5" glass>
                     <div className="flex items-center gap-3 mb-8 text-secondary">
                         <Shield size={20} />
-                        <h2 className="text-lg font-bold uppercase italic tracking-tight">Security & Authentication</h2>
+                        <h2 className="text-lg font-medium text-white">Security & Authentication</h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input label="Current Password" type="password" placeholder="••••••••" />
@@ -83,7 +83,7 @@ const AccountSettings: React.FC = () => {
                 <Card className="p-8 border-white/5" glass>
                     <div className="flex items-center gap-3 mb-8 text-yellow-400">
                         <Bell size={20} />
-                        <h2 className="text-lg font-bold uppercase italic tracking-tight">Communications</h2>
+                        <h2 className="text-lg font-medium text-white">Communications</h2>
                     </div>
                     <div className="space-y-4">
                         {[

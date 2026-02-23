@@ -33,8 +33,8 @@ const AnalyticsKPI: React.FC<AnalyticsKPIProps> = ({ label, value, change, trend
         >
             <div className="relative z-10 flex flex-col h-full">
                 <div className="flex justify-between items-start">
-                    <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">{label}</p>
-                    <div className={`flex items-center gap-0.5 text-xs font-bold px-2 py-0.5 rounded-lg ${trend === 'up' ? 'text-emerald-500 bg-emerald-500/10' :
+                    <p className="text-sm font-medium text-muted-foreground">{label}</p>
+                    <div className={`flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 rounded-lg ${trend === 'up' ? 'text-emerald-500 bg-emerald-500/10' :
                         trend === 'down' ? 'text-rose-500 bg-rose-500/10' : 'text-gray-400 bg-gray-400/10'
                         }`}>
                         {trend === 'up' ? <ArrowUpRight size={14} /> :
@@ -43,7 +43,7 @@ const AnalyticsKPI: React.FC<AnalyticsKPIProps> = ({ label, value, change, trend
                     </div>
                 </div>
 
-                <h3 className="text-3xl font-medium mt-2 text-white tracking-tight">{value}</h3>
+                <h3 className="text-2xl font-semibold mt-2 text-white tracking-tight">{value}</h3>
 
                 {/* Mini Sparkline Chart */}
                 <div className="mt-6 h-12 w-full overflow-hidden">

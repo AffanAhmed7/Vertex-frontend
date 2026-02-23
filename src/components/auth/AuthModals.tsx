@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
-import { Button } from '../ui/Button';
 import { setUser } from '../../store/slices/userSlice';
 import GoogleAuthButton from './GoogleAuthButton';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -122,13 +121,17 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
 
                         {error && <p className="text-[#00f2ff] text-[10px] uppercase tracking-widest text-center">{error}</p>}
 
-                        <Button
+                        <motion.button
                             type="submit"
-                            isLoading={isLoading}
-                            className="w-full bg-white text-black hover:bg-[#00f2ff] hover:text-black font-black uppercase tracking-[0.3em] h-12 rounded-full transition-all duration-700 shadow-xl"
+                            whileHover={{ scale: 1.01, backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
+                            whileTap={{ scale: 0.99 }}
+                            disabled={isLoading}
+                            className="w-full h-11 flex items-center justify-center gap-3 rounded-full border border-white/5 bg-white/[0.02] transition-all duration-500 group"
                         >
-                            {mode === 'login' ? 'Proceed' : 'Create'}
-                        </Button>
+                            <span className="text-[11px] font-medium text-white/40 tracking-[0.2em] uppercase group-hover:text-white/70 transition-colors">
+                                {isLoading ? 'Authenticating...' : (mode === 'login' ? 'Proceed' : 'Create')}
+                            </span>
+                        </motion.button>
                     </form>
 
                     <div className="relative py-2">

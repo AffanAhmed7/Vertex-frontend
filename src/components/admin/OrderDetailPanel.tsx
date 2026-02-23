@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, User, MapPin } from 'lucide-react';
+import { X, MapPin, Package, CheckCircle, Clock, Truck, ShieldCheck, AlertCircle } from 'lucide-react';
 import { AdminOrder } from '../../store/slices/adminSlice';
 
 interface OrderDetailPanelProps {
@@ -8,148 +8,217 @@ interface OrderDetailPanelProps {
     isOpen: boolean;
     onClose: () => void;
     onUpdateStatus: (id: string, status: AdminOrder['status']) => void;
+    onUpdateOrder: (order: AdminOrder) => void;
 }
 
-const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({ order, isOpen, onClose, onUpdateStatus }) => {
-    if (!order) return null;
+const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
+    order,
+    isOpen,
+    onClose,
+    onUpdateStatus,
+    onUpdateOrder
+}) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedOrder, setEditedOrder] = useState<AdminOrder | null>(null);
+
+    useEffect(() => {
+        if (order) {
+            setEditedOrder(order);
+        } else {
+            setIsEditing(false);
+            setEditedOrder(null);
+        }
+    }, [order, isOpen]);
+
+    const handleSave = () => {
+        if (editedOrder) {
+            onUpdateOrder(editedOrder);
+            setIsEditing(false);
+        }
+    };
+
+    const statusIcons = {
+        'Pending': <Clock size={16} />,
+        'Processing': <Package size={16} />,
+        'Shipped': <Truck size={16} />,
+        'Delivered': <CheckCircle size={16} />,
+        'Cancelled': <AlertCircle size={16} />
+    };
 
     const statusColors = {
-        Pending: 'text-amber-500 bg-amber-500/10',
-        Processing: 'text-blue-500 bg-blue-500/10',
-        Shipped: 'text-indigo-500 bg-indigo-500/10',
-        Delivered: 'text-emerald-500 bg-emerald-500/10',
-        Cancelled: 'text-rose-500 bg-rose-500/10',
+        'Pending': 'text-amber-500 bg-amber-500/10 border-amber-500/20',
+        'Processing': 'text-blue-500 bg-blue-500/10 border-blue-500/20',
+        'Shipped': 'text-purple-500 bg-purple-500/10 border-purple-500/20',
+        'Delivered': 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
+        'Cancelled': 'text-rose-500 bg-rose-500/10 border-rose-500/20'
     };
 
     return (
         <AnimatePresence>
-            {isOpen && (
-                <>
-                    {/* Overlay */}
+            {isOpen && order && editedOrder && (
+                <div className="fixed inset-0 z-[400] flex items-center justify-center p-4">
+                    {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200]"
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                     />
 
-                    {/* Panel */}
+                    {/* Modal Content */}
                     <motion.div
-                        initial={{ x: '100%' }}
-                        animate={{ x: 0 }}
-                        exit={{ x: '100%' }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed inset-y-0 right-0 w-full max-w-lg bg-[#0a0a0b] border-l border-white/5 z-[201] shadow-2xl flex flex-col"
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="relative w-full max-w-2xl h-fit max-h-[90vh] bg-[#0a0a0b] border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl flex flex-col"
                     >
                         {/* Header */}
                         <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                             <div>
-                                <h3 className="text-xl font-black italic text-white uppercase tracking-tighter">{order.id}</h3>
-                                <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Order Details</p>
+                                <h3 className="text-xl font-light text-white uppercase tracking-tighter">
+                                    Transmission View
+                                </h3>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
+                                    Order Data Segment <span className="text-white/10 mx-2">/</span> {order.id}
+                                </p>
                             </div>
-                            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-colors">
-                                <X size={20} />
-                            </button>
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+                                    className={`px-6 py-2.5 rounded-xl text-xs font-medium transition-all active:scale-95 border ${isEditing ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-white/[0.05] border-white/10 text-white hover:bg-white/10'}`}
+                                >
+                                    {isEditing ? 'Sync Changes' : 'Override Details'}
+                                </button>
+                                <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-colors">
+                                    <X size={20} className="text-white/40" />
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Content */}
-                        <div className="flex-1 overflow-y-auto p-6 space-y-8">
-                            {/* Status Section */}
+                        <div className="flex-1 overflow-y-auto hide-scrollbar p-8 space-y-8">
+                            {/* Content Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* Identity Module */}
+                                <section className="space-y-4">
+                                    <div className="flex items-center gap-2 text-primary opacity-60">
+                                        <ShieldCheck size={12} />
+                                        <h4 className="text-xs font-medium text-primary/60">Identity segment</h4>
+                                    </div>
+                                    <div className="space-y-4 bg-white/[0.01] border border-white/5 rounded-2xl p-5">
+                                        <div className="space-y-1">
+                                            <label className="text-xs font-medium text-white/30">Signatory Name</label>
+                                            {isEditing ? (
+                                                <input
+                                                    value={editedOrder.customerName}
+                                                    onChange={e => setEditedOrder({ ...editedOrder, customerName: e.target.value })}
+                                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-primary outline-none transition-all"
+                                                />
+                                            ) : (
+                                                <div className="text-sm text-white font-bold">{order.customerName}</div>
+                                            )}
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-xs font-medium text-white/30">Communication Channel</label>
+                                            {isEditing ? (
+                                                <input
+                                                    value={editedOrder.customerEmail}
+                                                    onChange={e => setEditedOrder({ ...editedOrder, customerEmail: e.target.value })}
+                                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-primary outline-none transition-all"
+                                                />
+                                            ) : (
+                                                <div className="text-sm text-white/60 tracking-wide">{order.customerEmail}</div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Process Module */}
+                                <section className="space-y-4">
+                                    <div className="flex items-center gap-2 text-primary opacity-60">
+                                        <Clock size={12} />
+                                        <h4 className="text-xs font-medium text-primary/60">Process State</h4>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map((status) => (
+                                            <button
+                                                key={status}
+                                                onClick={() => onUpdateStatus(order.id, status as AdminOrder['status'])}
+                                                className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition-all ${order.status === status ? statusColors[status as keyof typeof statusColors] : 'border-white/5 bg-white/[0.01] text-white/20 hover:bg-white/5'}`}
+                                            >
+                                                {statusIcons[status as keyof typeof statusIcons]}
+                                                {status}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </section>
+                            </div>
+
+                            {/* Logistics Overview */}
                             <section className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Current Status</span>
-                                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${statusColors[order.status]}`}>
-                                        {order.status}
-                                    </span>
+                                <div className="flex items-center gap-2 text-primary opacity-60">
+                                    <MapPin size={12} />
+                                    <h4 className="text-xs font-medium text-primary/60">Logistics Nexus</h4>
                                 </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                    {Object.keys(statusColors).map((s) => (
-                                        <button
-                                            key={s}
-                                            onClick={() => onUpdateStatus(order.id, s as AdminOrder['status'])}
-                                            className={`px-4 py-2 border rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${order.status === s
-                                                ? 'bg-primary border-primary text-white'
-                                                : 'bg-white/5 border-white/5 text-muted-foreground hover:bg-white/10 hover:border-white/10'
-                                                }`}
-                                        >
-                                            {s}
-                                        </button>
-                                    ))}
+                                <div className="bg-white/[0.01] border border-white/5 rounded-2xl p-5">
+                                    <label className="text-xs font-medium text-white/30 mb-1 block">Destination Module</label>
+                                    {isEditing ? (
+                                        <textarea
+                                            rows={2}
+                                            value={editedOrder.shippingAddress}
+                                            onChange={e => setEditedOrder({ ...editedOrder, shippingAddress: e.target.value })}
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-primary outline-none transition-all resize-none"
+                                        />
+                                    ) : (
+                                        <p className="text-sm text-white/60 leading-relaxed">{order.shippingAddress}</p>
+                                    )}
                                 </div>
                             </section>
 
-                            {/* Customer Info */}
-                            <section className="bg-white/5 rounded-2xl p-6 border border-white/5 space-y-4">
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                                    <User size={14} /> Customer Intelligence
-                                </h4>
-                                <div className="grid grid-cols-1 gap-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white font-bold">
-                                            {order.customerName[0]}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-white">{order.customerName}</p>
-                                            <p className="text-xs text-muted-foreground">{order.customerEmail}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <MapPin size={16} className="text-muted-foreground mt-0.5" />
-                                        <p className="text-xs text-muted-foreground leading-relaxed">{order.shippingAddress}</p>
-                                    </div>
-                                </div>
-                            </section>
-
-                            {/* Line Items */}
+                            {/* Payload Summary */}
                             <section className="space-y-4">
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Manifest</h4>
-                                <div className="space-y-3">
-                                    {order.items.map((item) => (
-                                        <div key={item.id} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-xl">
-                                            <div>
-                                                <p className="text-sm font-bold text-white">{item.name}</p>
-                                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Qty: {item.quantity}</p>
+                                <div className="flex items-center gap-2 text-primary opacity-60">
+                                    <Package size={12} />
+                                    <h4 className="text-xs font-medium text-primary/60">Payload Inventory</h4>
+                                </div>
+                                <div className="bg-[#111115] border border-white/5 rounded-2xl overflow-hidden">
+                                    <div className="p-3 border-b border-white/5 bg-white/[0.02]">
+                                        <div className="flex justify-between items-center text-xs font-medium text-white/30">
+                                            <span>Component Asset</span>
+                                            <span>Allocation</span>
+                                        </div>
+                                    </div>
+                                    <div className="max-h-32 overflow-y-auto hide-scrollbar">
+                                        {order.items.map((item, idx) => (
+                                            <div key={idx} className="p-3 flex items-center justify-between border-b border-white/[0.02] last:border-0">
+                                                <div className="space-y-0.5">
+                                                    <p className="text-xs font-bold text-white">{item.name}</p>
+                                                    <p className="text-[9px] text-white/40 tracking-wide">${item.price}</p>
+                                                </div>
+                                                <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-md">x{item.quantity}</span>
                                             </div>
-                                            <p className="text-sm font-black italic text-white">${item.price}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="pt-4 border-t border-white/5 flex justify-between items-end">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Revenue</span>
-                                    <span className="text-2xl font-black italic text-primary tracking-tighter">${order.total}</span>
-                                </div>
-                            </section>
-
-                            {/* Timeline/Activity */}
-                            <section className="space-y-4">
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Lifecycle Timeline</h4>
-                                <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-px before:bg-white/10">
-                                    <div className="relative">
-                                        <div className="absolute -left-[1.375rem] w-3 h-3 rounded-full bg-emerald-500 border-4 border-[#0a0a0b]" />
-                                        <p className="text-xs font-bold text-white">Payment Confirmed</p>
-                                        <p className="text-[10px] text-muted-foreground mt-0.5">{order.date}</p>
+                                        ))}
                                     </div>
-                                    <div className="relative">
-                                        <div className="absolute -left-[1.375rem] w-3 h-3 rounded-full bg-white/20 border-4 border-[#0a0a0b]" />
-                                        <p className="text-xs font-bold text-muted-foreground">Order Processed</p>
-                                        <p className="text-[10px] text-muted-foreground mt-0.5">Pending</p>
+                                    <div className="p-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-between">
+                                        <span className="text-xs font-medium text-white/40">Total Valuation</span>
+                                        <span className="text-lg font-light text-white tracking-widest">${order.total}</span>
                                     </div>
                                 </div>
                             </section>
                         </div>
 
-                        {/* Footer Actions */}
-                        <div className="p-6 border-t border-white/5 bg-white/[0.02] flex gap-3">
-                            <button className="flex-1 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
-                                Print Invoice
-                            </button>
-                            <button className="flex-1 px-4 py-3 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all">
-                                Manage Refund
+                        {/* Footer */}
+                        <div className="p-6 border-t border-white/5 bg-white/[0.01] flex items-center justify-end">
+                            <button
+                                onClick={onClose}
+                                className="px-8 py-3 bg-white/[0.03] border border-white/5 hover:border-white/10 text-white/60 hover:text-white rounded-xl text-xs font-medium transition-all"
+                            >
+                                Close Segment
                             </button>
                         </div>
                     </motion.div>
-                </>
+                </div>
             )}
         </AnimatePresence>
     );

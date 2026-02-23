@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { Package, MapPin, Star, User } from 'lucide-react';
+import { Package, MapPin, Star } from 'lucide-react';
 import { RootState } from '../../store';
 import { Card } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
 import { Link } from 'react-router-dom';
 
 const AccountOverview: React.FC = () => {
@@ -22,8 +21,8 @@ const AccountOverview: React.FC = () => {
         <div className="space-y-12">
             {/* Header */}
             <header className="space-y-2">
-                <h1 className="text-3xl font-black tracking-tight text-foreground uppercase italic underline decoration-primary decoration-4 underline-offset-8">
-                    Account <span className="text-primary italic">Overview</span>
+                <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">
+                    Account <span className="text-primary">Overview</span>
                 </h1>
                 <p className="text-muted-foreground">Welcome back, {currentUser?.name}. Manage your infrastructure and account data here.</p>
             </header>
@@ -56,7 +55,7 @@ const AccountOverview: React.FC = () => {
                 {/* Recent Order Preview */}
                 <section className="space-y-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-bold uppercase italic tracking-tight">Recent Order</h2>
+                        <h2 className="text-lg font-medium text-white">Recent Order</h2>
                         <Link to="/account/orders" className="text-xs font-bold text-primary hover:underline">View All &rarr;</Link>
                     </div>
                     {recentOrder ? (
@@ -91,7 +90,7 @@ const AccountOverview: React.FC = () => {
                 {/* Default Address Preview */}
                 <section className="space-y-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-bold uppercase italic tracking-tight">Shipping Default</h2>
+                        <h2 className="text-lg font-medium text-white">Shipping Default</h2>
                         <Link to="/account/addresses" className="text-xs font-bold text-primary hover:underline">Manage &rarr;</Link>
                     </div>
                     {defaultAddress ? (
@@ -116,24 +115,6 @@ const AccountOverview: React.FC = () => {
                     )}
                 </section>
             </div>
-
-            {/* Account Status Card */}
-            <Card className="p-8 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/20 transition-colors" />
-                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-8">
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-primary">
-                            <User size={18} />
-                            <span className="text-xs font-bold tracking-[0.2em] uppercase">Membership Tier</span>
-                        </div>
-                        <h3 className="text-2xl font-black italic uppercase">Vertex {currentUser?.status} Infrastructure</h3>
-                        <p className="text-muted-foreground text-sm max-w-md">Your account is currently in high-performance mode. Enjoy exclusive partner perks, priority shipping, and 24/7 technical support.</p>
-                    </div>
-                    <Button size="lg" variant="outline" className="shrink-0 border-white/10 hover:border-primary/40">
-                        View Membership Perks
-                    </Button>
-                </div>
-            </Card>
         </div>
     );
 };

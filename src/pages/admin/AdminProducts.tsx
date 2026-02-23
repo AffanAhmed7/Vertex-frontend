@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { motion } from 'framer-motion';
-import { Plus, Search, Filter, Edit2, Trash2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, Filter, Edit2, Trash2, ShieldAlert } from 'lucide-react';
 import { RootState } from '../../store';
-import { addProduct, deleteProduct, AdminProduct } from '../../store/slices/adminSlice';
+import { addProduct, updateProduct, deleteProduct, AdminProduct } from '../../store/slices/adminSlice';
 import AdminTable from '../../components/admin/AdminTable';
 import ProductFormModal from '../../components/admin/ProductFormModal';
 
 const AdminProducts: React.FC = () => {
     const dispatch = useDispatch();
-    const { products, loading } = useSelector((state: RootState) => state.admin);
-    const [searchTerm, setSearchTerm] = useState('');
+    const { products, loading, searchQuery } = useSelector((state: RootState) => state.admin);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<AdminProduct | null>(null);
+    const [confirmDelete, setConfirmDelete] = useState<AdminProduct | null>(null);
+    const [filterCategory, setFilterCategory] = useState<string | null>(null);
+    const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
 
-    const filteredProducts = products.filter(p =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.sku.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const maxStock = Math.max(...products.map(p => p.stock), 1);
+
+    const categories = Array.from(new Set(products.map(p => p.category)));
+
+    const filteredProducts = products.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.sku.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = !filterCategory || p.category === filterCategory;
+        return matchesSearch && matchesCategory;
+    });
 
     const columns = [
         {
@@ -28,8 +37,8 @@ const AdminProducts: React.FC = () => {
                         <img src={p.image} alt={name} className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <div>
-                        <p className="font-bold text-white group-hover:text-primary transition-colors">{name}</p>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{p.sku}</p>
+                        <p className="font-semibold text-white group-hover:text-primary transition-colors">{name}</p>
+                        <p className="text-xs text-muted-foreground">{p.sku}</p>
                     </div>
                 </div>
             )
@@ -38,18 +47,18 @@ const AdminProducts: React.FC = () => {
         {
             key: 'price',
             label: 'Valuation',
-            render: (price: number) => <span className="font-medium text-white tracking-widest">${price}</span>
+            render: (price: number) => <span className="font-medium text-white">${price}</span>
         },
         {
             key: 'stock',
             label: 'Capacity',
             render: (stock: number) => (
                 <div className="space-y-1">
-                    <span className="text-xs font-bold text-white">{stock} Units</span>
+                    <span className="text-xs font-medium text-white">{stock} Units</span>
                     <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
                         <motion.div
                             initial={{ width: 0 }}
-                            animate={{ width: `${Math.min((stock / 50) * 100, 100)}%` }}
+                            animate={{ width: `${Math.min((stock / maxStock) * 100, 100)}%` }}
                             className={`h-full ${stock < 10 ? 'bg-rose-500' : 'bg-emerald-500'}`}
                         />
                     </div>
@@ -60,7 +69,7 @@ const AdminProducts: React.FC = () => {
             key: 'status',
             label: 'Deployment Status',
             render: (status: string) => (
-                <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-widest ${status === 'In Stock' ? 'text-emerald-500 bg-emerald-500/10' :
+                <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${status === 'In Stock' ? 'text-emerald-500 bg-emerald-500/10' :
                     status === 'Low Stock' ? 'text-amber-500 bg-amber-500/10' :
                         'text-rose-500 bg-rose-500/10'
                     }`}>
@@ -73,13 +82,20 @@ const AdminProducts: React.FC = () => {
             label: 'Operations',
             render: (_: any, p: AdminProduct) => (
                 <div className="flex items-center gap-2">
-                    <button className="p-2 hover:bg-white/5 rounded-lg text-muted-foreground hover:text-white transition-all shadow-lg active:scale-95">
-                        <Edit2 size={14} />
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProduct(p);
+                            setIsModalOpen(true);
+                        }}
+                        className="p-2 hover:bg-white/5 rounded-lg text-muted-foreground hover:text-white transition-all shadow-lg active:scale-95 group/btn"
+                    >
+                        <Edit2 size={14} className="group-hover/btn:text-primary transition-colors" />
                     </button>
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            dispatch(deleteProduct(p.id));
+                            setConfirmDelete(p);
                         }}
                         className="p-2 hover:bg-rose-500/10 rounded-lg text-muted-foreground hover:text-rose-500 transition-all shadow-lg active:scale-95"
                     >
@@ -98,12 +114,12 @@ const AdminProducts: React.FC = () => {
                 </div>
                 <div>
                     <h4 className="text-sm font-bold text-white">{p.name}</h4>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{p.sku}</p>
+                    <p className="text-xs text-muted-foreground">{p.sku}</p>
                 </div>
             </div>
             <div className="text-right">
                 <p className="text-sm font-medium text-white">${p.price}</p>
-                <p className={`text-[10px] font-black uppercase tracking-widest ${p.stock < 10 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                <p className={`text-xs font-semibold ${p.stock < 10 ? 'text-rose-500' : 'text-emerald-500'}`}>
                     {p.stock} Units
                 </p>
             </div>
@@ -118,22 +134,55 @@ const AdminProducts: React.FC = () => {
                     <p className="text-[9px] text-[#00f2ff]/40 uppercase tracking-[0.4em] font-black">Infrastructure Assets <span className="text-white/10 mx-2">/</span> Product Management</p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                    <div className="relative group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                        <input
-                            value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
-                            className="bg-white/5 border border-white/5 rounded-xl py-2.5 pl-12 pr-4 text-sm text-white focus:border-primary/50 outline-none transition-all w-full md:w-64"
-                            placeholder="Identify asset (Name/SKU)..."
-                        />
+                <div className="flex flex-wrap items-center gap-3 relative">
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
+                            className={`p-2.5 border rounded-xl transition-all shadow-lg active:scale-95 ${isFilterMenuOpen ? 'bg-primary/20 border-primary text-primary' : 'bg-white/5 border-white/10 text-muted-foreground hover:text-white'}`}
+                        >
+                            <Filter size={20} />
+                        </button>
+
+                        <AnimatePresence>
+                            {isFilterMenuOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    className="absolute right-0 mt-2 w-48 bg-[#1a1a1e] border border-white/10 rounded-2xl p-2 shadow-2xl z-50 overflow-hidden"
+                                >
+                                    <button
+                                        onClick={() => {
+                                            setFilterCategory(null);
+                                            setIsFilterMenuOpen(false);
+                                        }}
+                                        className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${!filterCategory ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-white'}`}
+                                    >
+                                        All Sectors
+                                    </button>
+                                    {categories.map(cat => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => {
+                                                setFilterCategory(cat);
+                                                setIsFilterMenuOpen(false);
+                                            }}
+                                            className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${filterCategory === cat ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-white'}`}
+                                        >
+                                            {cat}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
-                    <button className="p-2.5 bg-white/5 border border-white/10 rounded-xl text-muted-foreground hover:text-white transition-all shadow-lg active:scale-95">
-                        <Filter size={20} />
-                    </button>
+
                     <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-white/[0.03] border border-white/5 text-white/70 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white/10 hover:text-white transition-all shadow-xl active:scale-95"
+                        onClick={() => {
+                            setSelectedProduct(null);
+                            setIsModalOpen(true);
+                        }}
+                        className="flex items-center gap-2 px-6 py-2.5 bg-white/[0.03] border border-white/5 text-white/70 rounded-full text-xs font-medium hover:bg-white/10 hover:text-white transition-all shadow-xl active:scale-95"
                     >
                         <Plus size={16} /> New Asset
                     </button>
@@ -145,22 +194,83 @@ const AdminProducts: React.FC = () => {
                 data={filteredProducts}
                 isLoading={loading}
                 mobileCardRender={mobileRender}
-                onRowClick={(p) => console.log('Edit', p)}
+                onRowClick={(p) => {
+                    setSelectedProduct(p);
+                    setIsModalOpen(true);
+                }}
             />
 
             <ProductFormModal
                 isOpen={isModalOpen}
+                initialData={selectedProduct}
+                categories={categories}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={(data) => {
-                    dispatch(addProduct({
-                        id: Math.random().toString(36).substr(2, 9),
-                        ...data,
-                        price: Number(data.price),
-                        stock: Number(data.stock),
-                        image: '/products/placeholder.jpg'
-                    }));
+                    if (data.id) {
+                        dispatch(updateProduct({
+                            ...data,
+                            price: Number(data.price),
+                            stock: Number(data.stock),
+                        }));
+                    } else {
+                        dispatch(addProduct({
+                            id: Math.random().toString(36).substr(2, 9),
+                            ...data,
+                            price: Number(data.price),
+                            stock: Number(data.stock),
+                        }));
+                    }
                 }}
             />
+
+            {/* Deletion Confirmation Modal */}
+            <AnimatePresence>
+                {confirmDelete && (
+                    <div className="fixed inset-0 z-[400] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setConfirmDelete(null)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-sm bg-[#0a0a0b] border border-white/5 rounded-3xl p-8 shadow-2xl space-y-6"
+                        >
+                            <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 mx-auto">
+                                <ShieldAlert size={32} />
+                            </div>
+                            <div className="text-center space-y-2">
+                                <h3 className="text-xl font-semibold tracking-tight text-white">Critical Asset Termination</h3>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                    Are you certain you want to decommission <span className="text-white font-bold">{confirmDelete.name}</span>?
+                                    This action will permanently purge the asset from infrastructure records.
+                                </p>
+                            </div>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => setConfirmDelete(null)}
+                                    className="flex-1 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-medium transition-all text-white/50 hover:text-white"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        dispatch(deleteProduct(confirmDelete.id));
+                                        setConfirmDelete(null);
+                                    }}
+                                    className="flex-1 px-4 py-3 bg-rose-500 text-white rounded-xl text-xs font-semibold hover:opacity-90 transition-all shadow-lg shadow-rose-500/20"
+                                >
+                                    Terminate
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

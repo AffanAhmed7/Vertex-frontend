@@ -57,6 +57,9 @@ export default {
                 'glow-cyan': '0 0 20px -5px rgba(6, 182, 212, 0.3)',
                 'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.5)',
             },
+            fontFamily: {
+                sans: ['Outfit', 'sans-serif'],
+            },
         },
     },
     plugins: [],

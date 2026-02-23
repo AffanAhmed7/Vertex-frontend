@@ -35,8 +35,8 @@ const AccountOrders: React.FC = () => {
             {/* Header with Search */}
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div className="space-y-2">
-                    <h1 className="text-3xl font-black tracking-tight text-foreground uppercase italic underline decoration-primary decoration-4 underline-offset-8">
-                        Order <span className="text-primary italic">History</span>
+                    <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">
+                        Order <span className="text-primary">History</span>
                     </h1>
                     <p className="text-muted-foreground">Monitor and track your infrastructure module deployments.</p>
                 </div>

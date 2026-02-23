@@ -86,7 +86,7 @@ const AccountLayout: React.FC = () => {
     );
 
     return (
-        <div className="min-h-screen pt-20">
+        <div className="min-h-screen pt-20" style={{ fontFamily: "'Outfit', sans-serif" }}>
             <div className="container mx-auto max-w-7xl px-6 py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 

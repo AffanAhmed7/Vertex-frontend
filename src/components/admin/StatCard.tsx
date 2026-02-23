@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, ArrowDownRight, LayoutDashboard, Package, Users, Target, DollarSign } from 'lucide-react';
+import { LayoutDashboard, Package, Users, Target, DollarSign } from 'lucide-react';
 
 const icons = {
     DollarSign: DollarSign,
@@ -14,11 +14,12 @@ interface StatCardProps {
     value: string | number;
     trend: number;
     trendDirection: 'up' | 'down';
+    trendLabel?: string;
     icon: keyof typeof icons;
     isLoading?: boolean;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, trend, trendDirection, icon, isLoading }) => {
+const StatCard: React.FC<StatCardProps> = ({ label, value, trend, trendDirection, trendLabel = '%', icon, isLoading }) => {
     const Icon = icons[icon] || LayoutDashboard;
 
     if (isLoading) {
@@ -49,16 +50,16 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, trend, trendDirection
                     <Icon size={22} />
                 </div>
 
-                <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg ${trendDirection === 'up' ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'
+                <div className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-lg ${trendDirection === 'up' ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'
                     }`}>
-                    {trendDirection === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                    {trend}%
+                    {trendDirection === 'up' ? '+' : '-'}
+                    {trend}{trendLabel}
                 </div>
             </div>
 
             <div className="mt-6 relative z-10">
-                <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">{label}</p>
-                <h3 className="text-3xl font-medium mt-1 text-white tracking-tight">{value}</h3>
+                <p className="text-sm font-medium text-muted-foreground">{label}</p>
+                <h3 className="text-2xl font-semibold mt-1 text-white">{value}</h3>
             </div>
         </motion.div>
     );

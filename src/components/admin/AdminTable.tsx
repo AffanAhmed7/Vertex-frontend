@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, ArrowUpDown } from 'lucide-react';
 
@@ -24,6 +24,10 @@ const AdminTable: React.FC<AdminTableProps> = ({ columns, data, onRowClick, isLo
 
     const paginatedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [data.length]);
+
     if (isLoading) {
         return (
             <div className="space-y-4 animate-pulse">
@@ -36,64 +40,82 @@ const AdminTable: React.FC<AdminTableProps> = ({ columns, data, onRowClick, isLo
 
     return (
         <div className="space-y-4">
-            {/* Desktop Table */}
+            {/* Desktop Table / Empty State */}
             <div className="hidden md:block overflow-hidden bg-[#111114] border border-white/5 rounded-2xl shadow-xl shadow-black/20">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="border-b border-white/5 bg-white/[0.02]">
-                            {columns.map((col) => (
-                                <th key={col.key} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                                    <div className="flex items-center gap-1">
-                                        {col.label}
-                                        {col.sortable && <ArrowUpDown size={12} className="opacity-50" />}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <AnimatePresence mode="popLayout">
-                            {paginatedData.map((item, index) => (
-                                <motion.tr
-                                    key={item.id || index}
-                                    layout
-                                    initial={{ opacity: 0, scale: 0.98 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    onClick={() => onRowClick?.(item)}
-                                    className={`group hover:bg-white/[0.03] transition-colors cursor-pointer border-b border-white/[0.02] last:border-0`}
-                                >
-                                    {columns.map((col) => (
-                                        <td key={col.key} className="px-6 py-4 text-sm whitespace-nowrap">
-                                            {col.render ? col.render(item[col.key], item) : item[col.key]}
-                                        </td>
-                                    ))}
-                                </motion.tr>
-                            ))}
-                        </AnimatePresence>
-                    </tbody>
-                </table>
+                {data.length === 0 ? (
+                    <div className="py-20 text-center space-y-4">
+                        <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-white/20">
+                            <ChevronRight size={32} className="rotate-45" />
+                        </div>
+                        <div className="space-y-1">
+                            <h3 className="text-sm font-medium text-white/40">No tactical records identified</h3>
+                            <p className="text-xs text-white/10">Adjust filters or search parameters</p>
+                        </div>
+                    </div>
+                ) : (
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr className="border-b border-white/5 bg-white/[0.02]">
+                                {columns.map((col) => (
+                                    <th key={col.key} className="px-6 py-4 text-xs font-medium text-[#00f2ff]/40">
+                                        <div className="flex items-center gap-1">
+                                            {col.label}
+                                            {col.sortable && <ArrowUpDown size={12} className="opacity-50" />}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <AnimatePresence mode="popLayout">
+                                {paginatedData.map((item, index) => (
+                                    <motion.tr
+                                        key={item.id || index}
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.98 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        onClick={() => onRowClick?.(item)}
+                                        className={`group hover:bg-white/[0.03] transition-colors cursor-pointer border-b border-white/[0.02] last:border-0`}
+                                    >
+                                        {columns.map((col) => (
+                                            <td key={col.key} className="px-6 py-4 text-sm whitespace-nowrap font-medium">
+                                                {col.render ? col.render(item[col.key], item) : item[col.key]}
+                                            </td>
+                                        ))}
+                                    </motion.tr>
+                                ))}
+                            </AnimatePresence>
+                        </tbody>
+                    </table>
+                )}
             </div>
 
-            {/* Mobile Cards */}
+            {/* Mobile Cards / Empty State */}
             <div className="md:hidden space-y-4">
-                {paginatedData.map((item, index) => (
-                    <motion.div
-                        key={item.id || index}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        onClick={() => onRowClick?.(item)}
-                        className="bg-[#111114] border border-white/5 rounded-xl p-4 shadow-lg shadow-black/20"
-                    >
-                        {mobileCardRender(item)}
-                    </motion.div>
-                ))}
+                {data.length === 0 ? (
+                    <div className="bg-[#111114] border border-white/5 rounded-xl p-12 text-center">
+                        <p className="text-xs font-medium text-white/20">No Records Identified</p>
+                    </div>
+                ) : (
+                    paginatedData.map((item, index) => (
+                        <motion.div
+                            key={item.id || index}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            onClick={() => onRowClick?.(item)}
+                            className="bg-[#111114] border border-white/5 rounded-xl p-4 shadow-lg shadow-black/20"
+                        >
+                            {mobileCardRender(item)}
+                        </motion.div>
+                    ))
+                )}
             </div>
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
                 <div className="flex items-center justify-between px-2">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    <p className="text-xs font-medium text-muted-foreground">
                         Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, data.length)} of {data.length}
                     </p>
                     <div className="flex gap-2">

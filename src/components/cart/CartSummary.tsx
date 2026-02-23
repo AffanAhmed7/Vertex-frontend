@@ -24,34 +24,43 @@ const CartSummary: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <div className="bg-card/40 border border-white/5 rounded-2xl p-6 space-y-6 backdrop-blur-xl">
-                <h2 className="text-xl font-bold tracking-tight text-foreground uppercase italic underline decoration-primary decoration-2 underline-offset-4">
-                    Order Summary
-                </h2>
+            <div className="bg-[#111114]/60 border border-white/5 rounded-3xl p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl pointer-events-none" />
 
-                <div className="space-y-4">
-                    <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Subtotal</span>
-                        <span className="text-foreground font-medium">${subtotal.toLocaleString()}</span>
+                <div className="space-y-1 relative z-10">
+                    <h2 className="text-[10px] font-black tracking-[0.4em] text-white/40 uppercase">Integration Summary</h2>
+                    <div className="h-px w-full bg-gradient-to-r from-white/10 to-transparent" />
+                </div>
+
+                <div className="space-y-5 relative z-10">
+                    <div className="flex justify-between items-center text-sm">
+                        <span className="text-muted-foreground font-medium">Core Allocation</span>
+                        <span className="text-white font-semibold">${subtotal.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Estimate Shipping</span>
-                        <span className="text-foreground font-medium">${shipping.toLocaleString()}</span>
+                    <div className="flex justify-between items-center text-sm">
+                        <div className="flex items-center gap-2">
+                            <span className="text-muted-foreground font-medium">Logistics Nodes</span>
+                            <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-[8px] font-black uppercase text-emerald-400 border border-emerald-500/20">Active</span>
+                        </div>
+                        <span className="text-white font-semibold">${shipping.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Estimated Tax</span>
-                        <span className="text-foreground font-medium">${tax.toLocaleString()}</span>
+                    <div className="flex justify-between items-center text-sm text-white/40">
+                        <span className="font-medium">System Tax (VAT)</span>
+                        <span className="font-semibold">${tax.toLocaleString()}</span>
                     </div>
 
-                    <div className="pt-4 border-t border-white/5">
+                    <div className="pt-6 border-t border-white/10">
                         <div className="flex justify-between items-end">
-                            <span className="text-base font-bold text-foreground">Total</span>
+                            <div className="space-y-1">
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Final Integration Cost</span>
+                                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-50">All nodes confirmed</p>
+                            </div>
                             <div className="text-right">
                                 <motion.p
                                     key={total}
                                     initial={{ y: 10, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
-                                    className="text-3xl font-black tracking-tighter text-primary"
+                                    className="text-4xl font-light tracking-tighter text-white"
                                 >
                                     ${total.toLocaleString()}
                                 </motion.p>
@@ -60,55 +69,62 @@ const CartSummary: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="space-y-4 pt-4">
+                <div className="space-y-4 pt-4 relative z-10">
                     <div className="flex gap-2">
                         <Input
-                            label="Discount Code"
-                            placeholder="Enter code"
+                            label="Promo Code"
+                            placeholder="SYSTEM_KEY"
                             value={discountCode}
                             onChange={(e) => setDiscountCode(e.target.value)}
-                            className="bg-black/20 border-white/5 h-10 text-sm"
+                            className="bg-white/[0.02] border-white/5 h-11 text-xs tracking-widest uppercase font-bold"
                         />
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={handleApplyDiscount}
                             isLoading={isApplying}
-                            className="border-white/10"
+                            className="border-white/10 px-6 h-11"
                         >
-                            Apply
+                            Log
                         </Button>
                     </div>
 
                     <Button
-                        className="w-full h-14 rounded-xl text-lg group"
+                        className="w-full h-14 rounded-xl text-xs font-bold uppercase tracking-[0.2em] group relative overflow-hidden bg-gradient-to-r from-[#00f2ff] to-[#00d8e6] text-black hover:shadow-[0_0_30px_#00f2ff40] transition-all duration-500"
                         onClick={() => navigate('/checkout')}
                     >
-                        Proceed to Checkout
-                        <motion.span
-                            className="ml-2 inline-block"
-                            animate={{ x: [0, 5, 0] }}
-                            transition={{ repeat: Infinity, duration: 1.5 }}
-                        >
-                            &rarr;
-                        </motion.span>
+                        <span className="relative z-10 flex items-center justify-center gap-3">
+                            Confirm Integration
+                            <motion.span
+                                animate={{ x: [0, 5, 0] }}
+                                transition={{ repeat: Infinity, duration: 1.5 }}
+                            >
+                                &rarr;
+                            </motion.span>
+                        </span>
                     </Button>
                 </div>
             </div>
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-1 gap-4 px-2">
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <ShieldCheck size={16} className="text-primary" />
+            <div className="space-y-4 px-2">
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.01] border border-white/5 group hover:border-primary/20 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
+                        <ShieldCheck size={18} className="text-primary opacity-50" />
                     </div>
-                    <p>Secure checkout with SSL encryption and enterprise-grade data protection.</p>
+                    <div>
+                        <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Security Protocol</p>
+                        <p className="text-[11px] text-white/60 leading-relaxed font-medium">Enterprise-grade quantum-safe encryption active for all transaction handshakes.</p>
+                    </div>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center shrink-0">
-                        <Truck size={16} className="text-secondary" />
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.01] border border-white/5 group hover:border-secondary/20 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-secondary/5 flex items-center justify-center shrink-0 border border-secondary/10">
+                        <Truck size={18} className="text-secondary opacity-50" />
                     </div>
-                    <p>Insured worldwide shipping with real-time tracking from our global nodes.</p>
+                    <div>
+                        <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Global Allocation</p>
+                        <p className="text-[11px] text-white/60 leading-relaxed font-medium">Real-time logistic nodes confirmed across all primary decentralized data centers.</p>
+                    </div>
                 </div>
             </div>
         </div>

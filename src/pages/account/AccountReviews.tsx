@@ -16,15 +16,15 @@ const AccountReviews: React.FC = () => {
         <div className="space-y-12">
             {/* Header */}
             <header className="space-y-2">
-                <h1 className="text-3xl font-black tracking-tight text-foreground uppercase italic underline decoration-primary decoration-4 underline-offset-8">
-                    Node <span className="text-primary italic">Reviews</span>
+                <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">
+                    Node <span className="text-primary">Reviews</span>
                 </h1>
                 <p className="text-muted-foreground">Share your technical feedback and integration performance with the Vertex community.</p>
             </header>
 
             {/* Content */}
             <div className="space-y-6">
-                <h2 className="text-lg font-bold uppercase italic tracking-tight">Pending Reviews</h2>
+                <h2 className="text-lg font-medium text-white">Pending Reviews</h2>
 
                 {eligibleItems.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

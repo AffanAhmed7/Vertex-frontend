@@ -20,6 +20,7 @@ import AdminUsers from '../pages/admin/AdminUsers';
 import AdminSettings from '../pages/admin/AdminSettings';
 import ScrollToTop from '../components/common/ScrollToTop';
 import { Login, Register } from '../pages/Placeholders';
+import HeritagePage from '../pages/HeritagePage';
 
 const AppRoutes = () => {
     return (
@@ -35,6 +36,7 @@ const AppRoutes = () => {
                     <Route path="checkout" element={<CheckoutPage />} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
+                    <Route path="heritage" element={<HeritagePage />} />
 
                     {/* Account Dashboard Group */}
                     <Route path="account" element={<AccountLayout />}>

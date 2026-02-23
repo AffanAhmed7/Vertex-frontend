@@ -137,7 +137,7 @@ export const TrustSection = () => {
     );
 };
 
-export const BottomCTA = () => {
+export const BottomCTA = ({ onApplyAccess }: { onApplyAccess?: () => void }) => {
     return (
         <section className="premium-cta">
             <motion.div
@@ -151,7 +151,7 @@ export const BottomCTA = () => {
                 <p style={{ color: '#666', fontSize: '1.25rem', marginBottom: '4rem', maxWidth: '600px', margin: '0 auto 4rem' }}>
                     Join the Vertex inner circle and redefine your relationship with luxury retail.
                 </p>
-                <button className="premium-cta-btn">
+                <button className="premium-cta-btn" onClick={onApplyAccess}>
                     Apply for Access
                 </button>
             </motion.div>

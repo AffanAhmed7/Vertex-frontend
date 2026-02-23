@@ -27,8 +27,7 @@ const Navigation = () => {
 
     const navLinks = [
         { name: 'Collections', path: '/shop' },
-        { name: 'Heritage', path: '/heritage' },
-        { name: 'Concierge', path: '/concierge' },
+        { name: 'Heritage', path: '/heritage' }
     ];
 
     return (
@@ -60,7 +59,7 @@ const Navigation = () => {
                     </Link>
 
                     {/* Desktop Links */}
-                    <div className="hidden lg:flex items-center gap-10">
+                    <div className="hidden lg:flex items-center gap-10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.path}
