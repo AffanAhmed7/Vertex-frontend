@@ -9,10 +9,9 @@ export const ChartPlaceholder: React.FC<{
     title: string;
     subtitle?: string;
     type: 'line' | 'bar' | 'donut';
-    filterStatus?: string | null;
     multiplier?: number;
     timeFrame?: 'All Time' | 'Month' | 'Week' | 'Day';
-}> = ({ title, subtitle, type, filterStatus, multiplier = 1, timeFrame = 'Month' }) => {
+}> = ({ title, subtitle, type, multiplier = 1, timeFrame = 'Month' }) => {
     const isRevenue = title.toLowerCase().includes('revenue');
     const isCategory = title.toLowerCase().includes('category');
     const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);

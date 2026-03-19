@@ -1,23 +1,47 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { User, Shield, Bell, Key, Save, CheckCircle2 } from 'lucide-react';
-import { RootState } from '../../store';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { User, Shield, Bell, Key, Save, CheckCircle2, AlertCircle } from 'lucide-react';
+import { RootState, AppDispatch } from '../../store';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
+import { updateProfile, clearError } from '../../store/slices/userSlice';
 
 const AccountSettings: React.FC = () => {
-    const { currentUser } = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch<AppDispatch>();
+    const { currentUser, error } = useSelector((state: RootState) => state.user);
     const [isSaving, setIsSaving] = useState(false);
     const [saved, setSaved] = useState(false);
+    
+    const [formData, setFormData] = useState({
+        name: currentUser?.name || '',
+        email: currentUser?.email || ''
+    });
 
-    const handleSave = () => {
+    useEffect(() => {
+        if (currentUser) {
+            setFormData({
+                name: currentUser.name,
+                email: currentUser.email
+            });
+        }
+    }, [currentUser]);
+
+    const handleSave = async () => {
         setIsSaving(true);
-        setTimeout(() => {
+        dispatch(clearError());
+        
+        try {
+            const resultAction = await dispatch(updateProfile(formData));
+            if (updateProfile.fulfilled.match(resultAction)) {
+                setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+            }
+        } catch (err) {
+            console.error('Failed to update profile:', err);
+        } finally {
             setIsSaving(false);
-            setSaved(true);
-            setTimeout(() => setSaved(false), 3000);
-        }, 1500);
+        }
     };
 
     return (
@@ -30,6 +54,13 @@ const AccountSettings: React.FC = () => {
                 <p className="text-muted-foreground">Manage your personal infrastructure and security protocols.</p>
             </header>
 
+            {error && (
+                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-500 text-sm">
+                    <AlertCircle size={18} />
+                    {error}
+                </div>
+            )}
+
             <div className="grid grid-cols-1 gap-8">
                 {/* Personal Information */}
                 <Card className="p-8 border-white/5" glass>
@@ -38,8 +69,16 @@ const AccountSettings: React.FC = () => {
                         <h2 className="text-lg font-medium text-white">Personal Information</h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input label="Full Name" defaultValue={currentUser?.name} />
-                        <Input label="Email Address" defaultValue={currentUser?.email} />
+                        <Input 
+                            label="Full Name" 
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
+                        <Input 
+                            label="Email Address" 
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        />
                         <div className="md:col-span-2">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground block mb-3">Avatar Integration</label>
                             <div className="flex items-center gap-6">
@@ -62,10 +101,15 @@ const AccountSettings: React.FC = () => {
                         <h2 className="text-lg font-medium text-white">Security & Authentication</h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input label="Current Password" type="password" placeholder="••••••••" />
+                        <Input label="Current Password" type="password" placeholder="••••••••" disabled />
                         <div className="hidden md:block" />
-                        <Input label="New Password" type="password" placeholder="••••••••" />
-                        <Input label="Confirm New Password" type="password" placeholder="••••••••" />
+                        <Input label="New Password" type="password" placeholder="••••••••" disabled />
+                        <Input label="Confirm New Password" type="password" placeholder="••••••••" disabled />
+                    </div>
+                    <div className="mt-4 p-3 bg-white/5 rounded-lg border border-white/5">
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest leading-relaxed">
+                            Password updates are handled via secure transmission. Contact your system admin or use the "Forgot Password" protocol at login.
+                        </p>
                     </div>
                     <div className="mt-8 p-4 bg-secondary/5 border border-secondary/10 rounded-xl flex items-center justify-between">
                         <div className="flex items-center gap-3">

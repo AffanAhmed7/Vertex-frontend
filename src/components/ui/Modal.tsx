@@ -48,7 +48,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        className={`relative w-full overflow-hidden glass-panel rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 ${maxWidth === 'sm' ? 'max-w-sm' :
+                        className={`relative w-full max-h-[90vh] overflow-y-auto glass-panel rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 ${maxWidth === 'sm' ? 'max-w-sm' :
                             maxWidth === 'md' ? 'max-w-md' :
                                 maxWidth === 'lg' ? 'max-w-lg' :
                                     maxWidth === 'xl' ? 'max-w-xl' :
@@ -71,7 +71,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
                         )}
 
                         {/* Body */}
-                        <div className="p-6">
+                        <div className="p-6 overflow-visible relative z-10">
                             {children}
                         </div>
 

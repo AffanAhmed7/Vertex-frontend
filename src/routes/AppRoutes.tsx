@@ -22,6 +22,8 @@ import ScrollToTop from '../components/common/ScrollToTop';
 import { Login, Register } from '../pages/Placeholders';
 import HeritagePage from '../pages/HeritagePage';
 
+import ProtectedRoute from '../components/auth/ProtectedRoute';
+
 const AppRoutes = () => {
     return (
         <>
@@ -38,8 +40,8 @@ const AppRoutes = () => {
                     <Route path="register" element={<Register />} />
                     <Route path="heritage" element={<HeritagePage />} />
 
-                    {/* Account Dashboard Group */}
-                    <Route path="account" element={<AccountLayout />}>
+                    {/* Account Dashboard Group — requires login */}
+                    <Route path="account" element={<ProtectedRoute requiredRole="CUSTOMER"><AccountLayout /></ProtectedRoute>}>
                         <Route index element={<AccountOverview />} />
                         <Route path="orders" element={<AccountOrders />} />
                         <Route path="addresses" element={<AccountAddresses />} />
@@ -48,8 +50,8 @@ const AppRoutes = () => {
                     </Route>
                 </Route>
 
-                {/* Admin Dashboard Group */}
-                <Route path="/admin" element={<AdminLayout />}>
+                {/* Admin Dashboard Group — requires ADMIN role */}
+                <Route path="/admin" element={<ProtectedRoute requiredRole="ADMIN"><AdminLayout /></ProtectedRoute>}>
                     <Route index element={<AdminOverview />} />
                     <Route path="products" element={<AdminProducts />} />
                     <Route path="orders" element={<AdminOrders />} />

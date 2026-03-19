@@ -318,7 +318,6 @@ const AdminOverview: React.FC = () => {
                         title={`Revenue Stream (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : 'All Time'})`}
                         subtitle={`Total: ${semanticData.semanticStats.find((s: any) => s.label === 'Total Revenue')?.value} •  ${semanticData.semanticStats.find((s: any) => s.label === 'Total Revenue')?.trend > 0 ? '+' : ''}${semanticData.semanticStats.find((s: any) => s.label === 'Total Revenue')?.trend}% ${semanticData.semanticStats.find((s: any) => s.label === 'Total Revenue')?.trendLabel}`}
                         type="line"
-                        filterStatus={filterStatus}
                         multiplier={semanticData.revenueRatio}
                         timeFrame={timeFrame}
                     />
@@ -328,7 +327,6 @@ const AdminOverview: React.FC = () => {
                         title={`Category Success (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : 'All Time'})`}
                         subtitle={`System Conversion: ${semanticData.semanticStats.find((s: any) => s.label === 'Conversion')?.value} • Active Ops: ${semanticData.semanticStats.find((s: any) => s.label === 'Active Orders')?.value}`}
                         type="bar"
-                        filterStatus={filterStatus}
                         multiplier={semanticData.distributionRatio}
                         timeFrame={timeFrame}
                     />

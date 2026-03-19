@@ -2,37 +2,23 @@ import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { RootState } from '../store';
-import { setSelectedProduct, setLoading, setError } from '../store/slices/productSlice';
+import { RootState, AppDispatch } from '../store';
+import { fetchProductById } from '../store/slices/productSlice';
 import ProductImageGallery from '../components/product/ProductImageGallery';
 import ProductInfo from '../components/product/ProductInfo';
 import ProductDetailsSections from '../components/product/ProductDetailsSections';
-import { allProducts } from '../data/products';
 import '../styles/product-detail.css';
 
 const ProductDetailPage = () => {
     const { id } = useParams<{ id: string }>();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const { selectedProduct, loading, error } = useSelector((state: RootState) => state.products);
+    const { items, selectedProduct, loading, error } = useSelector((state: RootState) => state.products);
 
     useEffect(() => {
-        dispatch(setLoading(true));
-
-        const timer = setTimeout(() => {
-            const product = allProducts.find(p => p.id === id);
-            if (product) {
-                dispatch(setSelectedProduct(product));
-                dispatch(setError(null));
-            } else {
-                dispatch(setError('Product Not Found'));
-            }
-            dispatch(setLoading(false));
-        }, 600);
-
-        return () => {
-            clearTimeout(timer);
-        };
+        if (id) {
+            dispatch(fetchProductById(id));
+        }
     }, [id, dispatch]);
 
     if (loading) {
@@ -58,8 +44,8 @@ const ProductDetailPage = () => {
         );
     }
 
-    // Get related products from same category
-    const relatedProducts = allProducts
+    // Get related products from same category from already loaded items
+    const relatedProducts = items
         .filter(p => p.category === selectedProduct.category && p.id !== selectedProduct.id)
         .slice(0, 4);
 

@@ -31,46 +31,50 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         const isActive = isFocused || hasValue || !!props.value;
 
         return (
-            <div className="relative w-full space-y-1">
+            <div className="relative w-full">
                 <div className="relative">
-                    <motion.label
-                        animate={{
-                            y: isActive ? -22 : 0,
-                            scale: isActive ? 0.85 : 1,
-                            color: isFocused ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
-                        }}
-                        initial={false}
-                        className="absolute left-3 top-3.5 z-10 origin-left pointer-events-none text-muted-foreground transition-colors"
+                    {/* Floating label */}
+                    <label
+                        className={cn(
+                            "absolute left-4 pointer-events-none transition-all duration-300 ease-out font-medium uppercase",
+                            isActive
+                                ? "top-2 text-[9px] tracking-[0.25em] pb-1"
+                                : "top-1/2 -translate-y-1/2 text-sm tracking-[0.05em] opacity-40",
+                            isFocused ? "text-[#00f2ff]" : "text-white/50"
+                        )}
                     >
                         {label}
-                    </motion.label>
+                    </label>
+
                     <input
                         ref={ref}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         className={cn(
-                            'w-full bg-muted/30 border-b-2 border-transparent px-3 pb-2 pt-6 rounded-t-lg transition-all focus:outline-none focus:border-primary focus:bg-muted/50 text-foreground',
-                            error && 'border-destructive focus:border-destructive',
+                            'w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 pt-7 pb-3 transition-all duration-300 focus:outline-none text-white text-sm placeholder:opacity-0',
+                            isFocused && 'border-[#00f2ff]/30 bg-white/[0.05]',
+                            !isFocused && isActive && 'border-white/15',
+                            error && 'border-red-500/50 focus:border-red-500',
                             className
                         )}
                         {...props}
                     />
 
-                    {/* Animated focus line */}
+                    {/* Focus glow line */}
                     <motion.div
                         initial={false}
-                        animate={{ scaleX: isFocused ? 1 : 0 }}
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary origin-center"
+                        animate={{ scaleX: isFocused ? 1 : 0, opacity: isFocused ? 1 : 0 }}
+                        className="absolute bottom-0 left-2 right-2 h-[1px] bg-gradient-to-r from-transparent via-[#00f2ff]/60 to-transparent origin-center"
                     />
                 </div>
 
                 <AnimatePresence>
                     {error && (
                         <motion.p
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="text-xs text-destructive px-1"
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            className="text-xs text-red-400 mt-1.5 px-1"
                         >
                             {error}
                         </motion.p>

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, ArrowLeft, ShoppingCart, Activity } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, ShoppingCart } from 'lucide-react';
 import { RootState } from '../store';
 import CartItem from '../components/cart/CartItem';
 import CartSummary from '../components/cart/CartSummary';

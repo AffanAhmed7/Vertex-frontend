@@ -1,20 +1,16 @@
 import { motion } from 'framer-motion';
-import { ShieldCheck, Zap, CreditCard, Lock, Truck, Briefcase } from 'lucide-react';
 
 export const ValueProp = () => {
     const items = [
         {
-            icon: Zap,
             title: "Unrivaled Velocity",
             description: "Our proprietary global fulfillment network ensures your selections arrive with unprecedented speed, setting a new standard for premium logistics."
         },
         {
-            icon: ShieldCheck,
             title: "Meticulous Curation",
             description: "Every piece in our collection undergoes a rigorous multi-stage vetting process to ensure exceptional quality, provenance, and ethical sourcing."
         },
         {
-            icon: Briefcase,
             title: "Elite Concierge",
             description: "Experience personalized 24/7 support from our dedicated hospitality team, tailored to meet the needs of our most discerning clientele."
         }
@@ -34,8 +30,7 @@ export const ValueProp = () => {
                         transition={{ delay: i * 0.2, duration: 0.8 }}
                         viewport={{ once: true }}
                     >
-                        <item.icon className="v-icon" />
-                        <h3>{item.title}</h3>
+                        <h3 className="elegant-heading">{item.title}</h3>
                         <p>{item.description}</p>
                     </motion.div>
                 ))}
@@ -92,22 +87,18 @@ export const FeaturedCategories = () => {
 export const TrustSection = () => {
     const trustItems = [
         {
-            icon: Truck,
             title: "Global Shipping",
             desc: "Swift, secure delivery to over 120 countries with real-time tracking."
         },
         {
-            icon: CreditCard,
             title: "Secure Payments",
             desc: "Multiple encrypted payment layers ensuring financial peace of mind."
         },
         {
-            icon: Lock,
             title: "Data Privacy",
             desc: "Military-grade encryption for all your personal and transactional data."
         },
         {
-            icon: ShieldCheck,
             title: "Authenticity",
             desc: "Guaranteed provenance for every item in our curated collection."
         }
@@ -126,8 +117,7 @@ export const TrustSection = () => {
                         viewport={{ once: true }}
                     >
                         <div className="trust-card-header">
-                            <item.icon className="trust-icon" />
-                            <h4>{item.title}</h4>
+                            <h4 className="elegant-heading">{item.title}</h4>
                         </div>
                         <p>{item.desc}</p>
                     </motion.div>

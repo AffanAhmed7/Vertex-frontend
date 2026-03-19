@@ -1,21 +1,37 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { Package, MapPin, Star } from 'lucide-react';
-import { RootState } from '../../store';
+import { RootState, AppDispatch } from '../../store';
 import { Card } from '../../components/ui/Card';
 import { Link } from 'react-router-dom';
+import { fetchOrders, fetchAddresses } from '../../store/slices/userSlice';
 
 const AccountOverview: React.FC = () => {
-    const { currentUser, orders, addresses } = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch<AppDispatch>();
+    const { currentUser, orders, addresses, loading } = useSelector((state: RootState) => state.user);
+    
+    useEffect(() => {
+        dispatch(fetchOrders());
+        dispatch(fetchAddresses());
+    }, [dispatch]);
+
     const recentOrder = orders[0];
     const defaultAddress = addresses.find(a => a.isDefault);
 
     const stats = [
         { label: 'Total Orders', value: orders.length, icon: Package, color: 'text-primary' },
         { label: 'Saved Locations', value: addresses.length, icon: MapPin, color: 'text-secondary' },
-        { label: 'Pending Reviews', value: '2', icon: Star, color: 'text-yellow-400' },
+        { label: 'Pending Reviews', value: '0', icon: Star, color: 'text-yellow-400' },
     ];
+
+    if (loading && orders.length === 0) {
+        return (
+            <div className="flex items-center justify-center p-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-12">
@@ -62,8 +78,8 @@ const AccountOverview: React.FC = () => {
                         <Card className="p-6 bg-card/40 border-white/5 space-y-4">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <p className="text-xs font-bold font-mono text-muted-foreground">{recentOrder.id}</p>
-                                    <p className="text-sm font-medium">{new Date(recentOrder.date).toLocaleDateString()}</p>
+                                    <p className="text-xs font-bold font-mono text-muted-foreground">#{recentOrder.id.slice(-8).toUpperCase()}</p>
+                                    <p className="text-sm font-medium">{new Date(recentOrder.createdAt).toLocaleDateString()}</p>
                                 </div>
                                 <span className="px-2 py-0.5 rounded bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-tight">
                                     {recentOrder.status}
@@ -71,13 +87,13 @@ const AccountOverview: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-4 pt-4 border-t border-white/5">
                                 <div className="w-12 h-12 rounded-lg bg-white/5 overflow-hidden">
-                                    <img src={recentOrder.items[0].image} alt="" className="w-full h-full object-cover" />
+                                    <img src={recentOrder.items[0]?.product.image || 'https://via.placeholder.com/150'} alt="" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex-grow min-w-0">
-                                    <p className="text-sm font-bold truncate">{recentOrder.items[0].name}</p>
+                                    <p className="text-sm font-bold truncate">{recentOrder.items[0]?.product.name}</p>
                                     <p className="text-xs text-muted-foreground">{recentOrder.items.length > 1 ? `+ ${recentOrder.items.length - 1} more items` : '1 Item'}</p>
                                 </div>
-                                <p className="text-sm font-black">${recentOrder.total}</p>
+                                <p className="text-sm font-black">${Number(recentOrder.total).toFixed(2)}</p>
                             </div>
                         </Card>
                     ) : (

@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import productService, { ProductFilters as ServiceFilters } from '../../services/productService';
 
 export interface ProductVariant {
     type: 'size' | 'color' | 'storage' | 'license' | 'material';
@@ -12,7 +13,7 @@ export interface Product {
     description: string;
     price: number;
     rating: number;
-    category: 'Electronics' | 'Apparel' | 'Accessories' | 'Digital';
+    category: string;
     image: string;
     images: string[];
     isAvailable: boolean;
@@ -20,12 +21,12 @@ export interface Product {
     specs?: { label: string; value: string }[];
 }
 
-interface ProductFilters {
+interface ProductFilters extends ServiceFilters {
     category: string;
     minPrice: number;
     maxPrice: number;
     minRating: number;
-    sortBy: 'newest' | 'price-low' | 'price-high' | 'rating';
+    sortBy: string;
     search: string;
 }
 
@@ -58,43 +59,37 @@ const initialState: ProductState = {
     error: null,
 };
 
+export const fetchProducts = createAsyncThunk(
+    'products/fetchAll',
+    async (filters: Partial<ProductFilters>, { rejectWithValue }) => {
+        try {
+            return await productService.getAll(filters);
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to fetch products');
+        }
+    }
+);
+
+export const fetchProductById = createAsyncThunk(
+    'products/fetchById',
+    async (id: string, { rejectWithValue }) => {
+        try {
+            return await productService.getById(id);
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to fetch product');
+        }
+    }
+);
+
 const productSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
-        setProducts: (state, action: PayloadAction<Product[]>) => {
-            state.items = action.payload;
-            state.filteredItems = action.payload;
-        },
         setFilters: (state, action: PayloadAction<Partial<ProductFilters>>) => {
             state.filters = { ...state.filters, ...action.payload };
-            state.filteredItems = state.items.filter(item => {
-                const matchesCategory = state.filters.category === 'All' || item.category === state.filters.category;
-                const matchesPrice = item.price >= state.filters.minPrice && item.price <= state.filters.maxPrice;
-                const matchesRating = item.rating >= state.filters.minRating;
-                const matchesSearch = item.name.toLowerCase().includes(state.filters.search.toLowerCase()) ||
-                    item.description.toLowerCase().includes(state.filters.search.toLowerCase());
-                return matchesCategory && matchesPrice && matchesRating && matchesSearch;
-            });
-
-            state.filteredItems.sort((a, b) => {
-                switch (state.filters.sortBy) {
-                    case 'price-low': return a.price - b.price;
-                    case 'price-high': return b.price - a.price;
-                    case 'rating': return b.rating - a.rating;
-                    default: return 0;
-                }
-            });
         },
         resetFilters: (state) => {
             state.filters = initialFilters;
-            state.filteredItems = state.items;
-        },
-        setLoading: (state, action: PayloadAction<boolean>) => {
-            state.loading = action.payload;
-        },
-        setError: (state, action: PayloadAction<string | null>) => {
-            state.error = action.payload;
         },
         setSelectedProduct: (state, action: PayloadAction<Product | null>) => {
             state.selectedProduct = action.payload;
@@ -103,7 +98,37 @@ const productSlice = createSlice({
             state.relatedProducts = action.payload;
         },
     },
+    extraReducers: (builder) => {
+        builder
+            // Fetch Products
+            .addCase(fetchProducts.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchProducts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.items = action.payload;
+                state.filteredItems = action.payload;
+            })
+            .addCase(fetchProducts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+            // Fetch Product By ID
+            .addCase(fetchProductById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchProductById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedProduct = action.payload;
+            })
+            .addCase(fetchProductById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            });
+    },
 });
 
-export const { setProducts, setFilters, resetFilters, setLoading, setError, setSelectedProduct, setRelatedProducts } = productSlice.actions;
+export const { setFilters, resetFilters, setSelectedProduct, setRelatedProducts } = productSlice.actions;
 export default productSlice.reducer;

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
-import { setUser } from '../../store/slices/userSlice';
+import { loginUser, registerUser, clearError } from '../../store/slices/userSlice';
+import { AppDispatch, RootState } from '../../store';
 import GoogleAuthButton from './GoogleAuthButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -16,46 +17,43 @@ interface AuthModalsProps {
 
 export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initialMode = 'login' }) => {
     const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
+
+    React.useEffect(() => {
+        setMode(initialMode);
+    }, [initialMode, isOpen]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
-
-    const dispatch = useDispatch();
+    
+    const { error, loading: isLoading } = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
+
+    // Clear error when switcher or initial mount
+    React.useEffect(() => {
+        dispatch(clearError());
+    }, [mode, dispatch]);
+
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        setError('');
 
         try {
-            // Mock authentication logic
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            const isEmailAdmin = email.toLowerCase().includes('admin');
-            const mockUser = {
-                id: Math.random().toString(36).substr(2, 9),
-                name: mode === 'signup' ? name : (isEmailAdmin ? 'Admin User' : 'Standard User'),
-                email: email,
-                role: (isEmailAdmin ? 'ADMIN' : 'CUSTOMER') as 'ADMIN' | 'CUSTOMER',
-                joinDate: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-                status: 'Standard' as const,
-            };
-
-            dispatch(setUser(mockUser));
-            onClose();
-
-            if (mockUser.role === 'ADMIN') {
-                navigate('/admin');
+            if (mode === 'login') {
+                const actionResult = await dispatch(loginUser({ email, password }));
+                if (loginUser.fulfilled.match(actionResult)) {
+                    onClose();
+                    navigate(actionResult.payload?.role === 'ADMIN' ? '/admin' : '/account');
+                }
             } else {
-                navigate('/account');
+                const actionResult = await dispatch(registerUser({ name, email, password }));
+                if (registerUser.fulfilled.match(actionResult)) {
+                    onClose();
+                    navigate(actionResult.payload?.role === 'ADMIN' ? '/admin' : '/account');
+                }
             }
         } catch (err) {
-            setError('Authentication failed. Please try again.');
-        } finally {
-            setIsLoading(false);
+            // Errors are handled by the userSlice extraReducers
         }
     };
 
@@ -66,10 +64,11 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
             maxWidth="md"
             showCloseButton={false}
         >
-            <div className="space-y-8 py-4">
-                <div className="flex justify-between items-start">
+            <div className="relative w-full py-1">
+                {/* Header */}
+                <div className="flex justify-between items-start mb-6">
                     <div className="space-y-1">
-                        <h2 className="text-3xl font-light tracking-[0.15em] uppercase text-white">
+                        <h2 className="text-3xl font-light tracking-[0.15em] uppercase text-white leading-none">
                             {mode === 'login' ? 'Sign In' : 'Join'}
                         </h2>
                         <p className="text-[10px] text-[#00f2ff]/60 uppercase tracking-[0.3em] font-medium transition-all duration-500">
@@ -78,28 +77,32 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 transition-all duration-300 rounded-full hover:bg-white/5 text-white/20 hover:text-[#00f2ff]"
+                        className="p-2 -mr-2 transition-all duration-300 rounded-full hover:bg-white/5 text-white/20 hover:text-[#00f2ff]"
                     >
                         <X size={20} />
                     </button>
                 </div>
 
-                <div className="space-y-6">
-                    <form onSubmit={handleAuth} className="space-y-5">
+                {/* Form Area */}
+                <div className="space-y-5">
+                    <form onSubmit={handleAuth} className="space-y-4">
                         <AnimatePresence mode="wait">
                             {mode === 'signup' && (
                                 <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="overflow-hidden"
                                 >
-                                    <Input
-                                        label="Full Name"
-                                        type="text"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        className="bg-transparent border-white/5 focus:border-[#00f2ff]/50"
-                                    />
+                                    <div className="pb-1">
+                                        <Input
+                                            label="Full Name"
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            className="bg-transparent"
+                                        />
+                                    </div>
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -109,49 +112,58 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="bg-transparent border-white/5 focus:border-[#00f2ff]/50"
+                            className="bg-transparent"
                         />
                         <Input
                             label="Password"
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="bg-transparent border-white/5 focus:border-[#00f2ff]/50"
+                            className="bg-transparent"
                         />
 
-                        {error && <p className="text-[#00f2ff] text-[10px] uppercase tracking-widest text-center">{error}</p>}
+                        {/* Error Message */}
+                        {error && (
+                            <motion.p 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-[#00f2ff] text-[10px] uppercase tracking-widest text-center"
+                            >
+                                {error}
+                            </motion.p>
+                        )}
 
                         <motion.button
                             type="submit"
-                            whileHover={{ scale: 1.01, backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
+                            whileHover={{ scale: 1.01, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
                             whileTap={{ scale: 0.99 }}
                             disabled={isLoading}
-                            className="w-full h-11 flex items-center justify-center gap-3 rounded-full border border-white/5 bg-white/[0.02] transition-all duration-500 group"
+                            className="w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/[0.02] transition-all duration-500 group mt-4"
                         >
-                            <span className="text-[11px] font-medium text-white/40 tracking-[0.2em] uppercase group-hover:text-white/70 transition-colors">
+                            <span className="text-[11px] font-medium text-white/60 tracking-[0.2em] uppercase group-hover:text-white transition-colors">
                                 {isLoading ? 'Authenticating...' : (mode === 'login' ? 'Proceed' : 'Create')}
                             </span>
                         </motion.button>
                     </form>
 
-                    <div className="relative py-2">
+                    <div className="relative py-3">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-white/5"></div>
                         </div>
                         <div className="relative flex justify-center text-[9px] uppercase tracking-[0.4em] text-white/20">
-                            <span className="bg-transparent px-4">Secure Gateway</span>
+                            <span className="bg-[#0c0c0c] px-4">Secure Gateway</span>
                         </div>
                     </div>
 
-                    <div className="space-y-4">
-                        <GoogleAuthButton onClick={() => console.log('Google Auth')} />
+                    <div className="space-y-4 pb-2">
+                        <GoogleAuthButton onSuccess={onClose} />
 
-                        <div className="text-center pt-2">
+                        <div className="text-center">
                             <button
                                 onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-                                className="text-[10px] text-white/30 hover:text-[#00f2ff] transition-all duration-300 uppercase tracking-[0.2em] font-bold"
+                                className="text-[10px] text-white/30 hover:text-[#00f2ff] transition-all duration-300 uppercase tracking-[0.3em] font-bold"
                             >
-                                {mode === 'login' ? "Need an invitation? Sign Up" : "Have an identity? Sign In"}
+                                {mode === 'login' ? "Need an account? Sign Up" : "Already have an identity? Sign In"}
                             </button>
                         </div>
                     </div>

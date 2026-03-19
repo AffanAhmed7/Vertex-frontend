@@ -258,14 +258,20 @@ h3 {
 }
 
 .v-card h3 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--lp-primary);
 }
 
 .v-card p {
     color: var(--lp-text-dim);
     font-weight: 300;
     font-size: 1.125rem;
+    text-align: center;
 }
 
 /* Categories */
@@ -347,6 +353,7 @@ h3 {
 .trust-card-header {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1.25rem;
     margin-bottom: 1.5rem;
 }
@@ -359,12 +366,13 @@ h3 {
 }
 
 .trust-card h4 {
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 400;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     margin: 0;
-    color: #fff;
+    color: var(--lp-primary);
+    text-align: center;
 }
 
 .trust-card p {
@@ -373,6 +381,7 @@ h3 {
     line-height: 1.5;
     margin: 0;
     font-weight: 300;
+    text-align: center;
 }
 
 @media (max-width: 1200px) {

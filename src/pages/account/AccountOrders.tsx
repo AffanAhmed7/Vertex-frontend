@@ -1,34 +1,50 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Search, ChevronRight, Clock, CheckCircle2, Truck, XCircle } from 'lucide-react';
-import { RootState } from '../../store';
+import { Package, Search, ChevronRight, Clock, CheckCircle2, Truck, RefreshCcw } from 'lucide-react';
+import { RootState, AppDispatch } from '../../store';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
+import { fetchOrders } from '../../store/slices/userSlice';
 
 const AccountOrders: React.FC = () => {
-    const { orders } = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch<AppDispatch>();
+    const { orders, loading } = useSelector((state: RootState) => state.user);
+
+    useEffect(() => {
+        dispatch(fetchOrders());
+    }, [dispatch]);
 
     const getStatusIcon = (status: string) => {
         switch (status) {
-            case 'Processing': return Clock;
-            case 'Shipped': return Truck;
-            case 'Delivered': return CheckCircle2;
-            case 'Cancelled': return XCircle;
+            case 'CREATED': return Clock;
+            case 'PAID': return CheckCircle2;
+            case 'SHIPPED': return Truck;
+            case 'DELIVERED': return Package;
+            case 'REFUNDED': return RefreshCcw;
             default: return Package;
         }
     };
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'Processing': return 'text-secondary bg-secondary/10';
-            case 'Shipped': return 'text-blue-400 bg-blue-400/10';
-            case 'Delivered': return 'text-primary bg-primary/10';
-            case 'Cancelled': return 'text-destructive bg-destructive/10';
+            case 'CREATED': return 'text-secondary bg-secondary/10';
+            case 'PAID': return 'text-primary bg-primary/10';
+            case 'SHIPPED': return 'text-blue-400 bg-blue-400/10';
+            case 'DELIVERED': return 'text-green-400 bg-green-400/10';
+            case 'REFUNDED': return 'text-destructive bg-destructive/10';
             default: return 'text-muted-foreground bg-white/5';
         }
     };
+
+    if (loading && orders.length === 0) {
+        return (
+            <div className="flex items-center justify-center p-20">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-12">
@@ -66,13 +82,13 @@ const AccountOrders: React.FC = () => {
                                             {/* Order Identity */}
                                             <div className="min-w-[120px]">
                                                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Order ID</p>
-                                                <p className="text-sm font-mono font-black">{order.id}</p>
+                                                <p className="text-sm font-mono font-black">#{order.id.slice(-8).toUpperCase()}</p>
                                             </div>
 
                                             {/* Date */}
                                             <div className="min-w-[120px]">
                                                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Date</p>
-                                                <p className="text-sm font-medium">{new Date(order.date).toLocaleDateString()}</p>
+                                                <p className="text-sm font-medium">{new Date(order.createdAt).toLocaleDateString()}</p>
                                             </div>
 
                                             {/* Status Badge */}
@@ -87,14 +103,14 @@ const AccountOrders: React.FC = () => {
                                             {/* Total */}
                                             <div className="min-w-[100px]">
                                                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total</p>
-                                                <p className="text-sm font-black text-primary">${order.total.toLocaleString()}</p>
+                                                <p className="text-sm font-black text-primary">${Number(order.total).toFixed(2)}</p>
                                             </div>
 
                                             {/* Item Previews */}
                                             <div className="flex-grow flex -space-x-3 overflow-hidden">
                                                 {order.items.slice(0, 3).map((item, idx) => (
                                                     <div key={idx} className="w-10 h-10 rounded-full border-2 border-background overflow-hidden bg-muted">
-                                                        <img src={item.image} alt="" className="w-full h-full object-cover" />
+                                                        <img src={item.product?.image || 'https://via.placeholder.com/150'} alt="" className="w-full h-full object-cover" />
                                                     </div>
                                                 ))}
                                                 {order.items.length > 3 && (

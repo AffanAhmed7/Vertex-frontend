@@ -2,26 +2,20 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SlidersHorizontal, Search, RotateCcw } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { setProducts, setLoading, setFilters, resetFilters } from '../store/slices/productSlice';
+import { RootState, AppDispatch } from '../store';
+import { fetchProducts, setFilters, resetFilters } from '../store/slices/productSlice';
 import ProductCard from '../components/shop/ProductCard';
 import FilterPanel from '../components/shop/FilterPanel';
-import { allProducts } from '../data/products';
 import '../styles/shop-page.css';
 
 const ShopPage = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const { filteredItems, loading, filters } = useSelector((state: RootState) => state.products);
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
     useEffect(() => {
-        dispatch(setLoading(true));
-        const timer = setTimeout(() => {
-            dispatch(setProducts(allProducts));
-            dispatch(setLoading(false));
-        }, 800);
-        return () => clearTimeout(timer);
-    }, [dispatch]);
+        dispatch(fetchProducts(filters));
+    }, [dispatch, filters.category, filters.sortBy, filters.search, filters.minPrice, filters.maxPrice]);
 
     return (
         <div className="shop-container">
