@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserPlus, Shield, ShieldAlert, Trash2, Filter } from 'lucide-react';
 import { RootState } from '../../store';
-import { deleteUser, updateUserRole, updateUserStatus, addUser, updateUser, AdminUser } from '../../store/slices/adminSlice';
+import { deleteUser, updateUserRole, updateUserStatus, addUser, updateUser, setUsers, setLoading, AdminUser } from '../../store/slices/adminSlice';
+import { fetchAdminUsers, toggleAdminUserStatus, changeAdminUserRole } from '../../services/adminService';
 import AdminTable from '../../components/admin/AdminTable';
 import UserFormModal from '../../components/admin/UserFormModal';
 
@@ -16,6 +17,31 @@ const AdminUsers: React.FC = () => {
     const [filterRole, setFilterRole] = useState<AdminUser['role'] | 'All'>('All');
     const [filterStatus, setFilterStatus] = useState<AdminUser['status'] | 'All'>('All');
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+
+    // Fetch users on mount
+    useEffect(() => {
+        const load = async () => {
+            dispatch(setLoading(true));
+            try {
+                const data = await fetchAdminUsers();
+                // Map DB user shape to admin user shape
+                const mapped: AdminUser[] = data.map((u: any) => ({
+                    id: u.id,
+                    name: u.name || u.email.split('@')[0],
+                    email: u.email,
+                    role: u.role === 'ADMIN' ? 'Admin' : 'Customer',
+                    status: u.isActive ? 'Active' : 'Suspended',
+                    lastLogin: new Date(u.createdAt).toLocaleDateString(),
+                }));
+                dispatch(setUsers(mapped));
+            } catch (err) {
+                console.error('Failed to load users', err);
+            } finally {
+                dispatch(setLoading(false));
+            }
+        };
+        load();
+    }, [dispatch]);
 
     const filteredUsers = users.filter(u => {
         const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,9 +78,16 @@ const AdminUsers: React.FC = () => {
                     <Shield size={14} className={role === 'Admin' ? 'text-primary' : 'text-muted-foreground opacity-50'} />
                     <select
                         value={role}
-                        onChange={(e) => {
+                        onChange={async (e) => {
                             e.stopPropagation();
-                            dispatch(updateUserRole({ id: u.id, role: e.target.value as AdminUser['role'] }));
+                            const newRole = e.target.value as AdminUser['role'];
+                            try {
+                                const dbRole = newRole === 'Admin' ? 'ADMIN' : 'CUSTOMER';
+                                await changeAdminUserRole(u.id, dbRole);
+                                dispatch(updateUserRole({ id: u.id, role: newRole }));
+                            } catch (err) {
+                                console.error('Role change failed', err);
+                            }
                         }}
                         className="bg-transparent text-xs font-medium text-white/60 focus:outline-none cursor-pointer hover:text-white transition-colors outline-none"
                     >
@@ -273,11 +306,16 @@ const AdminUsers: React.FC = () => {
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={() => {
+                                    onClick={async () => {
                                         if (confirmAction.type === 'delete') {
                                             dispatch(deleteUser(confirmAction.user.id));
                                         } else {
-                                            dispatch(updateUserStatus({ id: confirmAction.user.id, status: 'Suspended' }));
+                                            try {
+                                                await toggleAdminUserStatus(confirmAction.user.id, false);
+                                                dispatch(updateUserStatus({ id: confirmAction.user.id, status: 'Suspended' }));
+                                            } catch (err) {
+                                                console.error('Status toggle failed', err);
+                                            }
                                         }
                                         setConfirmAction(null);
                                     }}

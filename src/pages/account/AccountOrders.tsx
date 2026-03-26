@@ -54,13 +54,14 @@ const AccountOrders: React.FC = () => {
                     <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">
                         Order <span className="text-primary">History</span>
                     </h1>
-                    <p className="text-muted-foreground">Monitor and track your infrastructure module deployments.</p>
+                    <p className="text-muted-foreground">Monitor and track your recent orders.</p>
                 </div>
                 <div className="w-full md:w-80">
-                    <div className="relative">
-                        <Input label="Search Orders" placeholder="VTX-..." className="pl-12 h-12 bg-card/40 border-white/5" />
-                        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                    </div>
+                    <Input 
+                        label="Search Orders" 
+                        placeholder="VTX-..." 
+                        icon={<Search size={18} />}
+                    />
                 </div>
             </header>
 
@@ -81,19 +82,19 @@ const AccountOrders: React.FC = () => {
                                         <div className="p-6 flex flex-wrap items-center gap-8">
                                             {/* Order Identity */}
                                             <div className="min-w-[120px]">
-                                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Order ID</p>
+                                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-60">Order ID</p>
                                                 <p className="text-sm font-mono font-black">#{order.id.slice(-8).toUpperCase()}</p>
                                             </div>
 
                                             {/* Date */}
                                             <div className="min-w-[120px]">
-                                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Date</p>
+                                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-60">Date</p>
                                                 <p className="text-sm font-medium">{new Date(order.createdAt).toLocaleDateString()}</p>
                                             </div>
 
                                             {/* Status Badge */}
                                             <div className="min-w-[120px]">
-                                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Status</p>
+                                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-60">Status</p>
                                                 <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tight ${getStatusColor(order.status)}`}>
                                                     <StatusIcon size={12} />
                                                     {order.status}
@@ -102,7 +103,7 @@ const AccountOrders: React.FC = () => {
 
                                             {/* Total */}
                                             <div className="min-w-[100px]">
-                                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total</p>
+                                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-60">Total</p>
                                                 <p className="text-sm font-black text-primary">${Number(order.total).toFixed(2)}</p>
                                             </div>
 
@@ -132,7 +133,7 @@ const AccountOrders: React.FC = () => {
                         })
                     ) : (
                         <Card className="p-20 text-center italic text-muted-foreground">
-                            No deployments found in your integration history.
+                            No orders found in your history.
                         </Card>
                     )}
                 </AnimatePresence>

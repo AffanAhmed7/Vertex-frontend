@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Trash2, Plus, Minus } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import { CartItem as CartItemType, removeFromCart, updateQuantity } from '../../store/slices/cartSlice';
+import { CartItem as CartItemType, syncRemoveFromCart, syncUpdateQuantity } from '../../store/slices/cartSlice';
+import { AppDispatch } from '../../store';
 import { Card } from '../ui/Card';
 
 interface CartItemProps {
@@ -10,14 +11,14 @@ interface CartItemProps {
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const handleRemove = () => {
-        dispatch(removeFromCart({ id: item.id, variants: item.selectedVariants }));
+        dispatch(syncRemoveFromCart({ id: item.id, variants: item.selectedVariants }));
     };
 
     const handleQuantityChange = (delta: number) => {
-        dispatch(updateQuantity({
+        dispatch(syncUpdateQuantity({
             id: item.id,
             variants: item.selectedVariants,
             quantity: item.quantity + delta

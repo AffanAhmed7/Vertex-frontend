@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Filter, Edit2, Trash2, ShieldAlert } from 'lucide-react';
 import { RootState } from '../../store';
-import { addProduct, updateProduct, deleteProduct, AdminProduct } from '../../store/slices/adminSlice';
+import { setProducts, setLoading, AdminProduct } from '../../store/slices/adminSlice';
+import { fetchAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminProduct, fetchCategories } from '../../services/adminService';
 import AdminTable from '../../components/admin/AdminTable';
 import ProductFormModal from '../../components/admin/ProductFormModal';
 
@@ -15,6 +16,24 @@ const AdminProducts: React.FC = () => {
     const [confirmDelete, setConfirmDelete] = useState<AdminProduct | null>(null);
     const [filterCategory, setFilterCategory] = useState<string | null>(null);
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+    const [categoryList, setCategoryList] = useState<{ id: string; name: string }[]>([]);
+
+    // Fetch products + categories on mount
+    useEffect(() => {
+        const load = async () => {
+            dispatch(setLoading(true));
+            try {
+                const [prods, cats] = await Promise.all([fetchAdminProducts(), fetchCategories()]);
+                dispatch(setProducts(prods));
+                if (Array.isArray(cats)) setCategoryList(cats);
+            } catch (err) {
+                console.error('Failed to load products', err);
+            } finally {
+                dispatch(setLoading(false));
+            }
+        };
+        load();
+    }, [dispatch]);
 
     const maxStock = Math.max(...products.map(p => p.stock), 1);
 
@@ -205,20 +224,35 @@ const AdminProducts: React.FC = () => {
                 initialData={selectedProduct}
                 categories={categories}
                 onClose={() => setIsModalOpen(false)}
-                onSubmit={(data) => {
-                    if (data.id) {
-                        dispatch(updateProduct({
-                            ...data,
-                            price: Number(data.price),
-                            stock: Number(data.stock),
-                        }));
-                    } else {
-                        dispatch(addProduct({
-                            id: Math.random().toString(36).substr(2, 9),
-                            ...data,
-                            price: Number(data.price),
-                            stock: Number(data.stock),
-                        }));
+                onSubmit={async (data) => {
+                    try {
+                        // Resolve categoryId from category name
+                        let categoryId = categoryList.find(c => c.name === data.category)?.id || '';
+                        if (data.id) {
+                            await updateAdminProduct(data.id, {
+                                name: data.name,
+                                price: Number(data.price),
+                                stock: Number(data.stock),
+                                sku: data.sku,
+                                description: data.description,
+                                ...(categoryId ? { categoryId } : {}),
+                            });
+                        } else {
+                            if (!categoryId && categoryList.length > 0) categoryId = categoryList[0].id;
+                            await createAdminProduct({
+                                name: data.name,
+                                price: Number(data.price),
+                                stock: Number(data.stock),
+                                sku: data.sku,
+                                description: data.description,
+                                categoryId,
+                            });
+                        }
+                        // Refresh products list
+                        const prods = await fetchAdminProducts();
+                        dispatch(setProducts(prods));
+                    } catch (err) {
+                        console.error('Product save failed', err);
                     }
                 }}
             />
@@ -258,8 +292,14 @@ const AdminProducts: React.FC = () => {
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={() => {
-                                        dispatch(deleteProduct(confirmDelete.id));
+                                    onClick={async () => {
+                                        try {
+                                            await deleteAdminProduct(confirmDelete.id);
+                                            const prods = await fetchAdminProducts();
+                                            dispatch(setProducts(prods));
+                                        } catch (err) {
+                                            console.error('Delete failed', err);
+                                        }
                                         setConfirmDelete(null);
                                     }}
                                     className="flex-1 px-4 py-3 bg-rose-500 text-white rounded-xl text-xs font-semibold hover:opacity-90 transition-all shadow-lg shadow-rose-500/20"

@@ -1,10 +1,23 @@
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Outlet, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../../store';
+import { fetchDbCart } from '../../store/slices/cartSlice';
 import Navigation from './Navigation';
 import Footer from './Footer';
+import ToastContainer from '../ui/ToastContainer';
 
 const AppLayout = () => {
     const location = useLocation();
+    const dispatch = useDispatch<AppDispatch>();
+    const { currentUser } = useSelector((state: RootState) => state.user);
+
+    useEffect(() => {
+        if (currentUser) {
+            dispatch(fetchDbCart());
+        }
+    }, [currentUser, dispatch]);
 
     return (
         <div className="min-h-screen flex flex-col bg-[#050505] selection:bg-[#00f2ff] selection:text-black">
@@ -39,6 +52,8 @@ const AppLayout = () => {
             {/* High-End Ambient Glows */}
             <div className="fixed top-[-20%] left-[-10%] w-[60%] h-[60%] bg-[#00f2ff]/5 rounded-full blur-[160px] pointer-events-none" />
             <div className="fixed bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-[#2dd4bf]/5 rounded-full blur-[160px] pointer-events-none" />
+            
+            <ToastContainer />
         </div>
     );
 };

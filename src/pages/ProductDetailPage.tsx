@@ -72,7 +72,10 @@ const ProductDetailPage = () => {
             </motion.div>
 
             {/* Below the fold */}
-            <ProductDetailsSections relatedProducts={relatedProducts} />
+            <ProductDetailsSections 
+                relatedProducts={relatedProducts} 
+                productId={selectedProduct.id}
+            />
 
             {/* Mobile Sticky CTA */}
             <div className="mobile-sticky-actions">

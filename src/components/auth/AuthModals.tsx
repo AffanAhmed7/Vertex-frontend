@@ -7,7 +7,7 @@ import { loginUser, registerUser, clearError } from '../../store/slices/userSlic
 import { AppDispatch, RootState } from '../../store';
 import GoogleAuthButton from './GoogleAuthButton';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, User, Mail, Lock } from 'lucide-react';
 
 interface AuthModalsProps {
     isOpen: boolean;
@@ -101,6 +101,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
                                             className="bg-transparent"
+                                            icon={<User size={18} />}
                                         />
                                     </div>
                                 </motion.div>
@@ -113,6 +114,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="bg-transparent"
+                            icon={<Mail size={18} />}
                         />
                         <Input
                             label="Password"
@@ -120,17 +122,20 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="bg-transparent"
+                            icon={<Lock size={18} />}
                         />
 
                         {/* Error Message */}
                         {error && (
-                            <motion.p 
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                className="text-[#00f2ff] text-[10px] uppercase tracking-widest text-center"
+                            <motion.div 
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="p-3 rounded-lg border border-red-500/20 bg-red-500/5"
                             >
-                                {error}
-                            </motion.p>
+                                <p className="text-red-400 text-xs font-medium uppercase tracking-wider text-center">
+                                    {error}
+                                </p>
+                            </motion.div>
                         )}
 
                         <motion.button

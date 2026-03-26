@@ -46,7 +46,7 @@ const AccountLayout: React.FC = () => {
                 </div>
                 <div className="min-w-0">
                     <h3 className="text-sm font-bold text-foreground truncate">{currentUser?.name}</h3>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{currentUser?.status} Member</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{currentUser?.role === 'ADMIN' ? 'Admin' : 'Active'} Member</p>
                 </div>
             </div>
 

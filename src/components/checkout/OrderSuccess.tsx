@@ -44,10 +44,10 @@ const OrderSuccess: React.FC = () => {
 
             <div className="space-y-4">
                 <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground uppercase italic underline decoration-primary decoration-4 underline-offset-8">
-                    Deployment <span className="text-primary italic">Confirmed</span>
+                    Order <span className="text-primary italic">Confirmed</span>
                 </h1>
                 <p className="text-muted-foreground max-w-md mx-auto">
-                    Your infrastructure modules are being provisioned. System integration will begin momentarily across our global edge network.
+                    Your order is being processed. You'll receive an email confirmation with your order details and tracking information shortly.
                 </p>
             </div>
 
@@ -58,7 +58,7 @@ const OrderSuccess: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-center text-sm">
                     <span className="text-muted-foreground uppercase tracking-widest text-[10px] font-bold">Status</span>
-                    <span className="px-2 py-0.5 rounded bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-tight">Provisioning</span>
+                    <span className="px-2 py-0.5 rounded bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-tight">Processing</span>
                 </div>
             </div>
 
@@ -74,7 +74,7 @@ const OrderSuccess: React.FC = () => {
             </div>
 
             <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] pt-8">
-                Vertex Corporate Infrastructure Group
+                Vertex Haute Commerce
             </p>
         </motion.div>
     );

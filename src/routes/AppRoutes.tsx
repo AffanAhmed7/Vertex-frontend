@@ -35,7 +35,7 @@ const AppRoutes = () => {
                     <Route path="shop" element={<ShopPage />} />
                     <Route path="product/:id" element={<ProductDetailPage />} />
                     <Route path="cart" element={<CartPage />} />
-                    <Route path="checkout" element={<CheckoutPage />} />
+                    <Route path="checkout" element={<ProtectedRoute requiredRole="CUSTOMER"><CheckoutPage /></ProtectedRoute>} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
                     <Route path="heritage" element={<HeritagePage />} />

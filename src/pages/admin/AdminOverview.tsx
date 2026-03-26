@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RootState } from '../../store';
+import { setProducts, setOrders, setStats, setRecentOrders, setRecentActivity, refreshAnalytics } from '../../store/slices/adminSlice';
+import { fetchAdminProducts, fetchAdminOrders } from '../../services/adminService';
 import StatCard from '../../components/admin/StatCard';
 import { ChartPlaceholder } from '../../components/admin/DashboardCharts';
 import { Filter, Download, MoreHorizontal, ArrowRight } from 'lucide-react';
 
 const AdminOverview: React.FC = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { stats, recentOrders, recentActivity, searchQuery } = useSelector((state: RootState) => state.admin);
     const [isLoading, setIsLoading] = useState(true);
     const [isExporting, setIsExporting] = useState(false);
@@ -16,10 +19,68 @@ const AdminOverview: React.FC = () => {
     const [timeFrame, setTimeFrame] = useState<'All Time' | 'Month' | 'Week' | 'Day'>('Month');
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
 
+    const getTimeAgo = (dateStr: string) => {
+        const diff = Date.now() - new Date(dateStr).getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 60) return `${mins}m`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `${hours}h`;
+        return `${Math.floor(hours / 24)}d`;
+    };
+
+    // Fetch real data on mount
     useEffect(() => {
-        const timer = setTimeout(() => setIsLoading(false), 800);
-        return () => clearTimeout(timer);
-    }, []);
+        const load = async () => {
+            try {
+                const [prods, ords] = await Promise.all([
+                    fetchAdminProducts(),
+                    fetchAdminOrders(),
+                ]);
+                dispatch(setProducts(prods));
+                dispatch(setOrders(ords));
+
+                // Compute stats from real data
+                const totalRevenue = ords.reduce((acc: number, o: any) => acc + (o.total || 0), 0);
+                const activeOrders = ords.filter((o: any) => o.status !== 'Delivered' && o.status !== 'Cancelled').length;
+                const uniqueCustomers = new Set(ords.map((o: any) => o.customerEmail)).size;
+                const conversionRate = ords.length > 0 ? ((ords.filter((o: any) => o.status === 'Delivered').length / ords.length) * 100).toFixed(1) : '0.0';
+
+                dispatch(setStats([
+                    { label: 'Total Revenue', value: `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, trend: 0, icon: 'DollarSign', key: 'revenue' },
+                    { label: 'Active Orders', value: activeOrders.toLocaleString(), trend: 0, icon: 'ShoppingBag', key: 'orders' },
+                    { label: 'Platform Reach', value: uniqueCustomers.toLocaleString(), trend: 0, icon: 'Users', key: 'reach' },
+                    { label: 'Conversion', value: `${conversionRate}%`, trend: 0, icon: 'Target', key: 'conversion' },
+                ]));
+
+                // Compute recent orders for the dashboard widget
+                const recent = ords.slice(0, 5).map((o: any) => ({
+                    id: o.id.substring(0, 8),
+                    customer: o.customerName,
+                    product: o.items?.[0]?.name || 'Multiple Items',
+                    amount: o.total,
+                    status: o.paymentStatus || o.status,
+                }));
+                dispatch(setRecentOrders(recent));
+
+                // Compute recent activity from orders
+                const activity = ords.slice(0, 3).map((o: any, i: number) => ({
+                    id: String(i + 1),
+                    type: 'order' as const,
+                    time: getTimeAgo(o.date),
+                    message: `Order ${o.id.substring(0, 8)} — ${o.status} — $${o.total}`,
+                }));
+                dispatch(setRecentActivity(activity));
+
+                // Trigger analytics refresh with real data
+                dispatch(refreshAnalytics());
+            } catch (err) {
+                console.error('Failed to load overview data', err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        load();
+    }, [dispatch]);
 
     const filteredOrders = React.useMemo(() => {
         let result = recentOrders as any[];

@@ -9,10 +9,11 @@ interface ProductInfoProps {
 
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addToCart } from '../../store/slices/cartSlice';
+import { syncAddToCart } from '../../store/slices/cartSlice';
+import { AppDispatch } from '../../store';
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(() => {
         const defaults: Record<string, string> = {};
@@ -26,19 +27,21 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         setSelectedVariants(prev => ({ ...prev, [type]: value }));
     };
 
-    const handleAddToCart = () => {
-        dispatch(addToCart({
+    const handleAddToCart = async () => {
+        await dispatch(syncAddToCart({
             ...product,
             quantity: 1,
             selectedVariants
-        }));
-        // Optional: Navigate to cart or show a subtle feedback
-        // navigate('/cart');
+        })).unwrap();
     };
 
-    const handleBuyNow = () => {
-        handleAddToCart();
-        navigate('/cart');
+    const handleBuyNow = async () => {
+        try {
+            await handleAddToCart();
+            navigate('/checkout');
+        } catch (error) {
+            // Error toast is already handled in the thunk
+        }
     };
 
     return (

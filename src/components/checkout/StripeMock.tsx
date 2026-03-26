@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CreditCard, Lock, Calendar, ShieldCheck } from 'lucide-react';
 import { Input } from '../ui/Input';
 
 const StripeMock: React.FC = () => {
-    const [focused, setFocused] = useState<string | null>(null);
-
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -24,41 +22,26 @@ const StripeMock: React.FC = () => {
 
             <div className="bg-black/20 border border-white/5 rounded-2xl p-6 space-y-4">
                 {/* Card Number */}
-                <div className="relative">
-                    <Input
-                        label="Card Number"
-                        placeholder="0000 0000 0000 0000"
-                        onFocus={() => setFocused('card')}
-                        onBlur={() => setFocused(null)}
-                        className="pl-12 h-12 bg-white/5"
-                    />
-                    <CreditCard size={20} className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${focused === 'card' ? 'text-primary' : 'text-muted-foreground'}`} />
-                </div>
+                <Input
+                    label="Card Number"
+                    placeholder="0000 0000 0000 0000"
+                    icon={<CreditCard size={18} />}
+                />
 
                 <div className="grid grid-cols-2 gap-4">
                     {/* Expiry */}
-                    <div className="relative">
-                        <Input
-                            label="Expiry Date"
-                            placeholder="MM/YY"
-                            onFocus={() => setFocused('expiry')}
-                            onBlur={() => setFocused(null)}
-                            className="pl-12 h-12 bg-white/5"
-                        />
-                        <Calendar size={20} className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${focused === 'expiry' ? 'text-primary' : 'text-muted-foreground'}`} />
-                    </div>
+                    <Input
+                        label="Expiry Date"
+                        placeholder="MM/YY"
+                        icon={<Calendar size={18} />}
+                    />
 
                     {/* CVC */}
-                    <div className="relative">
-                        <Input
-                            label="CVC"
-                            placeholder="123"
-                            onFocus={() => setFocused('cvc')}
-                            onBlur={() => setFocused(null)}
-                            className="pl-12 h-12 bg-white/5"
-                        />
-                        <Lock size={20} className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${focused === 'cvc' ? 'text-primary' : 'text-muted-foreground'}`} />
-                    </div>
+                    <Input
+                        label="CVC"
+                        placeholder="123"
+                        icon={<Lock size={18} />}
+                    />
                 </div>
             </div>
 

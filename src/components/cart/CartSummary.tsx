@@ -5,11 +5,15 @@ import { RootState } from '../../store';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Truck } from 'lucide-react';
+import { ShieldCheck, Truck, Ticket } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { openAuthModal } from '../../store';
 
 const CartSummary: React.FC = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { items, shipping, taxRate } = useSelector((state: RootState) => state.cart);
+    const { currentUser } = useSelector((state: RootState) => state.user);
     const [discountCode, setDiscountCode] = useState('');
     const [isApplying, setIsApplying] = useState(false);
 
@@ -28,32 +32,32 @@ const CartSummary: React.FC = () => {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl pointer-events-none" />
 
                 <div className="space-y-1 relative z-10">
-                    <h2 className="text-[10px] font-black tracking-[0.4em] text-white/40 uppercase">Integration Summary</h2>
+                    <h2 className="text-[10px] font-black tracking-[0.4em] text-white/40 uppercase">Order Summary</h2>
                     <div className="h-px w-full bg-gradient-to-r from-white/10 to-transparent" />
                 </div>
 
                 <div className="space-y-5 relative z-10">
                     <div className="flex justify-between items-center text-sm">
-                        <span className="text-muted-foreground font-medium">Core Allocation</span>
+                        <span className="text-muted-foreground font-medium">Subtotal</span>
                         <span className="text-white font-semibold">${subtotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                         <div className="flex items-center gap-2">
-                            <span className="text-muted-foreground font-medium">Logistics Nodes</span>
-                            <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-[8px] font-black uppercase text-emerald-400 border border-emerald-500/20">Active</span>
+                            <span className="text-muted-foreground font-medium">Shipping</span>
+                            <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-[8px] font-black uppercase text-emerald-400 border border-emerald-500/20">Free</span>
                         </div>
-                        <span className="text-white font-semibold">${shipping.toLocaleString()}</span>
+                        <span className="text-white font-semibold">${shipping === 0 ? '0' : shipping.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm text-white/40">
-                        <span className="font-medium">System Tax (VAT)</span>
+                        <span className="font-medium">Estimated Tax</span>
                         <span className="font-semibold">${tax.toLocaleString()}</span>
                     </div>
 
                     <div className="pt-6 border-t border-white/10">
                         <div className="flex justify-between items-end">
                             <div className="space-y-1">
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Final Integration Cost</span>
-                                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-50">All nodes confirmed</p>
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Total Amount</span>
+                                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-50">Includes tax & shipping</p>
                             </div>
                             <div className="text-right">
                                 <motion.p
@@ -77,6 +81,7 @@ const CartSummary: React.FC = () => {
                             value={discountCode}
                             onChange={(e) => setDiscountCode(e.target.value)}
                             className="bg-white/[0.02] border-white/5 h-11 text-xs tracking-widest uppercase font-bold"
+                            icon={<Ticket size={18} />}
                         />
                         <Button
                             variant="outline"
@@ -91,10 +96,10 @@ const CartSummary: React.FC = () => {
 
                     <Button
                         className="w-full h-14 rounded-xl text-xs font-bold uppercase tracking-[0.2em] group relative overflow-hidden bg-gradient-to-r from-[#00f2ff] to-[#00d8e6] text-black hover:shadow-[0_0_30px_#00f2ff40] transition-all duration-500"
-                        onClick={() => navigate('/checkout')}
+                        onClick={() => currentUser ? navigate('/checkout') : dispatch(openAuthModal('login'))}
                     >
                         <span className="relative z-10 flex items-center justify-center gap-3">
-                            Confirm Integration
+                            {currentUser ? 'Proceed to Checkout' : 'Login to Checkout'}
                             <motion.span
                                 animate={{ x: [0, 5, 0] }}
                                 transition={{ repeat: Infinity, duration: 1.5 }}
@@ -113,8 +118,8 @@ const CartSummary: React.FC = () => {
                         <ShieldCheck size={18} className="text-primary opacity-50" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Security Protocol</p>
-                        <p className="text-[11px] text-white/60 leading-relaxed font-medium">Enterprise-grade quantum-safe encryption active for all transaction handshakes.</p>
+                        <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Secure Checkout</p>
+                        <p className="text-[11px] text-white/60 leading-relaxed font-medium">Your transaction is protected with industry-standard encryption.</p>
                     </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.01] border border-white/5 group hover:border-secondary/20 transition-colors">
@@ -122,8 +127,8 @@ const CartSummary: React.FC = () => {
                         <Truck size={18} className="text-secondary opacity-50" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Global Allocation</p>
-                        <p className="text-[11px] text-white/60 leading-relaxed font-medium">Real-time logistic nodes confirmed across all primary decentralized data centers.</p>
+                        <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Premium Delivery</p>
+                        <p className="text-[11px] text-white/60 leading-relaxed font-medium">Free express shipping on all orders over $500.</p>
                     </div>
                 </div>
             </div>

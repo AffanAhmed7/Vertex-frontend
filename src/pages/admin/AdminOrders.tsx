@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Eye, Filter } from 'lucide-react';
 import { RootState } from '../../store';
-import { updateOrderStatus, updateOrder, AdminOrder } from '../../store/slices/adminSlice';
+import { setOrders, setLoading, updateOrderStatus, updateOrder, AdminOrder } from '../../store/slices/adminSlice';
+import { fetchAdminOrders, updateAdminOrderStatus } from '../../services/adminService';
 import AdminTable from '../../components/admin/AdminTable';
 import OrderDetailPanel from '../../components/admin/OrderDetailPanel';
 
@@ -14,6 +15,22 @@ const AdminOrders: React.FC = () => {
     const [isExporting, setIsExporting] = useState(false);
     const [filterStatus, setFilterStatus] = useState<AdminOrder['status'] | 'All'>('All');
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+
+    // Fetch orders on mount
+    useEffect(() => {
+        const load = async () => {
+            dispatch(setLoading(true));
+            try {
+                const data = await fetchAdminOrders();
+                dispatch(setOrders(data));
+            } catch (err) {
+                console.error('Failed to load orders', err);
+            } finally {
+                dispatch(setLoading(false));
+            }
+        };
+        load();
+    }, [dispatch]);
 
     const filteredOrders = orders.filter(o => {
         const matchesSearch = o.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -195,7 +212,14 @@ const AdminOrders: React.FC = () => {
                 order={orders.find(o => o.id === selectedOrder?.id) || null}
                 isOpen={!!selectedOrder}
                 onClose={() => setSelectedOrder(null)}
-                onUpdateStatus={(id: string, status: AdminOrder['status']) => dispatch(updateOrderStatus({ id, status }))}
+                onUpdateStatus={async (id: string, status: AdminOrder['status']) => {
+                    try {
+                        await updateAdminOrderStatus(id, status);
+                        dispatch(updateOrderStatus({ id, status }));
+                    } catch (err) {
+                        console.error('Status update failed', err);
+                    }
+                }}
                 onUpdateOrder={(order: AdminOrder) => dispatch(updateOrder(order))}
             />
         </div>

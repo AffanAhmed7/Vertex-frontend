@@ -52,13 +52,13 @@ const CartPage: React.FC = () => {
                     <div className="space-y-3">
                         <div className="flex items-center gap-2.5 text-primary">
                             <ShoppingCart size={16} className="text-[#00f2ff]" />
-                            <span className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-70">Deployment Queue</span>
+                            <span className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-70">Your Cart</span>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-light tracking-[0.1em] text-white uppercase leading-none">
-                            Your <span className="text-primary font-medium">Selection</span>
+                            Review <span className="text-primary font-medium">Items</span>
                         </h1>
                         <p className="text-sm text-muted-foreground max-w-md font-medium opacity-80">
-                            Review and manage your selected commerce infrastructure modules before finalizing system integration.
+                            Check your items and proceed to checkout when you're ready.
                         </p>
                     </div>
 
@@ -67,7 +67,7 @@ const CartPage: React.FC = () => {
                         className="group flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-all duration-300"
                     >
                         <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                        Explore Modules
+                        Continue Shopping
                     </Link>
                 </div>
 
@@ -87,12 +87,12 @@ const CartPage: React.FC = () => {
                                     <ShoppingBag size={48} className="text-primary/40" />
                                 </div>
                             </div>
-                            <h2 className="text-2xl font-light tracking-widest text-white uppercase">Queue Empty</h2>
+                            <h2 className="text-2xl font-light tracking-widest text-white uppercase">Your Cart is Empty</h2>
                             <p className="text-sm text-muted-foreground max-w-xs mb-8 font-medium">
-                                No infrastructure modules have been added to your current deployment queue.
+                                Looks like you haven't added anything to your cart yet.
                             </p>
                             <Button size="lg" onClick={() => navigate('/shop')}>
-                                Explore Modules
+                                Browse Products
                             </Button>
                         </motion.div>
                     ) : (

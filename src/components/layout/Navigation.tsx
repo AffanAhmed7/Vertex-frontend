@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Moon, Sun, Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleTheme, RootState } from '../../store';
+import { toggleTheme, RootState, openAuthModal, closeAuthModal } from '../../store';
 import { Button } from '../ui/Button';
 import { AuthModals } from '../auth/AuthModals';
 
@@ -13,9 +13,11 @@ const Navigation = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const theme = useSelector((state: RootState) => state.ui.theme);
+    const { isAuthModalOpen, authMode } = useSelector((state: RootState) => state.ui);
     const { currentUser } = useSelector((state: RootState) => state.user);
-    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-    const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+    const { items } = useSelector((state: RootState) => state.cart);
+    
+    const cartItemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -83,9 +85,11 @@ const Navigation = () => {
 
                         <Link to="/cart" className="relative p-2 text-white/50 hover:text-[#00f2ff] transition-all duration-300">
                             <ShoppingCart size={18} />
-                            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#00f2ff] text-black text-[9px] flex items-center justify-center rounded-full font-black">
-                                0
-                            </span>
+                            {cartItemsCount > 0 && (
+                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#00f2ff] text-black text-[9px] flex items-center justify-center rounded-full font-black">
+                                    {cartItemsCount}
+                                </span>
+                            )}
                         </Link>
 
                         <div className="hidden md:flex items-center gap-3">
@@ -101,20 +105,14 @@ const Navigation = () => {
                                         variant="ghost"
                                         size="sm"
                                         className="px-5 text-white/70 hover:text-white hover:bg-white/5 font-semibold tracking-wider text-[12px] uppercase text-nowrap"
-                                        onClick={() => {
-                                            setAuthMode('login');
-                                            setIsAuthModalOpen(true);
-                                        }}
+                                        onClick={() => dispatch(openAuthModal('login'))}
                                     >
                                         Login
                                     </Button>
                                     <Button
                                         size="sm"
                                         className="px-6 bg-[#00f2ff] text-black hover:bg-white transition-all duration-500 font-bold tracking-wider text-[12px] uppercase rounded-full text-nowrap"
-                                        onClick={() => {
-                                            setAuthMode('signup');
-                                            setIsAuthModalOpen(true);
-                                        }}
+                                        onClick={() => dispatch(openAuthModal('signup'))}
                                     >
                                         Join Now
                                     </Button>
@@ -160,21 +158,13 @@ const Navigation = () => {
                                 <Button
                                     variant="ghost"
                                     className="text-white border border-white/10 uppercase tracking-widest py-6"
-                                    onClick={() => {
-                                        setAuthMode('login');
-                                        setIsAuthModalOpen(true);
-                                        setIsMobileMenuOpen(false);
-                                    }}
+                                    onClick={() => dispatch(openAuthModal('login'))}
                                 >
                                     Login
                                 </Button>
                                 <Button
                                     className="bg-[#00f2ff] text-black font-bold uppercase tracking-widest py-6"
-                                    onClick={() => {
-                                        setAuthMode('signup');
-                                        setIsAuthModalOpen(true);
-                                        setIsMobileMenuOpen(false);
-                                    }}
+                                    onClick={() => dispatch(openAuthModal('signup'))}
                                 >
                                     Register
                                 </Button>
@@ -186,7 +176,7 @@ const Navigation = () => {
 
             <AuthModals
                 isOpen={isAuthModalOpen}
-                onClose={() => setIsAuthModalOpen(false)}
+                onClose={() => dispatch(closeAuthModal())}
                 initialMode={authMode}
             />
         </nav>

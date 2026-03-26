@@ -10,10 +10,11 @@ function cn(...inputs: ClassValue[]) {
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
     error?: string;
+    icon?: React.ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ label, error, className, onFocus, onBlur, ...props }, ref) => {
+    ({ label, error, icon, className, onFocus, onBlur, ...props }, ref) => {
         const [isFocused, setIsFocused] = useState(false);
         const [hasValue, setHasValue] = useState(false);
 
@@ -31,12 +32,24 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         const isActive = isFocused || hasValue || !!props.value;
 
         return (
-            <div className="relative w-full">
+            <div className="relative w-full group">
                 <div className="relative">
+                    {/* Icon container */}
+                    {icon && (
+                        <div className={cn(
+                            "absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 z-10",
+                            isFocused ? "text-[#00f2ff]" : "text-white/30",
+                            isActive && "top-[calc(50%+6px)]" // Shift icon slightly down when label floats up
+                        )}>
+                            {icon}
+                        </div>
+                    )}
+
                     {/* Floating label */}
                     <label
                         className={cn(
-                            "absolute left-4 pointer-events-none transition-all duration-300 ease-out font-medium uppercase",
+                            "absolute pointer-events-none transition-all duration-300 ease-out font-medium uppercase z-20",
+                            icon ? "left-12" : "left-4",
                             isActive
                                 ? "top-2 text-[9px] tracking-[0.25em] pb-1"
                                 : "top-1/2 -translate-y-1/2 text-sm tracking-[0.05em] opacity-40",
@@ -51,7 +64,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         className={cn(
-                            'w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 pt-7 pb-3 transition-all duration-300 focus:outline-none text-white text-sm placeholder:opacity-0',
+                            'w-full bg-white/[0.03] border border-white/10 rounded-lg pb-3 transition-all duration-300 focus:outline-none text-white text-sm placeholder:opacity-0',
+                            icon ? 'pl-12' : 'px-4',
+                            'pt-7',
                             isFocused && 'border-[#00f2ff]/30 bg-white/[0.05]',
                             !isFocused && isActive && 'border-white/15',
                             error && 'border-red-500/50 focus:border-red-500',

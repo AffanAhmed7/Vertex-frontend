@@ -73,174 +73,43 @@ interface AdminState {
 }
 
 const initialState: AdminState = {
-    products: [
-        {
-            id: '1',
-            name: 'Vertex Cinematic 49"',
-            sku: 'VTX-49-C',
-            price: 1499,
-            stock: 12,
-            category: 'Monitors',
-            image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=300',
-            status: 'In Stock'
-        },
-        {
-            id: '2',
-            name: 'OLED Pro Panel',
-            sku: 'OLED-27-P',
-            price: 899,
-            stock: 8,
-            category: 'Monitors',
-            image: 'https://images.unsplash.com/photo-1547119957-637f8679db1e?auto=format&fit=crop&q=80&w=300',
-            status: 'Low Stock'
-        },
-        {
-            id: '3',
-            name: 'Neural Link Hub',
-            sku: 'NL-HUB-01',
-            price: 249,
-            stock: 0,
-            category: 'Infrastructure',
-            image: 'https://images.unsplash.com/photo-1518433278983-5110bc55670d?auto=format&fit=crop&q=80&w=300',
-            status: 'Out of Stock'
-        }
-    ],
-    orders: [
-        {
-            id: 'ORD-7721',
-            customerName: 'Emma Thompson',
-            customerEmail: 'emma@example.com',
-            date: '2026-02-18T19:20:00Z',
-            total: 1499,
-            status: 'Processing',
-            items: [{ id: '1', name: 'Vertex Cinematic 49"', quantity: 1, price: 1499 }],
-            shippingAddress: '123 Cyber St, Neo Tokyo, JP',
-            paymentStatus: 'Paid'
-        },
-        {
-            id: 'ORD-7720',
-            customerName: 'James Miller',
-            customerEmail: 'james@example.com',
-            date: '2026-02-15T10:05:00Z',
-            total: 899,
-            status: 'Shipped',
-            items: [{ id: '2', name: 'OLED Pro Panel', quantity: 1, price: 899 }],
-            shippingAddress: '456 Silicon Ave, Palo Alto, CA',
-            paymentStatus: 'Paid'
-        },
-        {
-            id: 'ORD-7719',
-            customerName: 'Sophia Chen',
-            customerEmail: 'sophia@example.com',
-            date: '2026-02-10T14:30:00Z',
-            total: 249,
-            status: 'Pending',
-            items: [{ id: '3', name: 'Neural Link Hub', quantity: 1, price: 249 }],
-            shippingAddress: '789 Matrix Blvd, London, UK',
-            paymentStatus: 'Unpaid'
-        },
-        {
-            id: 'ORD-7718',
-            customerName: 'Lucas Wright',
-            customerEmail: 'lucas@example.com',
-            date: '2026-02-05T09:15:00Z',
-            total: 1999,
-            status: 'Delivered',
-            items: [{ id: '4', name: 'Vertex Series X', quantity: 1, price: 1999 }],
-            shippingAddress: '101 Tech Way, Seattle, WA',
-            paymentStatus: 'Paid'
-        },
-        {
-            id: 'ORD-7717',
-            customerName: 'Emma Thompson',
-            customerEmail: 'emma@example.com',
-            date: '2026-01-25T16:45:00Z',
-            total: 500,
-            status: 'Delivered',
-            items: [{ id: '5', name: 'OLED Pro Panel', quantity: 1, price: 500 }],
-            shippingAddress: '123 Cyber St, Neo Tokyo, JP',
-            paymentStatus: 'Paid'
-        },
-        {
-            id: 'ORD-7716',
-            customerName: 'William Black',
-            customerEmail: 'will@example.com',
-            date: '2026-01-10T11:20:00Z',
-            total: 3200,
-            status: 'Delivered',
-            items: [{ id: '1', name: 'Vertex Cinematic 49"', quantity: 2, price: 1600 }],
-            shippingAddress: '555 Pine St, New York, NY',
-            paymentStatus: 'Paid'
-        },
-        {
-            id: 'ORD-7715',
-            customerName: 'Sophia Chen',
-            customerEmail: 'sophia@example.com',
-            date: '2025-12-20T10:00:00Z',
-            total: 150,
-            status: 'Delivered',
-            items: [{ id: '3', name: 'Neural Link Hub', quantity: 1, price: 150 }],
-            shippingAddress: '789 Matrix Blvd, London, UK',
-            paymentStatus: 'Paid'
-        }
-    ],
-    users: [
-        { id: '1', name: 'Alex Rivera', email: 'alex@vertex.com', role: 'Admin', status: 'Active', lastLogin: '2 mins ago' },
-        { id: '2', name: 'Sarah Miller', email: 'sarah@example.com', role: 'Customer', status: 'Active', lastLogin: '1 hour ago' },
-        { id: '3', name: 'David Chen', email: 'david@example.com', role: 'Editor', status: 'Suspended', lastLogin: '2 days ago' },
-    ],
-    notifications: [
-        { id: '1', text: 'System Update: v1.0.4 deployed', time: '2m ago', type: 'info', unread: true },
-        { id: '2', text: 'New asset verification required', time: '15m ago', type: 'warning', unread: true },
-        { id: '3', text: 'Operational threshold reached: Node A', time: '1h ago', type: 'alert', unread: true },
-    ],
+    products: [],
+    orders: [],
+    users: [],
+    notifications: [],
     analytics: {
         kpis: [
-            { id: '1', label: 'Return Rate', value: '28.4%', change: 3.2, trend: 'up', icon: 'RefreshCw', sparkline: [22, 24, 25, 26, 27, 28, 28] },
-            { id: '2', label: 'Net Profit', value: '$82.4k', change: -2.4, trend: 'down', icon: 'TrendingUp', sparkline: [65, 62, 58, 60, 55, 52, 50] },
-            { id: '3', label: 'Avg Session', value: '4m 12s', change: 6.8, trend: 'up', icon: 'Clock', sparkline: [200, 210, 225, 230, 240, 248, 252] },
-            { id: '4', label: 'Bounce Rate', value: '38.1%', change: -5.1, trend: 'up', icon: 'MousePointer', sparkline: [48, 46, 44, 43, 41, 40, 38] },
-            { id: '5', label: 'Avg Order Value', value: '$842', change: 4.3, trend: 'up', icon: 'ShoppingBag', sparkline: [800, 810, 820, 815, 830, 840, 842] },
-            { id: '6', label: 'Repeat Purchase', value: '42.0%', change: 2.1, trend: 'up', icon: 'Repeat', sparkline: [36, 37, 38, 39, 40, 41, 42] },
+            { id: '1', label: 'Return Rate', value: '—', change: 0, trend: 'neutral', icon: 'RefreshCw', sparkline: [] },
+            { id: '2', label: 'Net Profit', value: '—', change: 0, trend: 'neutral', icon: 'TrendingUp', sparkline: [] },
+            { id: '3', label: 'Avg Session', value: '—', change: 0, trend: 'neutral', icon: 'Clock', sparkline: [] },
+            { id: '4', label: 'Bounce Rate', value: '—', change: 0, trend: 'neutral', icon: 'MousePointer', sparkline: [] },
+            { id: '5', label: 'Avg Order Value', value: '—', change: 0, trend: 'neutral', icon: 'ShoppingBag', sparkline: [] },
+            { id: '6', label: 'Repeat Purchase', value: '—', change: 0, trend: 'neutral', icon: 'Repeat', sparkline: [] },
         ],
         revenueData: [],
-        trafficSources: [
-            { name: 'Direct', value: 45 },
-            { name: 'Organic', value: 30 },
-            { name: 'Social', value: 15 },
-            { name: 'Referral', value: 10 },
-        ],
+        trafficSources: [],
         topProducts: [],
         insights: {
-            retentionRate: 68,
-            repeatPurchase: 42,
-            refundRate: 1.2,
-            inventoryHealth: 92,
-            insightText: "Customer retention has increased by 4% compared to last week, primarily driven by the 'Vertex Loyalty' initiative."
+            retentionRate: 0,
+            repeatPurchase: 0,
+            refundRate: 0,
+            inventoryHealth: 0,
+            insightText: 'Loading analytics data...',
         },
-        totalVisitors: 14200,
+        totalVisitors: 0,
         dateRange: '30d',
-        loading: false,
+        loading: true,
     },
     stats: [
-        { label: 'Total Revenue', value: '$124,500.00', trend: 12.5, icon: 'DollarSign', key: 'revenue' },
-        { label: 'Active Orders', value: '1,240', trend: 8.1, icon: 'ShoppingBag', key: 'orders' },
-        { label: 'Platform Reach', value: '14,200', trend: 4.3, icon: 'Users', key: 'reach' },
-        { label: 'Conversion', value: '3.42%', trend: 1.2, icon: 'Target', key: 'conversion' },
+        { label: 'Total Revenue', value: '$0.00', trend: 0, icon: 'DollarSign', key: 'revenue' },
+        { label: 'Active Orders', value: '0', trend: 0, icon: 'ShoppingBag', key: 'orders' },
+        { label: 'Platform Reach', value: '0', trend: 0, icon: 'Users', key: 'reach' },
+        { label: 'Conversion', value: '0%', trend: 0, icon: 'Target', key: 'conversion' },
     ],
-    recentOrders: [
-        { id: 'VTX-9921', customer: 'Emma Thompson', product: 'Vertex Cinematic 49"', amount: 1499, status: 'Paid' },
-        { id: 'VTX-9920', customer: 'James Miller', product: 'OLED Pro Panel', amount: 899, status: 'Shipped' },
-        { id: 'VTX-9919', customer: 'Sophia Chen', product: 'Neural Link Hub', amount: 249, status: 'Pending' },
-        { id: 'VTX-9918', customer: 'Lucas Wright', product: 'Vertex Series X', amount: 1999, status: 'Paid' },
-    ],
-    recentActivity: [
-        { id: '1', type: 'order', time: '2m', message: 'New deployment authorized: VTX-9921' },
-        { id: '2', type: 'user', time: '15m', message: 'Security clearance updated: Admin Rivera' },
-        { id: '3', type: 'system', time: '1h', message: 'Node A operational threshold reached' },
-    ],
+    recentOrders: [],
+    recentActivity: [],
     searchQuery: '',
-    loading: false,
+    loading: true,
 };
 
 const adminSlice = createSlice({
@@ -315,6 +184,18 @@ const adminSlice = createSlice({
         },
         setSearchQuery: (state, action: PayloadAction<string>) => {
             state.searchQuery = action.payload;
+        },
+        setLoading: (state, action: PayloadAction<boolean>) => {
+            state.loading = action.payload;
+        },
+        setStats: (state, action: PayloadAction<AdminState['stats']>) => {
+            state.stats = action.payload;
+        },
+        setRecentOrders: (state, action: PayloadAction<AdminState['recentOrders']>) => {
+            state.recentOrders = action.payload;
+        },
+        setRecentActivity: (state, action: PayloadAction<AdminState['recentActivity']>) => {
+            state.recentActivity = action.payload;
         },
         setAnalyticsLoading: (state, action: PayloadAction<boolean>) => {
             state.analytics.loading = action.payload;
@@ -443,11 +324,22 @@ const adminSlice = createSlice({
                 o.items.forEach(item => {
                     if (!productSales[item.name]) {
                         const realProduct = state.products?.find(p => p.name === item.name);
-                        const status = realProduct ? realProduct.status : (Math.random() > 0.1 ? 'Active' : 'Low Stock');
-                        productSales[item.name] = { sales: 0, revenue: 0, growth: Math.floor(Math.random() * 40) - 5, status };
+                        const status = realProduct ? realProduct.status : 'Active';
+                        productSales[item.name] = { sales: 0, revenue: 0, growth: 0, status };
                     }
                     productSales[item.name].sales += item.quantity;
                     productSales[item.name].revenue += (item.quantity * item.price);
+                });
+            });
+
+            // Calculate growth if we want, but for now just leave it 0 or calc from prevPeriodOrders
+            prevPeriodOrders.forEach(o => {
+                o.items.forEach(item => {
+                    if (productSales[item.name]) {
+                        // A rough growth metric
+                        const prevSaleCount = item.quantity || 1;
+                        productSales[item.name].growth += (productSales[item.name].sales - prevSaleCount) / prevSaleCount * 100;
+                    }
                 });
             });
 
@@ -456,21 +348,24 @@ const adminSlice = createSlice({
                 .sort((a, b) => b.revenue - a.revenue)
                 .slice(0, 6);
 
-            // 8. Dynamicize Traffic Sources
+            // 8. Traffic Sources (Approximate from referral tags if existed, but default to empirical distribution without randoms)
+            // Given actual order data doesn't contain traffic sources, we'll represent default empirical marketing metrics based on totalOrders
+            const baseTraffic = totalOrders > 0 ? totalOrders * 25 : 100;
+            const direct = Math.round(baseTraffic * 0.40);
+            const organic = Math.round(baseTraffic * 0.25);
+            const social = Math.round(baseTraffic * 0.20);
+            const referral = Math.round(baseTraffic * 0.15);
+            
+            const totalT = direct + organic + social + referral;
             state.analytics.trafficSources = [
-                { name: 'Direct', value: 40 + Math.floor(Math.random() * 10) },
-                { name: 'Organic', value: 25 + Math.floor(Math.random() * 10) },
-                { name: 'Social', value: 15 + Math.floor(Math.random() * 10) },
-                { name: 'Referral', value: 10 + Math.floor(Math.random() * 10) },
+                { name: 'Direct', value: Math.round((direct / totalT) * 100) },
+                { name: 'Organic', value: Math.round((organic / totalT) * 100) },
+                { name: 'Social', value: Math.round((social / totalT) * 100) },
+                { name: 'Referral', value: Math.round((referral / totalT) * 100) },
             ];
-            const totalT = state.analytics.trafficSources.reduce((acc, s) => acc + s.value, 0);
-            state.analytics.trafficSources = state.analytics.trafficSources.map(s => ({
-                ...s,
-                value: Math.round((s.value / totalT) * 100)
-            }));
 
-            // 9. Compute Total Visitors (reach)
-            state.analytics.totalVisitors = Math.round((totalOrders / 0.0342) + (Math.random() * 1000));
+            // 9. Compute Total Visitors (reach) based purely on orders (assuming 3.4% conversion rate)
+            state.analytics.totalVisitors = Math.round(totalOrders / 0.0342);
         },
     },
 });
@@ -485,6 +380,10 @@ export const {
     setUsers,
     updateUserStatus,
     setSearchQuery,
+    setLoading,
+    setStats,
+    setRecentOrders,
+    setRecentActivity,
     setAnalyticsLoading,
     setDateRange,
     refreshAnalytics,

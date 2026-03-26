@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Package, DollarSign, CheckCircle, Plus } from 'lucide-react';
+import { X, Package, DollarSign, CheckCircle, Plus, Hash, Layers } from 'lucide-react';
+import { Input } from '../ui/Input';
 
 interface ProductFormModalProps {
     isOpen: boolean;
@@ -64,20 +65,22 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({ isOpen, onClose, on
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate API delay
-        setTimeout(() => {
-            onSubmit(formData);
-            setIsSubmitting(false);
+        try {
+            await onSubmit(formData);
             setShowSuccess(true);
             setTimeout(() => {
                 setShowSuccess(false);
                 onClose();
             }, 1500);
-        }, 1000);
+        } catch (err) {
+            console.error('Product submission failed', err);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -127,79 +130,64 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({ isOpen, onClose, on
 
                                 <div className="flex-1 overflow-y-auto hide-scrollbar p-8 space-y-8">
                                     <div className="grid grid-cols-2 gap-6">
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-medium text-muted-foreground">Internal Name</label>
-                                            <div className="relative">
-                                                <Package className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                                                <input
-                                                    required
-                                                    value={formData.name}
-                                                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-sm text-white focus:border-primary outline-none transition-all"
-                                                    placeholder="Product name..."
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Strategic Sector</label>
-                                            <input
-                                                required
-                                                list="category-suggestions"
-                                                value={formData.category}
-                                                onChange={e => setFormData({ ...formData, category: e.target.value })}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-4 text-sm text-white focus:border-primary outline-none transition-all"
-                                                placeholder="Category..."
-                                            />
-                                            <datalist id="category-suggestions">
-                                                {categories?.map(cat => (
-                                                    <option key={cat} value={cat} />
-                                                ))}
-                                            </datalist>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">SKU Designator</label>
-                                            <input
-                                                required
-                                                value={formData.sku}
-                                                onChange={e => setFormData({ ...formData, sku: e.target.value })}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-4 text-sm text-white focus:border-primary outline-none transition-all tracking-widest uppercase"
-                                                placeholder="VTX-0000"
-                                            />
-                                        </div>
+                                        <Input 
+                                            label="Internal Name" 
+                                            placeholder="Product name..." 
+                                            value={formData.name}
+                                            onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                            required
+                                            icon={<Package size={18} />}
+                                        />
+                                        <Input 
+                                            label="Strategic Sector"
+                                            placeholder="Category..."
+                                            list="category-suggestions"
+                                            value={formData.category}
+                                            onChange={e => setFormData({ ...formData, category: e.target.value })}
+                                            required
+                                            icon={<Layers size={18} />}
+                                        />
+                                        <datalist id="category-suggestions">
+                                            {categories?.map(cat => (
+                                                <option key={cat} value={cat} />
+                                            ))}
+                                        </datalist>
+                                        <Input 
+                                            label="SKU Designator" 
+                                            placeholder="VTX-0000" 
+                                            value={formData.sku}
+                                            onChange={e => setFormData({ ...formData, sku: e.target.value })}
+                                            required
+                                            className="tracking-widest uppercase"
+                                            icon={<Hash size={18} />}
+                                        />
                                     </div>
 
                                     <div className="grid grid-cols-3 gap-6">
+                                        <Input 
+                                            label="Standard Price" 
+                                            type="number"
+                                            placeholder="0.00" 
+                                            value={formData.price}
+                                            onChange={e => setFormData({ ...formData, price: e.target.value })}
+                                            required
+                                            icon={<DollarSign size={18} />}
+                                        />
+                                        <Input 
+                                            label="Inventory Units" 
+                                            type="number"
+                                            placeholder="0" 
+                                            value={formData.stock}
+                                            onChange={e => setFormData({ ...formData, stock: e.target.value })}
+                                            required
+                                            icon={<Package size={18} />}
+                                        />
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Standard Price</label>
-                                            <div className="relative">
-                                                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                                                <input
-                                                    type="number"
-                                                    required
-                                                    value={formData.price}
-                                                    onChange={e => setFormData({ ...formData, price: e.target.value })}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-sm text-white focus:border-primary outline-none transition-all"
-                                                    placeholder="0.00"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Inventory Units</label>
-                                            <input
-                                                type="number"
-                                                required
-                                                value={formData.stock}
-                                                onChange={e => setFormData({ ...formData, stock: e.target.value })}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-4 text-sm text-white focus:border-primary outline-none transition-all"
-                                                placeholder="0"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Projected Status</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Projected Status</label>
                                             <select
                                                 value={formData.status}
                                                 onChange={e => setFormData({ ...formData, status: e.target.value })}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-4 text-sm text-white focus:border-primary outline-none transition-all"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:border-primary outline-none transition-all"
                                             >
                                                 <option>In Stock</option>
                                                 <option>Low Stock</option>

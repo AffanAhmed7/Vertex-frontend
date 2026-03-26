@@ -73,7 +73,7 @@ const HeritagePage = () => {
                             margin: '0 auto'
                         }}
                     >
-                        Forged at the intersection of timeless craftsmanship and bleeding-edge digital infrastructure. A new standard for global commerce.
+                        Forged at the intersection of timeless craftsmanship and innovative digital design. A new standard for global commerce.
                     </motion.p>
                 </div>
             </section>
@@ -96,7 +96,7 @@ const HeritagePage = () => {
                             Vertex was established with a singular, unyielding vision: to architect a commerce environment that completely dismantles the friction between luxury acquisition and digital convenience. Most platforms view these as inherently opposing forces. We view them as necessary counterparts.
                         </p>
                         <p style={{ color: 'var(--lp-text-dim)', fontSize: '1.125rem', fontWeight: 300, lineHeight: 1.8 }}>
-                            To achieve this, we bypassed conventional retail systems, building a bespoke digital infrastructure from the ground up. Every algorithm, server protocol, and distribution node has been optimized to ensure the experience of securing rare artifacts feels as effortless as the items themselves.
+                            To achieve this, we bypassed conventional retail systems, building a bespoke digital platform from the ground up. Every algorithm and delivery network has been optimized to ensure the experience of securing rare artifacts feels as effortless as the items themselves.
                         </p>
                     </motion.div>
 

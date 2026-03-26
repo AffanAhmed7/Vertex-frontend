@@ -3,6 +3,7 @@ import { authService } from '../../services/authService';
 import { userService } from '../../services/userService';
 import { orderService } from '../../services/orderService';
 import { addressService } from '../../services/addressService';
+import { fetchDbCart } from './cartSlice';
 
 export interface UserAddress {
     id: string;
@@ -13,10 +14,12 @@ export interface UserAddress {
     city: string;
     postalCode: string;
     country: string;
+    phone?: string;
 }
 
 export interface OrderItem {
     id: string;
+    productId: string;
     quantity: number;
     priceAtPurchase: number;
     product: {
@@ -42,6 +45,7 @@ interface UserState {
         email: string;
         avatar?: string;
         role: 'CUSTOMER' | 'ADMIN';
+        twoFactorEnabled?: boolean;
     } | null;
     orders: Order[];
     addresses: UserAddress[];
@@ -97,7 +101,7 @@ export const registerUser = createAsyncThunk(
 
 export const updateProfile = createAsyncThunk(
     'user/updateProfile',
-    async (data: { name?: string; email?: string }, { rejectWithValue }: any) => {
+    async (data: { name?: string; email?: string; twoFactorEnabled?: boolean }, { rejectWithValue }: any) => {
         try {
             const response = await userService.updateProfile(data);
             if (response.success) {
@@ -106,6 +110,21 @@ export const updateProfile = createAsyncThunk(
             return rejectWithValue(response.message || 'Profile update failed');
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Profile update failed');
+        }
+    }
+);
+
+export const changePassword = createAsyncThunk(
+    'user/changePassword',
+    async (data: any, { rejectWithValue }: any) => {
+        try {
+            const response = await userService.changePassword(data);
+            if (response.success) {
+                return response.message;
+            }
+            return rejectWithValue(response.message || 'Password update failed');
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Password update failed');
         }
     }
 );
@@ -170,6 +189,21 @@ export const deleteExistingAddress = createAsyncThunk(
     }
 );
 
+export const updateExistingAddress = createAsyncThunk(
+    'user/updateAddress',
+    async ({ id, data }: { id: string; data: Partial<UserAddress> }, { rejectWithValue }: any) => {
+        try {
+            const response = await addressService.updateAddress(id, data);
+            if (response.success) {
+                return response.data;
+            }
+            return rejectWithValue('Failed to update address');
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to update address');
+        }
+    }
+);
+
 export const googleLogin = createAsyncThunk(
     'user/googleLogin',
     async (idToken: string, { rejectWithValue }: any) => {
@@ -183,6 +217,44 @@ export const googleLogin = createAsyncThunk(
             return rejectWithValue(response.message || 'Google login failed');
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Google login failed');
+        }
+    }
+);
+
+export const fetchCurrentUser = createAsyncThunk(
+    'user/fetchCurrentUser',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await userService.getMe();
+            if (response.success) {
+                return response.data;
+            }
+            return rejectWithValue('Failed to fetch user');
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to fetch user');
+        }
+    }
+);
+
+export const initializeAuth = createAsyncThunk(
+    'user/initializeAuth',
+    async (_, { dispatch, rejectWithValue }: any) => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) return null;
+        try {
+            const response = await userService.getMe();
+            if (response.success) {
+                // Fetch addresses, orders, and cart if login successful
+                dispatch(fetchAddresses());
+                dispatch(fetchOrders());
+                dispatch(fetchDbCart());
+                return response.data;
+            }
+            return null;
+        } catch (error) {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            return null;
         }
     }
 );
@@ -250,6 +322,22 @@ const userSlice = createSlice({
             })
             .addCase(deleteExistingAddress.fulfilled, (state: any, action: any) => {
                 state.addresses = state.addresses.filter((a: any) => a.id !== action.payload);
+            })
+            .addCase(updateExistingAddress.fulfilled, (state: any, action: any) => {
+                const index = state.addresses.findIndex((a: any) => a.id === action.payload.id);
+                if (index !== -1) {
+                    if (action.payload.isDefault) {
+                        state.addresses.forEach((a: any) => a.isDefault = false);
+                    }
+                    state.addresses[index] = action.payload;
+                }
+            })
+            // Initialize Auth
+            .addCase(initializeAuth.fulfilled, (state: any, action: any) => {
+                state.currentUser = action.payload;
+            })
+            .addCase(fetchCurrentUser.fulfilled, (state: any, action: any) => {
+                state.currentUser = action.payload;
             });
     }
 });

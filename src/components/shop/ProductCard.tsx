@@ -2,6 +2,9 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Heart, Star } from 'lucide-react';
 import { Product } from '../../store/slices/productSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store';
+import { syncAddToCart } from '../../store/slices/cartSlice';
 
 interface ProductCardProps {
     product: Product;
@@ -9,6 +12,18 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, index }: ProductCardProps) => {
+    const dispatch = useDispatch<AppDispatch>();
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dispatch(syncAddToCart({
+            ...product,
+            quantity: 1,
+            selectedVariants: {} // Default empty variants for quick add
+        }));
+    };
+
     return (
         <Link to={`/product/${product.id}`}>
             <motion.div
@@ -29,7 +44,10 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
                     <img src={product.image} alt={product.name} className="product-image" />
 
                     <div className="hover-actions">
-                        <button className="btn-primary-shop">
+                        <button 
+                            className="btn-primary-shop"
+                            onClick={handleAddToCart}
+                        >
                             Add to Cart
                         </button>
                         <button className="btn-icon">

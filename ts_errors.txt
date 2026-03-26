@@ -1,0 +1,4 @@
+src/components/account/AccountLayout.tsx(49,110): error TS2339: Property 'status' does not exist on type '{ id: string; name: string; email: string; avatar?: string | undefined; role: "CUSTOMER" | "ADMIN"; }'.
+src/pages/account/AccountReviews.tsx(41,60): error TS2339: Property 'image' does not exist on type 'OrderItem'.
+src/pages/account/AccountReviews.tsx(41,77): error TS2339: Property 'name' does not exist on type 'OrderItem'.
+src/pages/account/AccountReviews.tsx(44,94): error TS2339: Property 'name' does not exist on type 'OrderItem'.
