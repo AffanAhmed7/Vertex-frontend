@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin, Package, CheckCircle, Clock, Truck, ShieldCheck, AlertCircle } from 'lucide-react';
 import { AdminOrder } from '../../store/slices/adminSlice';
+import AdminVault from './AdminVault';
 
 interface OrderDetailPanelProps {
     order: AdminOrder | null;
@@ -20,6 +21,8 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedOrder, setEditedOrder] = useState<AdminOrder | null>(null);
+    const [isVaultOpen, setIsVaultOpen] = useState(false);
+    const [vaultAction, setVaultAction] = useState<{ type: 'status' | 'update', data: any } | null>(null);
 
     useEffect(() => {
         if (order) {
@@ -30,10 +33,17 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
         }
     }, [order, isOpen]);
 
-    const handleSave = () => {
+    const handleSaveInitiate = () => {
         if (editedOrder) {
-            onUpdateOrder(editedOrder);
-            setIsEditing(false);
+            setVaultAction({ type: 'update', data: editedOrder });
+            setIsVaultOpen(true);
+        }
+    };
+
+    const handleStatusInitiate = (status: AdminOrder['status']) => {
+        if (order) {
+            setVaultAction({ type: 'status', data: status });
+            setIsVaultOpen(true);
         }
     };
 
@@ -86,7 +96,7 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                             </div>
                             <div className="flex items-center gap-3">
                                 <button
-                                    onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+                                    onClick={() => isEditing ? handleSaveInitiate() : setIsEditing(true)}
                                     className={`px-6 py-2.5 rounded-xl text-xs font-medium transition-all active:scale-95 border ${isEditing ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-white/[0.05] border-white/10 text-white hover:bg-white/10'}`}
                                 >
                                     {isEditing ? 'Sync Changes' : 'Override Details'}
@@ -144,7 +154,7 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                                         {['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map((status) => (
                                             <button
                                                 key={status}
-                                                onClick={() => onUpdateStatus(order.id, status as AdminOrder['status'])}
+                                                onClick={() => handleStatusInitiate(status as AdminOrder['status'])}
                                                 className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition-all ${order.status === status ? statusColors[status as keyof typeof statusColors] : 'border-white/5 bg-white/[0.01] text-white/20 hover:bg-white/5'}`}
                                             >
                                                 {statusIcons[status as keyof typeof statusIcons]}
@@ -220,6 +230,24 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                     </motion.div>
                 </div>
             )}
+            <AdminVault
+                isOpen={isVaultOpen}
+                onClose={() => {
+                    setIsVaultOpen(false);
+                    setVaultAction(null);
+                }}
+                onSuccess={() => {
+                    if (!vaultAction || !order) return;
+                    if (vaultAction.type === 'status') {
+                        onUpdateStatus(order.id, vaultAction.data);
+                    } else if (vaultAction.type === 'update') {
+                        onUpdateOrder(vaultAction.data);
+                        setIsEditing(false);
+                    }
+                    setVaultAction(null);
+                }}
+                actionLabel={vaultAction?.type === 'status' ? `update order status to ${vaultAction.data}` : "override order details"}
+            />
         </AnimatePresence>
     );
 };

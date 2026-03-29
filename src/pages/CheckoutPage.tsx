@@ -42,7 +42,7 @@ const CheckoutPage: React.FC = () => {
             { key: 'shippingPhone', label: 'Phone Number', required: true, length: 11 },
             { key: 'shippingAddress', label: 'Street Address', required: true },
             { key: 'shippingCity', label: 'City', required: true },
-            { key: 'shippingZip', label: 'Postal Code', required: true },
+            { key: 'shippingZip', label: 'Zip Code', required: true },
             { key: 'shippingCountry', label: 'Country', required: true },
         ];
 
@@ -102,7 +102,7 @@ const CheckoutPage: React.FC = () => {
                                         Back to Cart
                                     </Link>
                                     <h1 className="text-4xl md:text-5xl font-light tracking-[0.1em] text-white uppercase italic">
-                                        Secure <span className="text-primary font-medium tracking-normal">Checkout</span>
+                                        <span className="text-primary font-medium tracking-normal">Checkout</span>
                                     </h1>
                                 </div>
 

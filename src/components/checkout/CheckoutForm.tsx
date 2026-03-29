@@ -122,11 +122,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, setFormData, addr
                         icon={<MapPin size={18} />}
                     />
                     <Input 
-                        label="Postal Code" 
+                        label="Zip Code" 
                         name="shippingZip" 
                         value={formData.shippingZip || ''} 
                         onChange={handleChange} 
-                        placeholder="Postal Code" 
+                        placeholder="Zip Code" 
                         autoComplete="postal-code"
                         icon={<MapPin size={18} />}
                     />

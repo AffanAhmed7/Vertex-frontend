@@ -21,6 +21,10 @@ import AdminSettings from '../pages/admin/AdminSettings';
 import ScrollToTop from '../components/common/ScrollToTop';
 import { Login, Register } from '../pages/Placeholders';
 import HeritagePage from '../pages/HeritagePage';
+import ContactPage from '../pages/info/ContactPage';
+import PrivacyPage from '../pages/info/PrivacyPage';
+import CompliancePage from '../pages/info/CompliancePage';
+import TermsPage from '../pages/info/TermsPage';
 
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 
@@ -39,6 +43,10 @@ const AppRoutes = () => {
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
                     <Route path="heritage" element={<HeritagePage />} />
+                    <Route path="contact" element={<ContactPage />} />
+                    <Route path="privacy" element={<PrivacyPage />} />
+                    <Route path="compliance" element={<CompliancePage />} />
+                    <Route path="terms" element={<TermsPage />} />
 
                     {/* Account Dashboard Group — requires login */}
                     <Route path="account" element={<ProtectedRoute requiredRole="CUSTOMER"><AccountLayout /></ProtectedRoute>}>

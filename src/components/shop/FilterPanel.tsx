@@ -36,7 +36,7 @@ const FilterPanel = ({ isOpen, onClose, isMobile }: FilterPanelProps) => {
                             className={`filter-option ${filters.category === cat ? 'active' : ''}`}
                             onClick={() => dispatch(setFilters({ category: cat }))}
                         >
-                            <div className={`w-4 h-4 rounded-sm border border-white/20 flex items-center justify-center ${filters.category === cat ? 'bg-[#00f2ff] border-[#00f2ff]' : ''}`}>
+                            <div className={`w-4 h-4 rounded-sm border border-white/20 flex items-center justify-center ${filters.category === cat ? 'bg-white border-white' : ''}`}>
                                 {filters.category === cat && <Check size={10} color="#000" strokeWidth={4} />}
                             </div>
                             <span>{cat}</span>
@@ -56,11 +56,11 @@ const FilterPanel = ({ isOpen, onClose, isMobile }: FilterPanelProps) => {
                         step="100"
                         value={filters.maxPrice}
                         onChange={(e) => dispatch(setFilters({ maxPrice: Number(e.target.value) }))}
-                        className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#00f2ff]"
+                        className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
                     />
                     <div className="flex justify-between mt-4 text-xs text-white/60">
                         <span>$0</span>
-                        <span className="text-[#00f2ff] font-bold">Up to ${filters.maxPrice}</span>
+                        <span className="text-white font-bold opacity-90">Up to ${filters.maxPrice}</span>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@ const FilterPanel = ({ isOpen, onClose, isMobile }: FilterPanelProps) => {
                             className={`filter-option ${filters.minRating === rating ? 'active' : ''}`}
                             onClick={() => dispatch(setFilters({ minRating: rating }))}
                         >
-                            <div className={`w-4 h-4 rounded-full border border-white/20 flex items-center justify-center ${filters.minRating === rating ? 'bg-[#00f2ff] border-[#00f2ff]' : ''}`}>
+                            <div className={`w-4 h-4 rounded-full border border-white/20 flex items-center justify-center ${filters.minRating === rating ? 'bg-white border-white' : ''}`}>
                                 {filters.minRating === rating && <div className="w-1.5 h-1.5 bg-black rounded-full" />}
                             </div>
                             <span>{rating}+ Stars</span>
@@ -88,7 +88,7 @@ const FilterPanel = ({ isOpen, onClose, isMobile }: FilterPanelProps) => {
             <div className="filter-section">
                 <h3 className="filter-title">Availability</h3>
                 <div className="filter-option" onClick={() => dispatch(setFilters({ search: filters.search === 'available' ? '' : 'available' }))}>
-                    <div className={`w-10 h-5 rounded-full relative transition-colors ${filters.search === 'available' ? 'bg-[#00f2ff]' : 'bg-white/10'}`}>
+                    <div className={`w-10 h-5 rounded-full relative transition-colors ${filters.search === 'available' ? 'bg-white' : 'bg-white/10'}`}>
                         <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${filters.search === 'available' ? 'left-6' : 'left-1'}`} />
                     </div>
                     <span>In Stock Only</span>

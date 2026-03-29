@@ -50,10 +50,13 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, trend, trendDirection
                     <Icon size={22} />
                 </div>
 
-                <div className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-lg ${trendDirection === 'up' ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'
-                    }`}>
-                    {trendDirection === 'up' ? '+' : '-'}
-                    {trend}{trendLabel}
+                <div className="flex flex-col items-end gap-1">
+                    <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg ${trendDirection === 'up' ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'
+                        }`}>
+                        {trendDirection === 'up' ? '+' : '-'}
+                        {trend}%
+                    </div>
+                    {trendLabel && <span className="text-[10px] text-muted-foreground font-medium">{trendLabel}</span>}
                 </div>
             </div>
 

@@ -2,26 +2,22 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { Download, RefreshCw, ShoppingCart, Package, Crown, BarChart3, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { RootState } from '../../store';
-import { setAnalyticsLoading, setDateRange, refreshAnalytics } from '../../store/slices/adminSlice';
+import { RootState, AppDispatch } from '../../store';
+import { setDateRange, fetchDashboardAnalytics } from '../../store/slices/adminSlice';
 import AnalyticsInsights from '../../components/admin/AnalyticsInsights';
 import DateRangeSelector from '../../components/admin/DateRangeSelector';
 
 const AdminAnalytics: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const { analytics } = useSelector((state: RootState) => state.admin);
 
     useEffect(() => {
-        dispatch(setAnalyticsLoading(true));
-        dispatch(refreshAnalytics());
-        setTimeout(() => dispatch(setAnalyticsLoading(false)), 800);
+        dispatch(fetchDashboardAnalytics(analytics.dateRange));
     }, [dispatch]);
 
     const handleRangeChange = (range: any) => {
-        dispatch(setAnalyticsLoading(true));
         dispatch(setDateRange(range));
-        dispatch(refreshAnalytics());
-        setTimeout(() => dispatch(setAnalyticsLoading(false)), 1200);
+        dispatch(fetchDashboardAnalytics(range));
     };
 
     const handleExport = () => {
@@ -45,8 +41,8 @@ const AdminAnalytics: React.FC = () => {
     // Derived data
     const topProducts = analytics.topProducts || [];
     const bestProduct = topProducts.length > 0 ? topProducts[0] : null;
-    const totalRevenue = topProducts.reduce((acc: number, p: any) => acc + (p.revenue || 0), 0);
-    const totalUnitsSold = topProducts.reduce((acc: number, p: any) => acc + (p.sales || 0), 0);
+    const totalRevenue = analytics.productMetrics?.totalProductRevenue || 0;
+    const totalUnitsSold = analytics.productMetrics?.totalProductUnitsSold || 0;
 
     // Find Average Order Value KPI from store
     const aovKpi = analytics.kpis.find((k: any) => k.id === '5');

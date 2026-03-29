@@ -87,3 +87,25 @@ export const fetchSalesHistory = async (days: number = 7) => {
     const res = await api.get(`/admin/analytics/sales?days=${days}`);
     return res.data.data;
 };
+
+export const getDashboardAnalytics = async (range: string) => {
+    const res = await api.get(`/admin/analytics/dashboard?range=${range}`);
+    return res.data.data;
+};
+
+// ——— Settings ———
+
+export const fetchSettings = async () => {
+    const res = await api.get('/admin/settings');
+    return res.data.data;
+};
+
+export const updateSettings = async (data: Record<string, any>) => {
+    const res = await api.patch('/admin/settings', data);
+    return res.data;
+};
+
+export const factoryReset = async () => {
+    const res = await api.post('/admin/settings/reset');
+    return res.data;
+};

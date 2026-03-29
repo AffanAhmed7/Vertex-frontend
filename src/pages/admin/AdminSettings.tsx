@@ -3,42 +3,97 @@ import { motion } from 'framer-motion';
 import { Store, CreditCard, Truck, Bell, Save, Trash2, Check, RefreshCw } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { fetchSettings, updateSettings, factoryReset } from '../../services/adminService';
+import { addToast } from '../../store/slices/toastSlice';
+import { useDispatch } from 'react-redux';
+import AdminVault from '../../components/admin/AdminVault';
 
-// Simulated Settings State
-const initialSettings = {
-    storeName: 'Vertex E-Commerce',
-    contactEmail: 'admin@vertex.com',
-    supportPhone: '+1 (800) 555-0199',
-    currency: 'USD',
-    stripeEnabled: true,
-    paypalEnabled: false,
-    shippingRate: '15.00',
-    freeShippingThreshold: '150.00',
-    internationalShipping: true,
-    orderEmails: true,
-    lowInventoryAlerts: true,
-    dailySummary: false,
-};
+
 
 const AdminSettings: React.FC = () => {
-    const [settings, setSettings] = useState(initialSettings);
-    const [savedSettings, setSavedSettings] = useState(initialSettings);
+    const dispatch = useDispatch();
+    const [settings, setSettings] = useState<any>(null);
+    const [savedSettings, setSavedSettings] = useState<any>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
+    const [isVaultOpen, setIsVaultOpen] = useState(false);
+    const [vaultContext, setVaultContext] = useState<'save' | 'reset'>('save');
 
-    const hasChanges = JSON.stringify(settings) !== JSON.stringify(savedSettings);
+    // Load settings from backend
+    React.useEffect(() => {
+        const load = async () => {
+            try {
+                const data = await fetchSettings();
+                setSettings(data);
+                setSavedSettings(data);
+            } catch (err) {
+                console.error('Failed to load settings', err);
+            }
+        };
+        load();
+    }, []);
 
-    const handleSave = () => {
-        setIsSaving(true);
-        setTimeout(() => {
-            setIsSaving(false);
-            setSavedSettings({ ...settings });
-            setLastSaved(new Date());
-        }, 1200);
+    const hasChanges = settings && savedSettings && JSON.stringify(settings) !== JSON.stringify(savedSettings);
+
+    const handleSaveInitiate = () => {
+        setVaultContext('save');
+        setIsVaultOpen(true);
     };
 
-    const handleChange = (key: keyof typeof settings, value: any) => {
-        setSettings(prev => ({ ...prev, [key]: value }));
+    const handleResetInitiate = () => {
+        const confirmed = window.confirm("WARNING: This will permanently delete all store data (Orders, Products, Analytics). This action is IRREVERSIBLE. Are you sure you want to proceed?");
+        if (!confirmed) return;
+        
+        setVaultContext('reset');
+        setIsVaultOpen(true);
+    };
+
+    const handleVaultSuccess = async () => {
+        if (vaultContext === 'save') {
+            await handleSaveAction();
+        } else {
+            await handleResetAction();
+        }
+    };
+
+    const handleSaveAction = async () => {
+        setIsSaving(true);
+        try {
+            const res = await updateSettings(settings);
+            setSavedSettings({ ...settings });
+            setLastSaved(new Date());
+            dispatch(addToast({ message: res.message || 'Settings updated successfully.', type: 'success' }));
+        } catch (err) {
+            dispatch(addToast({ message: 'Failed to update configuration.', type: 'error' }));
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleResetAction = async () => {
+        try {
+            const res = await factoryReset();
+            dispatch(addToast({ message: res.message, type: 'success' }));
+            // Reload page to reflect purged state
+            window.location.reload();
+        } catch (err) {
+            dispatch(addToast({ message: 'Critical error during system reset.', type: 'error' }));
+        }
+    };
+
+    const handleChange = (key: string, value: any) => {
+        setSettings((prev: any) => ({ ...prev, [key]: value }));
+    };
+
+    const getCurrencySymbol = (code: string) => {
+        const symbols: Record<string, string> = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'JPY': '¥',
+            'PKR': '₨'
+        };
+        return symbols[code] || '$';
     };
 
     const Toggle = ({ checked, onChange }: { checked: boolean, onChange: (v: boolean) => void }) => (
@@ -93,7 +148,7 @@ const AdminSettings: React.FC = () => {
                         </span>
                     )}
                     <Button
-                        onClick={handleSave}
+                        onClick={handleSaveInitiate}
                         disabled={!hasChanges || isSaving}
                         className={`flex items-center gap-2 px-6 h-[40px] rounded-xl text-xs font-medium transition-all shadow-xl ${hasChanges ? 'bg-[#00f2ff] text-[#0e0e10] hover:bg-[#00f2ff]/90 hover:shadow-[0_0_20px_rgba(0,242,255,0.4)]' : 'bg-white/5 text-white/40 cursor-not-allowed'}`}
                     >
@@ -106,12 +161,20 @@ const AdminSettings: React.FC = () => {
                 </motion.div>
             </div>
 
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="grid grid-cols-1 lg:grid-cols-2 gap-6"
-            >
+            {!settings ? (
+                <div className="h-[60vh] flex flex-col items-center justify-center space-y-4">
+                    <div className="p-4 rounded-full bg-[#00f2ff]/5 border border-[#00f2ff]/10">
+                        <RefreshCw className="animate-spin text-[#00f2ff]" size={32} />
+                    </div>
+                    <p className="text-[10px] text-[#00f2ff]/40 uppercase tracking-[0.4em] font-black animate-pulse">Synchronizing Platform Core...</p>
+                </div>
+            ) : (
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                >
                 {/* Store Details */}
                 <motion.div variants={itemVariants}>
                     <Card className="p-6 bg-[#111114] border-white/5 h-full flex flex-col">
@@ -162,9 +225,11 @@ const AdminSettings: React.FC = () => {
                                     <option value="EUR">EUR (€)</option>
                                     <option value="GBP">GBP (£)</option>
                                     <option value="JPY">JPY (¥)</option>
+                                    <option value="PKR">PKR (₨)</option>
                                 </select>
                             </div>
                         </div>
+
                     </Card>
                 </motion.div>
 
@@ -218,7 +283,7 @@ const AdminSettings: React.FC = () => {
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-white/40">Standard Rate ({settings.currency})</label>
                                     <div className="relative">
-                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 font-medium">$</span>
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 font-medium">{getCurrencySymbol(settings.currency)}</span>
                                         <input
                                             type="text"
                                             value={settings.shippingRate}
@@ -230,7 +295,7 @@ const AdminSettings: React.FC = () => {
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-white/40">Free Threshold ({settings.currency})</label>
                                     <div className="relative">
-                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 font-medium">$</span>
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 font-medium">{getCurrencySymbol(settings.currency)}</span>
                                         <input
                                             type="text"
                                             value={settings.freeShippingThreshold}
@@ -285,7 +350,9 @@ const AdminSettings: React.FC = () => {
                         </div>
                     </Card>
                 </motion.div>
-            </motion.div>
+                </motion.div>
+            )}
+
 
             {/* Danger Zone */}
             <motion.div variants={itemVariants} className="pt-8">
@@ -299,12 +366,23 @@ const AdminSettings: React.FC = () => {
                                 Permanently delete all store data, orders, customers, and analytics. This action is irreversible and requires re-authentication.
                             </p>
                         </div>
-                        <Button className="bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all duration-300 px-8 text-xs font-medium py-3">
+                        <Button 
+                            onClick={handleResetInitiate}
+                            className="bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all duration-300 px-8 text-xs font-medium py-3"
+                        >
                             Factory Reset
                         </Button>
                     </div>
                 </Card>
             </motion.div>
+
+            {/* OTP Vault */}
+            <AdminVault
+                isOpen={isVaultOpen}
+                onClose={() => setIsVaultOpen(false)}
+                onSuccess={handleVaultSuccess}
+                actionLabel={vaultContext === 'save' ? 'save system configuration' : 'perform full platform reset'}
+            />
         </div>
     );
 };

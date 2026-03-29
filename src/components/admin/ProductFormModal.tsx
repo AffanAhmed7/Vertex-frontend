@@ -30,8 +30,10 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({ isOpen, onClose, on
         if (initialData) {
             setFormData({
                 ...initialData,
-                price: initialData.price.toString(),
-                stock: initialData.stock.toString(),
+                price: initialData.price?.toString() || '',
+                stock: initialData.stock?.toString() || '',
+                description: initialData.description || '',
+                image: initialData.image || ''
             });
             setImagePreview(initialData.image);
         } else {
@@ -109,8 +111,8 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({ isOpen, onClose, on
                                 >
                                     <CheckCircle size={40} />
                                 </motion.div>
-                                <h3 className="text-2xl font-semibold tracking-tight">SUCCESSFULLY INGESTED</h3>
-                                <p className="text-muted-foreground text-xs font-medium">Product registered in infrastructure</p>
+                                <h3 className="text-2xl font-semibold tracking-tight">{initialData ? 'SUCCESSFULLY UPDATED' : 'SUCCESSFULLY ADDED'}</h3>
+                                <p className="text-muted-foreground text-xs font-medium">{initialData ? 'Product updated in infrastructure' : 'Product registered in infrastructure'}</p>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} className="flex flex-col h-full min-h-0 overflow-hidden">
@@ -189,10 +191,10 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({ isOpen, onClose, on
                                                 onChange={e => setFormData({ ...formData, status: e.target.value })}
                                                 className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:border-primary outline-none transition-all"
                                             >
-                                                <option>In Stock</option>
-                                                <option>Low Stock</option>
-                                                <option>Out of Stock</option>
-                                                <option>Draft</option>
+                                                <option className="bg-[#0a0a0b] text-white">In Stock</option>
+                                                <option className="bg-[#0a0a0b] text-white">Low Stock</option>
+                                                <option className="bg-[#0a0a0b] text-white">Out of Stock</option>
+                                                <option className="bg-[#0a0a0b] text-white">Draft</option>
                                             </select>
                                         </div>
                                     </div>
@@ -249,7 +251,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({ isOpen, onClose, on
                                         disabled={isSubmitting}
                                         className="px-8 py-3 bg-white/[0.05] hover:bg-white/10 border border-white/10 hover:border-primary/50 text-white rounded-xl text-xs font-medium disabled:opacity-50 transition-all shadow-xl"
                                     >
-                                        {isSubmitting ? 'Processing...' : 'Confirm Ingestion'}
+                                        {isSubmitting ? 'Processing...' : (initialData ? 'Update Asset' : 'Add Asset')}
                                     </button>
                                 </div>
                             </form>

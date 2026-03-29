@@ -43,7 +43,7 @@ interface ProductState {
 const initialFilters: ProductFilters = {
     category: 'All',
     minPrice: 0,
-    maxPrice: 10000,
+    maxPrice: 5000,
     minRating: 0,
     sortBy: 'newest',
     search: '',
@@ -63,7 +63,11 @@ export const fetchProducts = createAsyncThunk(
     'products/fetchAll',
     async (filters: Partial<ProductFilters>, { rejectWithValue }) => {
         try {
-            return await productService.getAll(filters);
+            const apiFilters = { ...filters };
+            if (apiFilters.maxPrice === 5000) {
+                delete apiFilters.maxPrice;
+            }
+            return await productService.getAll(apiFilters);
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Failed to fetch products');
         }

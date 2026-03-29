@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SlidersHorizontal, Search, RotateCcw } from 'lucide-react';
+import { SlidersHorizontal, Search, RotateCcw, ChevronDown } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
 import { fetchProducts, setFilters, resetFilters } from '../store/slices/productSlice';
@@ -10,8 +11,16 @@ import '../styles/shop-page.css';
 
 const ShopPage = () => {
     const dispatch = useDispatch<AppDispatch>();
+    const [searchParams] = useSearchParams();
     const { filteredItems, loading, filters } = useSelector((state: RootState) => state.products);
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+    useEffect(() => {
+        const urlSort = searchParams.get('sortBy');
+        if (urlSort && urlSort !== filters.sortBy) {
+            dispatch(setFilters({ sortBy: urlSort as any }));
+        }
+    }, [searchParams, dispatch]);
 
     useEffect(() => {
         dispatch(fetchProducts(filters));
@@ -49,16 +58,19 @@ const ShopPage = () => {
                                 <span>Filters</span>
                             </button>
 
-                            <select
-                                className="bg-white/5 border border-white/10 rounded-full py-3 px-6 outline-none hover:bg-white/10 transition-all cursor-pointer appearance-none"
-                                value={filters.sortBy}
-                                onChange={(e) => dispatch(setFilters({ sortBy: e.target.value as any }))}
-                            >
-                                <option value="newest">Latest Arrivals</option>
-                                <option value="price-low">Price: Low to High</option>
-                                <option value="price-high">Price: High to Low</option>
-                                <option value="rating">Highest Rated</option>
-                            </select>
+                            <div className="relative group">
+                                <select
+                                    className="bg-white/5 border border-white/10 rounded-full py-3 pl-6 pr-12 outline-none hover:bg-white/10 transition-all cursor-pointer appearance-none text-sm font-medium focus:border-[#00f2ff]/50 min-w-[200px]"
+                                    value={filters.sortBy}
+                                    onChange={(e) => dispatch(setFilters({ sortBy: e.target.value as any }))}
+                                >
+                                    <option value="newest" className="bg-[#0a0a0c]">Latest Arrivals</option>
+                                    <option value="price-low" className="bg-[#0a0a0c]">Price: Low to High</option>
+                                    <option value="price-high" className="bg-[#0a0a0c]">Price: High to Low</option>
+                                    <option value="rating" className="bg-[#0a0a0c]">Highest Rated</option>
+                                </select>
+                                <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-[#00f2ff] pointer-events-none transition-colors" size={16} />
+                            </div>
 
                             <button
                                 className="p-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all text-white/40 hover:text-white"

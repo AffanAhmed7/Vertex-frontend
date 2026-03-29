@@ -1,9 +1,8 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const REVENUE_DATA = [32, 45, 38, 52, 48, 65, 85, 74, 88, 82, 95, 110];
-const CATEGORIES = ['Monitors', 'Infrastructure', 'Peripherals', 'Software', 'Networking'];
-const CATEGORY_DATA = [85, 65, 45, 30, 20];
+
+
 
 export const ChartPlaceholder: React.FC<{
     title: string;
@@ -21,11 +20,11 @@ export const ChartPlaceholder: React.FC<{
     // Full X-axis labels based on timeframe or category
     const allLabels = React.useMemo(() => {
         if (labels) return labels;
-        if (isCategory) return CATEGORIES;
 
         switch (timeFrame) {
             case 'Day': return ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'];
             case 'Week': return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            case 'Year': return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             case 'All Time': return ['Mar', 'May', 'Jul', 'Sep', 'Nov', 'Jan'];
             case 'Month':
             default: return ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
@@ -34,13 +33,17 @@ export const ChartPlaceholder: React.FC<{
 
     // MATHEMATICALLY SOUND NORMALIZATION ENGINE
     const { normalizedData, yAxisMax } = React.useMemo(() => {
-        const baseData = data || (isRevenue ? REVENUE_DATA : CATEGORY_DATA);
+        // Use real data if provided; fall back to placeholder only when no prop at all
+        const hasRealData = data !== undefined && data.length > 0;
+        const baseData = hasRealData ? data! : [];
+        if (baseData.length === 0) return { normalizedData: [], yAxisMax: 10 };
+
         const rawScaled = baseData.map((val: number) => Math.max(0, val * (data ? 1 : multiplier)));
         const sum = rawScaled.reduce((acc, v) => acc + v, 0);
 
         if (isCategory) {
             // For category distribution, we calculate true percentages
-            const data = rawScaled.map((v, i) => {
+            const catItems = rawScaled.map((v, i) => {
                 const relativeShare = sum > 0 ? (v / sum) * 100 : 0;
                 return {
                     original: baseData[i],
@@ -50,11 +53,11 @@ export const ChartPlaceholder: React.FC<{
             });
 
             // Set Y-axis max based on the highest category percentage, rounded up to nearest 10
-            const maxShare = Math.max(...data.map(d => d.relativeShare), 10);
+            const maxShare = Math.max(...catItems.map(d => d.relativeShare), 10);
             const yMax = Math.ceil(maxShare / 10) * 10;
 
             // Map the percentage height to the visual container (90% to leave room for tooltips)
-            const finalData = data.map(d => ({
+            const finalData = catItems.map(d => ({
                 ...d,
                 percentage: yMax > 0 ? (d.relativeShare / yMax) * 90 : 0
             }));
@@ -82,7 +85,7 @@ export const ChartPlaceholder: React.FC<{
 
             return { normalizedData: finalData, yAxisMax: yMax };
         }
-    }, [isRevenue, isCategory, multiplier]);
+    }, [isRevenue, isCategory, multiplier, data, labels]);
 
     const dataPoints = normalizedData.map(d => d.percentage);
 
@@ -140,6 +143,16 @@ export const ChartPlaceholder: React.FC<{
                         {[0, 25, 50, 75, 100].map(i => <div key={i} className="border-t border-dashed border-white w-full" />)}
                     </div>
 
+                    {/* Empty state when no data for selected period */}
+                    {normalizedData.length === 0 && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pb-8">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="opacity-20">
+                                <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" stroke="#00f2ff" strokeWidth="1.5" strokeLinejoin="round"/>
+                            </svg>
+                            <p className="text-[11px] text-white/20 font-medium uppercase tracking-widest">No data for this period</p>
+                        </div>
+                    )}
+
                     {type === 'bar' && (
                         <div className="w-full h-[180px] relative z-10 px-2 mt-auto">
                             <svg width="100%" height="100%" viewBox="0 0 400 100" preserveAspectRatio="none" className="overflow-visible">
@@ -185,10 +198,11 @@ export const ChartPlaceholder: React.FC<{
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, y: 5 }}
                                                     >
-                                                        <foreignObject x={x - 15} y={100 - val - 38} width={barWidth + 30} height="28" className="overflow-visible">
-                                                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-lg px-2 flex items-center justify-center h-full shadow-2xl">
-                                                                <span className="text-white text-xs font-medium">
-                                                                    {isCategory ? `${Math.round(item.relativeShare)}%` : Math.round(item.scaled)}
+                                                        <foreignObject x={x - 25} y={100 - val - 48} width={barWidth + 50} height="38" className="overflow-visible">
+                                                            <div className="bg-[#111]/80 backdrop-blur-xl border border-white/10 rounded-lg px-2 py-1 flex flex-col items-center justify-center h-full shadow-2xl">
+                                                                {allLabels[i] && <span className="text-white/50 text-[9px] font-medium leading-none mb-0.5">{allLabels[i]}</span>}
+                                                                <span className="text-white text-xs font-semibold">
+                                                                    {isCategory ? `${Math.round(item.relativeShare)}%` : `$${Math.round(item.scaled).toLocaleString()}`}
                                                                 </span>
                                                             </div>
                                                         </foreignObject>
@@ -203,7 +217,7 @@ export const ChartPlaceholder: React.FC<{
                                                     textAnchor="middle"
                                                     className={`text-[10px] font-medium transition-all duration-300 ${hoveredIndex === i ? 'fill-primary' : 'fill-white/40'}`}
                                                 >
-                                                    {CATEGORIES[i]}
+                                                    {allLabels[i] ?? ''}
                                                 </text>
                                             )}
                                         </g>
@@ -273,9 +287,10 @@ export const ChartPlaceholder: React.FC<{
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, y: 12 }}
                                                     >
-                                                        <foreignObject x={x - 35} y={100 - val - 45} width="70" height="32" className="overflow-visible">
-                                                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-lg flex items-center justify-center h-full shadow-2xl">
-                                                                <span className="text-white text-xs font-medium">
+                                                        <foreignObject x={x - 45} y={100 - val - 52} width="90" height="40" className="overflow-visible">
+                                                            <div className="bg-[#111]/80 backdrop-blur-xl border border-white/10 rounded-lg px-2 py-1 flex flex-col items-center justify-center h-full shadow-2xl">
+                                                                {allLabels[i] && <span className="text-white/50 text-[9px] font-medium leading-none mb-0.5 text-center truncate w-full">{allLabels[i]}</span>}
+                                                                <span className="text-white text-xs font-semibold">
                                                                     ${Math.round(item.scaled).toLocaleString()}
                                                                 </span>
                                                             </div>
@@ -295,7 +310,7 @@ export const ChartPlaceholder: React.FC<{
             <div className="mt-10 flex justify-between items-center text-xs font-medium text-muted-foreground border-t border-white/5 pt-6 min-h-[46px]">
                 {!isCategory ? (
                     <>
-                        {allLabels.map((label, i) => (
+                        {allLabels.map((label: string, i: number) => (
                             <div key={i} className="flex items-center gap-1.5 text-white/40 group-hover:text-white/70 transition-all duration-700">
                                 {i === 0 && <span className="w-1 h-1 rounded-full bg-primary/40 shadow-[0_0_8px_#00f2ff]/20" />}
                                 {label}

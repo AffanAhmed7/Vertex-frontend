@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RootState } from '../../store';
-import { setProducts, setOrders, setStats, setRecentOrders, setRecentActivity, refreshAnalytics } from '../../store/slices/adminSlice';
+import { setProducts, setOrders, setStats, setRecentOrders, setRecentActivity } from '../../store/slices/adminSlice';
 import { fetchAdminProducts, fetchAdminOrders, fetchSalesHistory, fetchCategories } from '../../services/adminService';
 import StatCard from '../../components/admin/StatCard';
 import { ChartPlaceholder } from '../../components/admin/DashboardCharts';
@@ -34,19 +34,17 @@ const AdminOverview: React.FC = () => {
     useEffect(() => {
         const load = async () => {
             try {
-                const [prods, ords, history, cats] = await Promise.all([
+                const [prods, ords, cats] = await Promise.all([
                     fetchAdminProducts(),
                     fetchAdminOrders(),
-                    fetchSalesHistory(30),
                     fetchCategories()
                 ]);
                 dispatch(setProducts(prods));
                 dispatch(setOrders(ords));
-                setSalesHistory(history);
                 setCategories(cats);
 
                 // Initial stats computation (will be refined by semanticData memo)
-                const totalRevenue = ords.reduce((acc: number, o: any) => acc + (o.total || 0), 0);
+                const totalRevenue = ords.reduce((acc: number, o: any) => acc + (o.subtotal || 0), 0);
                 const activeOrders = ords.filter((o: any) => o.status !== 'Delivered' && o.status !== 'Cancelled').length;
                 const uniqueCustomers = new Set(ords.map((o: any) => o.customerEmail || o.userId)).size;
                 const conversionRate = ords.length > 0 ? ((ords.filter((o: any) => o.status === 'Delivered').length / ords.length) * 100).toFixed(1) : '0.0';
@@ -77,7 +75,6 @@ const AdminOverview: React.FC = () => {
                 }));
                 dispatch(setRecentActivity(activity));
 
-                dispatch(refreshAnalytics());
             } catch (err) {
                 console.error('Failed to load overview data', err);
             } finally {
@@ -87,26 +84,51 @@ const AdminOverview: React.FC = () => {
         load();
     }, [dispatch]);
 
+    // Re-fetch sales history whenever the timeframe changes
+    useEffect(() => {
+        const daysMap: Record<string, number> = {
+            'Day': 1,
+            'Week': 7,
+            'Month': 30,
+            'Year': 365,
+            'All Time': 1095,
+        };
+        const days = daysMap[timeFrame] ?? 30;
+        fetchSalesHistory(days)
+            .then(setSalesHistory)
+            .catch(err => console.error('Failed to fetch sales history', err));
+    }, [timeFrame]);
+
+    // Derived state: All orders matching search + status filters (not bound by timeframe for the manifest)
+    const baseFilteredOrders = React.useMemo(() => {
+        return allOrders.filter((o: any) => {
+            // 1. Status Filter
+            if (filterStatus) {
+                const target = filterStatus === 'Paid' ? 'Processing' : filterStatus;
+                if (o.status !== target) return false;
+            }
+            // 2. Search Filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                const idMatch = o.id?.toLowerCase().includes(query);
+                const custMatch = o.userId?.toLowerCase().includes(query);
+                if (!idMatch && !custMatch) return false;
+            }
+            return true;
+        }).map((o: any) => ({
+            id: o.id,
+            customer: o.userId?.substring(0, 8) || 'Anonymous',
+            product: o.items?.[0]?.name || 'Unknown Item',
+            amount: o.subtotal,
+            status: o.status === 'Processing' ? 'Paid' : o.status,
+            date: o.date
+        }));
+    }, [allOrders, filterStatus, searchQuery]);
+
+    // UI Table orders (limited to top 10)
     const filteredOrders = React.useMemo(() => {
-        let result = recentOrders as any[];
-
-        // 1. Status Filter
-        if (filterStatus) {
-            result = result.filter(o => o.status === filterStatus);
-        }
-
-        // 2. Search Query Filter
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            result = result.filter(o =>
-                o.id.toLowerCase().includes(query) ||
-                o.customer.toLowerCase().includes(query) ||
-                o.product.toLowerCase().includes(query)
-            );
-        }
-
-        return result;
-    }, [recentOrders, filterStatus, searchQuery]);
+        return baseFilteredOrders.slice(0, 10);
+    }, [baseFilteredOrders]);
 
     const handleExport = () => {
         setIsExporting(true);
@@ -122,10 +144,12 @@ const AdminOverview: React.FC = () => {
         sections.push(['']);
 
         // 2. Orders Section
-        sections.push(['--- FILTERED DEPLOYMENT MANIFEST ---']);
-        sections.push(['Order ID', 'Customer', 'Product', 'Amount', 'Status']);
-        filteredOrders.forEach(o => {
-            sections.push([o.id, o.customer, o.product, o.amount, o.status]);
+        sections.push(['--- FILTERED DEPLOYMENT MANIFEST (FULL) ---']);
+        sections.push(['Order ID', 'Customer (UID)', 'Primary Product', 'Value', 'Status', 'Timestamp']);
+        
+        // Use the FULL baseFilteredOrders list for export, not just the top 10 from the UI
+        baseFilteredOrders.forEach(o => {
+            sections.push([o.id, o.customer, o.product, `$${o.amount.toFixed(2)}`, o.status, o.date]);
         });
         sections.push(['']);
 
@@ -154,56 +178,188 @@ const AdminOverview: React.FC = () => {
         }, 1200);
     };
 
-    // REAL DATA ENGINE: Calculate real stats based on selected timeframe
+    // REAL DATA ENGINE: Calculate real stats + growth vs previous equivalent period
     const semanticData = React.useMemo(() => {
-        
         const now = new Date();
-        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        const startOfYear = new Date(now.getFullYear(), 0, 1);
- 
-        const filterByTime = (dateStr: string | undefined) => {
-            if (!dateStr) return false;
-            const date = new Date(dateStr);
-            if (timeFrame === 'Day') return date >= startOfDay;
-            if (timeFrame === 'Week') return date >= startOfWeek;
-            if (timeFrame === 'Month') return date >= startOfMonth;
-            if (timeFrame === 'Year') return date >= startOfYear;
-            return true;
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        
+        // Define stable rolling window boundaries (aligned to midnight)
+        const startOfWeek   = new Date(startOfToday.getTime() - 6 * 86400000); // 7 days total (today + 6 prev)
+        const startOfMonth  = new Date(now.getFullYear(), now.getMonth(), 1);
+        const startOfYear   = new Date(now.getFullYear(), 0, 1);
+
+        // Current-period boundaries
+        const currentStart = timeFrame === 'Day' ? startOfToday
+            : timeFrame === 'Week'  ? startOfWeek
+            : timeFrame === 'Month' ? startOfMonth
+            : timeFrame === 'Year'  ? startOfYear
+            : new Date(0);
+
+        // Previous-period boundaries (same length, just before currentStart)
+        const getPrevBounds = (): [Date, Date] => {
+            if (timeFrame === 'Day') {
+                const s = new Date(startOfToday.getTime() - 86400000);
+                return [s, startOfToday];
+            }
+            if (timeFrame === 'Week') {
+                const s = new Date(startOfWeek.getTime() - 7 * 86400000);
+                return [s, startOfWeek];
+            }
+            if (timeFrame === 'Month') {
+                const s = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                const e = new Date(now.getFullYear(), now.getMonth(), 1);
+                return [s, e];
+            }
+            if (timeFrame === 'Year') {
+                const s = new Date(now.getFullYear() - 1, 0, 1);
+                const e = new Date(now.getFullYear(), 0, 1);
+                return [s, e];
+            }
+            return [new Date(0), new Date(0)];
         };
 
-        const filteredByTime = allOrders.filter((o: any) => filterByTime(o.date));
+        const [prevStart, prevEnd] = getPrevBounds();
+
+        const filterByTime = (dateStr: string | undefined) => {
+            if (!dateStr) return false;
+            const orderTime = new Date(dateStr).getTime();
+            return orderTime >= currentStart.getTime();
+        };
+
+        const filterPrev = (dateStr: string | undefined) => {
+            if (!dateStr || timeFrame === 'All Time') return false;
+            const orderTime = new Date(dateStr).getTime();
+            return orderTime >= prevStart.getTime() && orderTime < prevEnd.getTime();
+        };
+
+        // Current period data
+        const filteredByTime = allOrders.filter((o: any) => {
+            if (!filterByTime(o.date) || o.status === 'Cancelled' || o.status === 'REFUNDED') return false;
+            
+            // Apply Status Filter
+            if (filterStatus) {
+                const target = filterStatus === 'Paid' ? 'Processing' : filterStatus;
+                if (o.status !== target) return false;
+            }
+            // Apply Search Filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                const idMatch = o.id?.toLowerCase().includes(query);
+                const custMatch = o.userId?.toLowerCase().includes(query); 
+                if (!idMatch && !custMatch) return false;
+            }
+            return true;
+        });
         
-        const periodRevenue = filteredByTime.reduce((acc: number, o: any) => acc + Number(o.total || 0), 0);
-        const periodOrders = filteredByTime.length;
-        const periodReach = new Set(filteredByTime.map((o: any) => o.userId)).size;
-        const periodConversion = periodOrders > 0 
-            ? ((filteredByTime.filter((o: any) => o.status === 'DELIVERED').length / periodOrders) * 100).toFixed(1) 
-            : '0.0';
+        // Stats
+        const periodRevenue    = filteredByTime.reduce((acc: number, o: any) => acc + Number(o.subtotal || 0), 0);
+        const totalOrdersInPeriod = filteredByTime.length;
+        
+        // "Active" Orders definition for the Current Snapshot
+        const activeOrdersCount = filteredByTime.filter((o: any) => 
+            o.status !== 'Delivered' && o.status !== 'DELIVERED'
+        ).length;
+
+        const periodReach      = new Set(filteredByTime.map((o: any) => o.userId)).size;
+        const periodConversion = totalOrdersInPeriod > 0
+            ? ((filteredByTime.filter((o: any) => o.status?.toLowerCase() === 'delivered').length / totalOrdersInPeriod) * 100)
+            : 0;
+
+        // Previous period data
+        const prevOrders     = allOrders.filter((o: any) => {
+            if (!filterPrev(o.date) || o.status === 'Cancelled' || o.status === 'REFUNDED') return false;
+            
+            // Apply Status Filter
+            if (filterStatus) {
+                const target = filterStatus === 'Paid' ? 'Processing' : filterStatus;
+                if (o.status !== target) return false;
+            }
+            // Apply Search Filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                const idMatch = o.id?.toLowerCase().includes(query);
+                const custMatch = o.userId?.toLowerCase().includes(query);
+                if (!idMatch && !custMatch) return false;
+            }
+            return true;
+        });
+        
+        const prevRevenue    = prevOrders.reduce((acc: number, o: any) => acc + Number(o.subtotal || 0), 0);
+        const prevOrderCount = prevOrders.length;
+        const prevReach      = new Set(prevOrders.map((o: any) => o.userId)).size;
+        const prevConversion = prevOrderCount > 0
+            ? ((prevOrders.filter((o: any) => o.status?.toLowerCase() === 'delivered').length / prevOrderCount) * 100)
+            : 0;
+
+        // Growth % helper
+        const growth = (curr: number, prev: number): number => {
+            if (prev === 0) return curr > 0 ? 100 : 0;
+            if (curr === 0) return -100;
+            return Math.round(((curr - prev) / prev) * 100);
+        };
+
+        const periodLabel = timeFrame === 'All Time' ? 'All Time'
+            : timeFrame === 'Day'   ? 'vs Yesterday'
+            : timeFrame === 'Week'  ? 'vs Last Week'
+            : timeFrame === 'Month' ? 'vs Last Month'
+            : 'vs Last Year';
 
         const semanticStats = [
-            { label: 'Total Revenue', value: `$${periodRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, trend: 0, icon: 'DollarSign', trendLabel: `In ${timeFrame}` },
-            { label: 'Active Orders', value: periodOrders.toLocaleString(), trend: 0, icon: 'ShoppingBag', trendLabel: `In ${timeFrame}` },
-            { label: 'Platform Reach', value: periodReach.toLocaleString(), trend: 0, icon: 'Users', trendLabel: `In ${timeFrame}` },
-            { label: 'Conversion', value: `${periodConversion}%`, trend: 0, icon: 'Target', trendLabel: `In ${timeFrame}` },
+            { 
+                label: 'Total Revenue', 
+                value: `$${periodRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, 
+                trend: Math.abs(growth(periodRevenue, prevRevenue)), 
+                trendDirection: growth(periodRevenue, prevRevenue) >= 0 ? 'up' : 'down',
+                icon: 'DollarSign', 
+                trendLabel: periodLabel 
+            },
+            { 
+                label: 'Active Orders', 
+                value: activeOrdersCount.toLocaleString(), 
+                trend: Math.abs(growth(totalOrdersInPeriod, prevOrderCount)), 
+                trendDirection: growth(totalOrdersInPeriod, prevOrderCount) >= 0 ? 'up' : 'down',
+                icon: 'ShoppingBag', 
+                trendLabel: periodLabel 
+            },
+            { 
+                label: 'Platform Reach', 
+                value: periodReach.toLocaleString(), 
+                trend: Math.abs(growth(periodReach, prevReach)), 
+                trendDirection: growth(periodReach, prevReach) >= 0 ? 'up' : 'down',
+                icon: 'Users', 
+                trendLabel: periodLabel 
+            },
+            { 
+                label: 'Conversion', 
+                value: `${periodConversion.toFixed(1)}%`, 
+                trend: Math.abs(growth(periodConversion, prevConversion)), 
+                trendDirection: growth(periodConversion, prevConversion) >= 0 ? 'up' : 'down',
+                icon: 'Target', 
+                trendLabel: periodLabel 
+            },
         ];
 
-        // Prepare chart data: Try salesHistory snapshots first, fallback to live orders
+        // ── Chart data ──────────────────────────────────────────────────
         let filteredHistory = salesHistory
             .filter(s => filterByTime(s.date))
             .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-        let chartData = filteredHistory.map(s => Number(s.totalRevenue));
-        let chartLabels = filteredHistory.map(s => {
-            const d = new Date(s.date);
-            if (timeFrame === 'Week') return d.toLocaleDateString(undefined, { weekday: 'short' });
-            if (timeFrame === 'Day') return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-            return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-        });
+        let chartData: number[] = [];
+        let chartLabels: string[] = [];
 
-        // Fallback to Live Order Data if no snapshots exist OR if timeFrame is Day/Year (where snapshots might be less granular)
-        if (chartData.length === 0 || timeFrame === 'Day' || timeFrame === 'Year' || timeFrame === 'All Time') {
+        if (filteredHistory.length > 0) {
+            chartData   = filteredHistory.map(s => Number(s.totalRevenue));
+            chartLabels = filteredHistory.map(s => {
+                const d = new Date(s.date);
+                if (timeFrame === 'Week') return d.toLocaleDateString(undefined, { weekday: 'short' });
+                if (timeFrame === 'Day')  return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+                // Month / Year / All Time: include month name so tooltip is clear
+                return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+            });
+        }
+
+        // Fallback to live order aggregation when no daily snapshots yet
+        if (chartData.length === 0) {
             const liveMap: Record<string, number> = {};
             filteredByTime.forEach((o: any) => {
                 const date = new Date(o.date);
@@ -213,31 +369,31 @@ const AdminOverview: React.FC = () => {
                 } else if (timeFrame === 'Year' || timeFrame === 'All Time') {
                     key = date.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
                 } else if (timeFrame === 'Week') {
-                    key = date.toLocaleDateString(undefined, { weekday: 'short' });
+                    key = date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
                 } else {
+                    // Month — include full date so tooltip is unambiguous
                     key = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
                 }
-                liveMap[key] = (liveMap[key] || 0) + Number(o.total);
+                liveMap[key] = (liveMap[key] || 0) + Number(o.subtotal);
             });
 
-            // Sort keys correctly based on timeframe
             const sortedKeys = Object.keys(liveMap).sort((a, b) => {
                 if (timeFrame === 'Day') return parseInt(a) - parseInt(b);
                 if (timeFrame === 'Week') {
                     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                    return days.indexOf(a) - days.indexOf(b);
+                    // extract weekday abbreviation ("Mon", "Tue"…) from keys like "Mon, Mar 25"
+                    const da = days.findIndex(d => a.startsWith(d));
+                    const db = days.findIndex(d => b.startsWith(d));
+                    return da - db;
                 }
                 return new Date(a).getTime() - new Date(b).getTime();
             });
 
-            chartData = sortedKeys.map(key => liveMap[key]);
-            chartLabels = sortedKeys.map(key => {
-                if (timeFrame === 'Day') return `${key}:00`;
-                return key;
-            });
+            chartData   = sortedKeys.map(k => liveMap[k]);
+            chartLabels = sortedKeys.map(k => (timeFrame === 'Day' ? `${k}:00` : k));
         }
 
-        // Prepare category distribution
+        // ── Category distribution ────────────────────────────────────────
         const catMap: Record<string, number> = {};
         filteredByTime.forEach((o: any) => {
             o.items?.forEach((item: any) => {
@@ -248,19 +404,17 @@ const AdminOverview: React.FC = () => {
         });
 
         const sortedCats = Object.entries(catMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
-        const catData = sortedCats.map(c => c[1]);
-        const catLabels = sortedCats.map(c => c[0]);
+        const catData    = sortedCats.map(c => c[1]);
+        const catLabels  = sortedCats.map(c => c[0]);
 
         return {
             semanticStats,
             chartLabels: chartLabels.length > 0 ? chartLabels : undefined,
-            chartData: chartData.length > 0 ? chartData : undefined,
-            catData: catData.length > 0 ? catData : undefined,
-            catLabels: catLabels.length > 0 ? catLabels : undefined,
-            revenueRatio: 1,
-            distributionRatio: 1
+            chartData:   chartData.length   > 0 ? chartData   : undefined,
+            catData:     catData.length     > 0 ? catData     : undefined,
+            catLabels:   catLabels.length   > 0 ? catLabels   : undefined,
         };
-    }, [allOrders, salesHistory, timeFrame, products, categories]);
+    }, [allOrders, salesHistory, timeFrame, products, categories, filterStatus, searchQuery]);
 
     // Align Activity Feed with visible Deployment IDs
     const alignedActivity = React.useMemo(() => {
@@ -390,12 +544,11 @@ const AdminOverview: React.FC = () => {
                 ))}
             </div>
 
-            {/* Charts Section */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
                 <motion.div variants={itemVariants}>
                     <ChartPlaceholder
-                        title={`Revenue Stream (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : 'All Time'})`}
-                        subtitle={`Total: ${semanticData.semanticStats[0]?.value || '$0.00'} • ${timeFrame}`}
+                        title={`Revenue Stream (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : timeFrame === 'Year' ? '1Y' : 'All Time'})`}
+                        subtitle={`Total: ${semanticData.semanticStats[0]?.value || '$0.00'} • ${timeFrame === 'Month' ? new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) : timeFrame}`}
                         type="line"
                         data={semanticData.chartData}
                         labels={semanticData.chartLabels}
@@ -404,7 +557,7 @@ const AdminOverview: React.FC = () => {
                 </motion.div>
                 <motion.div variants={itemVariants}>
                     <ChartPlaceholder
-                        title={`Category Success (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : 'All Time'})`}
+                        title={`Category Success (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : timeFrame === 'Year' ? '1Y' : 'All Time'})`}
                         subtitle={`System Conversion: ${semanticData.semanticStats[3]?.value || '0.0%'} • Active Ops: ${semanticData.semanticStats[1]?.value || '0'}`}
                         type="bar"
                         data={semanticData.catData}

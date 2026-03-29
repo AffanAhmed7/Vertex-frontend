@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -86,6 +87,24 @@
     body {
         @apply bg-background text-foreground font-sans antialiased;
         font-feature-settings: "rlig" 1, "calt" 1;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Outfit', sans-serif;
+        letter-spacing: -0.02em;
+    }
+
+    /* Standardized Numeric Typography - Professional & Narrow */
+    :is(span, p, div, h1, h2, h3, h4, h5, h6, select, input, button, a) {
+        font-variant-numeric: tabular-nums;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Simpler, professional font for all numbers */
+    @supports (font-variation-settings: normal) {
+        :is(span, p, div, h1, h2, h3, h4, h5, h6, select, input, button) {
+            font-feature-settings: "tnum", "cv05", "cv11";
+        }
     }
 }
 

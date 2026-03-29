@@ -66,9 +66,9 @@ const AdminOrders: React.FC = () => {
             )
         },
         {
-            key: 'total',
-            label: 'Total Valuation',
-            render: (total: number) => <span className="font-medium text-white">${total}</span>
+            key: 'subtotal',
+            label: 'Valuation',
+            render: (subtotal: number) => <span className="font-medium text-white">${subtotal}</span>
         },
         {
             key: 'status',
@@ -107,7 +107,7 @@ const AdminOrders: React.FC = () => {
                 <p className="text-xs font-sans text-muted-foreground">{o.id}</p>
             </div>
             <div className="text-right">
-                <p className="text-sm font-medium text-white">${o.total}</p>
+                <p className="text-sm font-medium text-white">${o.subtotal}</p>
                 <p className="text-xs font-semibold text-primary">{o.status}</p>
             </div>
         </div>
@@ -122,7 +122,7 @@ const AdminOrders: React.FC = () => {
                 o.customerName,
                 o.customerEmail,
                 o.date,
-                o.total,
+                o.subtotal,
                 o.status,
                 o.items.map(i => `${i.name} (x${i.quantity})`).join('; '),
                 o.shippingAddress

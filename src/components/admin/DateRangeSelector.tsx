@@ -2,16 +2,17 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface DateRangeSelectorProps {
-    activeRange: '7d' | '30d' | '90d' | 'custom';
-    onRangeChange: (range: '7d' | '30d' | '90d' | 'custom') => void;
+    activeRange: '24h' | '7d' | '30d' | '1y' | 'all';
+    onRangeChange: (range: '24h' | '7d' | '30d' | '1y' | 'all') => void;
 }
 
 const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({ activeRange, onRangeChange }) => {
     const ranges: { id: typeof activeRange; label: string }[] = [
-        { id: '7d', label: '7 Days' },
-        { id: '30d', label: '30 Days' },
-        { id: '90d', label: '90 Days' },
-        { id: 'custom', label: 'Custom' },
+        { id: '24h', label: 'Day' },
+        { id: '7d', label: 'Week' },
+        { id: '30d', label: 'Month' },
+        { id: '1y', label: 'Year' },
+        { id: 'all', label: 'All Time' },
     ];
 
     return (

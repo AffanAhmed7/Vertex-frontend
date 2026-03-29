@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Filter, Edit2, Trash2, ShieldAlert } from 'lucide-react';
 import { RootState } from '../../store';
+import { addToast } from '../../store/slices/toastSlice';
 import { setProducts, setLoading, AdminProduct } from '../../store/slices/adminSlice';
 import { fetchAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminProduct, fetchCategories } from '../../services/adminService';
 import AdminTable from '../../components/admin/AdminTable';
 import ProductFormModal from '../../components/admin/ProductFormModal';
+import AdminVault from '../../components/admin/AdminVault';
 
 const AdminProducts: React.FC = () => {
     const dispatch = useDispatch();
@@ -17,6 +19,10 @@ const AdminProducts: React.FC = () => {
     const [filterCategory, setFilterCategory] = useState<string | null>(null);
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
     const [categoryList, setCategoryList] = useState<{ id: string; name: string }[]>([]);
+    
+    // Vault State
+    const [isVaultOpen, setIsVaultOpen] = useState(false);
+    const [vaultAction, setVaultAction] = useState<{ type: 'save' | 'delete', data?: any } | null>(null);
 
     // Fetch products + categories on mount
     useEffect(() => {
@@ -224,36 +230,9 @@ const AdminProducts: React.FC = () => {
                 initialData={selectedProduct}
                 categories={categories}
                 onClose={() => setIsModalOpen(false)}
-                onSubmit={async (data) => {
-                    try {
-                        // Resolve categoryId from category name
-                        let categoryId = categoryList.find(c => c.name === data.category)?.id || '';
-                        if (data.id) {
-                            await updateAdminProduct(data.id, {
-                                name: data.name,
-                                price: Number(data.price),
-                                stock: Number(data.stock),
-                                sku: data.sku,
-                                description: data.description,
-                                ...(categoryId ? { categoryId } : {}),
-                            });
-                        } else {
-                            if (!categoryId && categoryList.length > 0) categoryId = categoryList[0].id;
-                            await createAdminProduct({
-                                name: data.name,
-                                price: Number(data.price),
-                                stock: Number(data.stock),
-                                sku: data.sku,
-                                description: data.description,
-                                categoryId,
-                            });
-                        }
-                        // Refresh products list
-                        const prods = await fetchAdminProducts();
-                        dispatch(setProducts(prods));
-                    } catch (err) {
-                        console.error('Product save failed', err);
-                    }
+                onSubmit={(data) => {
+                    setVaultAction({ type: 'save', data });
+                    setIsVaultOpen(true);
                 }}
             />
 
@@ -292,15 +271,9 @@ const AdminProducts: React.FC = () => {
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={async () => {
-                                        try {
-                                            await deleteAdminProduct(confirmDelete.id);
-                                            const prods = await fetchAdminProducts();
-                                            dispatch(setProducts(prods));
-                                        } catch (err) {
-                                            console.error('Delete failed', err);
-                                        }
-                                        setConfirmDelete(null);
+                                    onClick={() => {
+                                        setVaultAction({ type: 'delete', data: confirmDelete });
+                                        setIsVaultOpen(true);
                                     }}
                                     className="flex-1 px-4 py-3 bg-rose-500 text-white rounded-xl text-xs font-semibold hover:opacity-90 transition-all shadow-lg shadow-rose-500/20"
                                 >
@@ -311,6 +284,68 @@ const AdminProducts: React.FC = () => {
                     </div>
                 )}
             </AnimatePresence>
+
+            {/* OTP Vault */}
+            <AdminVault
+                isOpen={isVaultOpen}
+                onClose={() => {
+                    setIsVaultOpen(false);
+                    setVaultAction(null);
+                }}
+                onSuccess={async () => {
+                    if (!vaultAction) return;
+
+                    if (vaultAction.type === 'save') {
+                        const data = vaultAction.data;
+                        try {
+                            let categoryId = categoryList.find(c => c.name === data.category)?.id || '';
+                            if (data.id) {
+                                await updateAdminProduct(data.id, {
+                                    name: data.name,
+                                    price: Number(data.price),
+                                    stock: Number(data.stock),
+                                    sku: data.sku,
+                                    description: data.description || undefined,
+                                    image: data.image || undefined,
+                                    ...(categoryId ? { categoryId } : {}),
+                                });
+                            } else {
+                                if (!categoryId && categoryList.length > 0) categoryId = categoryList[0].id;
+                                await createAdminProduct({
+                                    name: data.name,
+                                    price: Number(data.price),
+                                    stock: Number(data.stock),
+                                    sku: data.sku,
+                                    description: data.description || undefined,
+                                    image: data.image || undefined,
+                                    categoryId,
+                                });
+                            }
+                            const prods = await fetchAdminProducts();
+                            dispatch(setProducts(prods));
+                            dispatch(addToast({ message: 'Product configuration synchronized.', type: 'success' }));
+                            setIsModalOpen(false);
+                        } catch (err: any) {
+                            const msg = err.response?.data?.message || err.response?.data?.error || 'Product save failed';
+                            dispatch(addToast({ message: msg, type: 'error' }));
+                        }
+                    } else if (vaultAction.type === 'delete') {
+                        const product = vaultAction.data;
+                        try {
+                            await deleteAdminProduct(product.id);
+                            const prods = await fetchAdminProducts();
+                            dispatch(setProducts(prods));
+                            dispatch(addToast({ message: 'Asset decommissioned successfully.', type: 'success' }));
+                            setConfirmDelete(null);
+                        } catch (err: any) {
+                            const msg = err.response?.data?.message || err.response?.data?.error || 'Delete failed';
+                            dispatch(addToast({ message: msg, type: 'error' }));
+                        }
+                    }
+                    setVaultAction(null);
+                }}
+                actionLabel={vaultAction?.type === 'save' ? "save product configuration" : "decommission asset"}
+            />
         </div>
     );
 };

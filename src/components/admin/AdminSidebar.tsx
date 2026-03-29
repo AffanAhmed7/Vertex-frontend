@@ -1,6 +1,8 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/slices/userSlice';
 import {
     LayoutDashboard,
     Package,
@@ -21,6 +23,14 @@ interface AdminSidebarProps {
 }
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, className, isMobile }) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/login');
+    };
+
     const navItems = [
         { icon: LayoutDashboard, label: 'Overview', path: '/admin', end: true },
         { icon: Package, label: 'Products', path: '/admin/products' },
@@ -89,7 +99,10 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, clas
 
             {/* Footer Section (Logout) */}
             <div className="p-4 border-t border-white/5">
-                <button className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all">
+                <button 
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all"
+                >
                     <LogOut size={20} className="shrink-0" />
                     {!isCollapsed && <span className="text-sm font-medium">Logout</span>}
                 </button>

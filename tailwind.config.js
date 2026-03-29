@@ -58,7 +58,8 @@ export default {
                 'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.5)',
             },
             fontFamily: {
-                sans: ['Outfit', 'sans-serif'],
+                sans: ['Inter', 'Outfit', 'sans-serif'],
+                display: ['Outfit', 'sans-serif'],
             },
         },
     },
