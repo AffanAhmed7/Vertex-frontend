@@ -1,7 +1,7 @@
 import api from './api';
 
 export const userService = {
-    async updateProfile(data: { name?: string; email?: string; twoFactorEnabled?: boolean }) {
+    async updateProfile(data: { name?: string; email?: string; twoFactorEnabled?: boolean; securityQuestion?: string; securityAnswer?: string }) {
         const response = await api.patch<{ success: boolean; data: any; message: string }>('/auth/profile', data);
         return response.data;
     },

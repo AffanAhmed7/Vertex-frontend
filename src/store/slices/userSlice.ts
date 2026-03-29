@@ -46,7 +46,12 @@ interface UserState {
         avatar?: string;
         role: 'CUSTOMER' | 'ADMIN';
         twoFactorEnabled?: boolean;
+        securityQuestion?: string;
+        hasSecurityQuestion?: boolean;
     } | null;
+    requires2FA: boolean;
+    twoFactorUserId: string | null;
+    securityQuestion: string | null;
     orders: Order[];
     addresses: UserAddress[];
     loading: boolean;
@@ -55,6 +60,9 @@ interface UserState {
 
 const initialState: UserState = {
     currentUser: null,
+    requires2FA: false,
+    twoFactorUserId: null,
+    securityQuestion: null,
     orders: [],
     addresses: [],
     loading: false,
@@ -68,13 +76,39 @@ export const loginUser = createAsyncThunk(
         try {
             const response = await authService.login(credentials);
             if (response.success) {
-                localStorage.setItem('accessToken', response.accessToken);
-                localStorage.setItem('refreshToken', response.refreshToken);
+                if (response.requires2FA) {
+                    return { requires2FA: true, securityQuestion: response.securityQuestion, userId: response.userId };
+                }
+                localStorage.setItem('accessToken', response.accessToken!);
+                localStorage.setItem('refreshToken', response.refreshToken!);
                 return response.user;
             }
             return rejectWithValue(response.message || 'Login failed');
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Login failed');
+        }
+    }
+);
+
+export const verify2FA = createAsyncThunk(
+    'user/verify2FA',
+    async ({ userId, answer }: { userId: string; answer: string }, { dispatch, rejectWithValue }: any) => {
+        try {
+            const response = await authService.verify2FA(userId, answer);
+            if (response.success) {
+                localStorage.setItem('accessToken', response.accessToken!);
+                localStorage.setItem('refreshToken', response.refreshToken!);
+                
+                // Fetch user data after successful 2FA
+                dispatch(fetchAddresses());
+                dispatch(fetchOrders());
+                dispatch(fetchDbCart());
+                
+                return response.user;
+            }
+            return rejectWithValue(response.message || 'Verification failed');
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Verification failed');
         }
     }
 );
@@ -88,8 +122,8 @@ export const registerUser = createAsyncThunk(
             }
             const response = await authService.register(userData);
             if (response.success) {
-                localStorage.setItem('accessToken', response.accessToken);
-                localStorage.setItem('refreshToken', response.refreshToken);
+                localStorage.setItem('accessToken', response.accessToken!);
+                localStorage.setItem('refreshToken', response.refreshToken!);
                 return response.user;
             }
             return rejectWithValue(response.message || 'Registration failed');
@@ -101,7 +135,7 @@ export const registerUser = createAsyncThunk(
 
 export const updateProfile = createAsyncThunk(
     'user/updateProfile',
-    async (data: { name?: string; email?: string; twoFactorEnabled?: boolean }, { rejectWithValue }: any) => {
+    async (data: { name?: string; email?: string; twoFactorEnabled?: boolean; securityQuestion?: string; securityAnswer?: string }, { rejectWithValue }: any) => {
         try {
             const response = await userService.updateProfile(data);
             if (response.success) {
@@ -210,8 +244,8 @@ export const googleLogin = createAsyncThunk(
         try {
             const response = await authService.googleLogin(idToken);
             if (response.success) {
-                localStorage.setItem('accessToken', response.accessToken);
-                localStorage.setItem('refreshToken', response.refreshToken);
+                localStorage.setItem('accessToken', response.accessToken!);
+                localStorage.setItem('refreshToken', response.refreshToken!);
                 return response.user;
             }
             return rejectWithValue(response.message || 'Google login failed');
@@ -238,7 +272,7 @@ export const fetchCurrentUser = createAsyncThunk(
 
 export const initializeAuth = createAsyncThunk(
     'user/initializeAuth',
-    async (_, { dispatch, rejectWithValue }: any) => {
+    async (_, { dispatch }: any) => {
         const token = localStorage.getItem('accessToken');
         if (!token) return null;
         try {
@@ -278,19 +312,74 @@ const userSlice = createSlice({
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;
+        },
+        reset2FA: (state) => {
+            state.requires2FA = false;
+            state.twoFactorUserId = null;
+            state.securityQuestion = null;
+            state.error = null;
         }
     },
     extraReducers: (builder: any) => {
         builder
             // Auth
+            .addCase(loginUser.pending, (state: any) => {
+                state.loading = true;
+                state.error = null;
+            })
             .addCase(loginUser.fulfilled, (state: any, action: any) => {
+                state.loading = false;
+                if (action.payload?.requires2FA) {
+                    state.requires2FA = true;
+                    state.securityQuestion = action.payload.securityQuestion;
+                    state.twoFactorUserId = action.payload.userId;
+                } else {
+                    state.currentUser = action.payload;
+                    state.requires2FA = false;
+                }
+            })
+            .addCase(loginUser.rejected, (state: any, action: any) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+            .addCase(verify2FA.pending, (state: any) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(verify2FA.fulfilled, (state: any, action: any) => {
+                state.loading = false;
                 state.currentUser = action.payload;
+                state.requires2FA = false;
+                state.twoFactorUserId = null;
+                state.securityQuestion = null;
+            })
+            .addCase(verify2FA.rejected, (state: any, action: any) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+            .addCase(registerUser.pending, (state: any) => {
+                state.loading = true;
+                state.error = null;
             })
             .addCase(registerUser.fulfilled, (state: any, action: any) => {
+                state.loading = false;
                 state.currentUser = action.payload;
             })
+            .addCase(registerUser.rejected, (state: any, action: any) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+            .addCase(googleLogin.pending, (state: any) => {
+                state.loading = true;
+                state.error = null;
+            })
             .addCase(googleLogin.fulfilled, (state: any, action: any) => {
+                state.loading = false;
                 state.currentUser = action.payload;
+            })
+            .addCase(googleLogin.rejected, (state: any, action: any) => {
+                state.loading = false;
+                state.error = action.payload as string;
             })
             // Profile
             .addCase(updateProfile.fulfilled, (state: any, action: any) => {
@@ -342,5 +431,5 @@ const userSlice = createSlice({
     }
 });
 
-export const { setUser, logout, clearError, setError } = userSlice.actions;
+export const { setUser, logout, clearError, setError, reset2FA } = userSlice.actions;
 export default userSlice.reducer;

@@ -3,14 +3,17 @@ import api from './api';
 export interface AuthResponse {
     success: boolean;
     message: string;
-    user: {
+    user?: {
         id: string;
         email: string;
         name: string;
         role: 'CUSTOMER' | 'ADMIN';
     };
-    accessToken: string;
-    refreshToken: string;
+    accessToken?: string;
+    refreshToken?: string;
+    requires2FA?: boolean;
+    securityQuestion?: string;
+    userId?: string;
 }
 
 export const authService = {
@@ -31,6 +34,11 @@ export const authService = {
 
     async googleLogin(idToken: string): Promise<AuthResponse> {
         const response = await api.post<AuthResponse>('/auth/google', { idToken });
+        return response.data;
+    },
+
+    async verify2FA(userId: string, answer: string): Promise<AuthResponse> {
+        const response = await api.post<AuthResponse>('/auth/verify-2fa', { userId, answer });
         return response.data;
     },
 };

@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { motion } from 'framer-motion';
-import { User, Shield, Save, CheckCircle2, AlertCircle, Mail, Lock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, Shield, Save, CheckCircle2, AlertCircle, Mail, Lock, ShieldQuestion, ChevronDown } from 'lucide-react';
 import { RootState, AppDispatch } from '../../store';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { updateProfile, clearError, changePassword } from '../../store/slices/userSlice';
+
+const SECURITY_QUESTIONS = [
+    'What is your mother\'s maiden name?',
+    'What city were you born in?',
+    'What was the name of your first pet?',
+    'What was the name of your first school?',
+    'What is your favorite book?',
+];
 
 const AccountSettings: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -30,6 +38,13 @@ const AccountSettings: React.FC = () => {
     const [passwordSuccess, setPasswordSuccess] = useState(false);
     const [passwordError, setPasswordError] = useState<string | null>(null);
 
+    // Security Question Form
+    const [securityQuestion, setSecurityQuestion] = useState(currentUser?.securityQuestion || '');
+    const [securityAnswer, setSecurityAnswer] = useState('');
+    const [isSavingSecurity, setIsSavingSecurity] = useState(false);
+    const [securitySaved, setSecuritySaved] = useState(false);
+    const [securityError, setSecurityError] = useState<string | null>(null);
+
     useEffect(() => {
         if (currentUser) {
             setProfileData({
@@ -37,6 +52,9 @@ const AccountSettings: React.FC = () => {
                 email: currentUser.email,
                 twoFactorEnabled: !!currentUser.twoFactorEnabled
             });
+            if (currentUser.securityQuestion) {
+                setSecurityQuestion(currentUser.securityQuestion);
+            }
         }
     }, [currentUser]);
 
@@ -99,6 +117,39 @@ const AccountSettings: React.FC = () => {
         await dispatch(updateProfile({ twoFactorEnabled: nextValue }));
     };
 
+    const handleSecurityQuestionSave = async () => {
+        if (!securityQuestion) {
+            setSecurityError('Please select a security question');
+            return;
+        }
+        if (!securityAnswer.trim()) {
+            setSecurityError('Please provide an answer');
+            return;
+        }
+
+        setIsSavingSecurity(true);
+        setSecurityError(null);
+
+        try {
+            const resultAction = await dispatch(updateProfile({
+                securityQuestion,
+                securityAnswer: securityAnswer.trim()
+            }));
+
+            if (updateProfile.fulfilled.match(resultAction)) {
+                setSecuritySaved(true);
+                setSecurityAnswer('');
+                setTimeout(() => setSecuritySaved(false), 3000);
+            } else {
+                setSecurityError('Failed to save security question');
+            }
+        } catch (err) {
+            setSecurityError('Failed to save security question');
+        } finally {
+            setIsSavingSecurity(false);
+        }
+    };
+
     return (
         <div className="space-y-12 pb-20">
             {/* Header */}
@@ -147,7 +198,7 @@ const AccountSettings: React.FC = () => {
                             </div>
                             <div className="space-y-1">
                                 <p className="text-xs font-bold text-white uppercase">{currentUser?.name || 'Anonymous User'}</p>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Customer ID: {currentUser?.id.slice(0, 8)}...</p>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Active Member</p>
                             </div>
                         </div>
                     </div>
@@ -192,12 +243,17 @@ const AccountSettings: React.FC = () => {
                                 )}
                                 
                                 <Button 
-                                    variant="outline" 
-                                    className="w-full border-white/10 hover:border-secondary hover:bg-secondary/5 text-xs uppercase tracking-widest h-12"
+                                    variant="primary" 
+                                    className="w-full rounded-full text-xs uppercase tracking-widest h-12 font-black"
                                     onClick={handlePasswordSave}
                                     isLoading={isChangingPassword}
                                 >
-                                    {passwordSuccess ? 'Password Updated' : 'Update Password'}
+                                    {passwordSuccess ? (
+                                        <span className="flex items-center gap-2 animate-in zoom-in-50">
+                                            <CheckCircle2 size={16} />
+                                            Password Updated
+                                        </span>
+                                    ) : 'Update Password'}
                                 </Button>
                             </div>
                         </div>
@@ -232,6 +288,93 @@ const AccountSettings: React.FC = () => {
                             </div>
                         </div>
                     </div>
+
+                    {/* Security Question — only visible when 2FA is enabled */}
+                    <AnimatePresence>
+                        {profileData.twoFactorEnabled && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                                className="overflow-hidden"
+                            >
+                                <div className="space-y-6 pt-2">
+                                    <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                        <ShieldQuestion size={14} className="text-primary" />
+                                        Security Question
+                                    </h3>
+                                    <div className="p-8 bg-white/[0.02] border border-white/5 rounded-2xl space-y-6">
+                                        {currentUser?.hasSecurityQuestion && (
+                                            <div className="flex items-center gap-2 text-green-500 text-[10px] font-black uppercase tracking-widest">
+                                                <CheckCircle2 size={14} />
+                                                Security question is set
+                                            </div>
+                                        )}
+                                        
+                                        <div className="space-y-4">
+                                            {/* Custom Select */}
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                    Select a Question
+                                                </label>
+                                                <div className="relative">
+                                                    <select
+                                                        value={securityQuestion}
+                                                        onChange={(e) => setSecurityQuestion(e.target.value)}
+                                                        className="w-full h-12 bg-white/[0.03] border border-white/10 rounded-xl px-4 pr-10 text-sm text-white appearance-none focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all cursor-pointer"
+                                                        style={{ fontFamily: "'Outfit', sans-serif" }}
+                                                    >
+                                                        <option value="" className="bg-[#0a0a0f] text-white/50">Choose a security question...</option>
+                                                        {SECURITY_QUESTIONS.map((q) => (
+                                                            <option key={q} value={q} className="bg-[#0a0a0f] text-white">{q}</option>
+                                                        ))}
+                                                    </select>
+                                                    <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                                                </div>
+                                            </div>
+
+                                            <Input 
+                                                label="Your Answer"
+                                                type="password"
+                                                value={securityAnswer}
+                                                onChange={(e) => setSecurityAnswer(e.target.value)}
+                                                placeholder={currentUser?.hasSecurityQuestion ? '••••••••  (leave blank to keep current)' : 'Enter your answer'}
+                                                icon={<Lock size={18} />}
+                                            />
+
+                                            {securityError && (
+                                                <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest">{securityError}</p>
+                                            )}
+
+                                            <Button
+                                                variant="primary"
+                                                className="w-full sm:w-auto rounded-full text-xs uppercase tracking-widest h-12 font-black px-10"
+                                                onClick={handleSecurityQuestionSave}
+                                                isLoading={isSavingSecurity}
+                                            >
+                                                {securitySaved ? (
+                                                    <span className="flex items-center gap-2 animate-in zoom-in-50">
+                                                        <CheckCircle2 size={16} />
+                                                        Saved
+                                                    </span>
+                                                ) : (
+                                                    <span className="flex items-center gap-2">
+                                                        <ShieldQuestion size={16} />
+                                                        Save Security Question
+                                                    </span>
+                                                )}
+                                            </Button>
+                                        </div>
+
+                                        <p className="text-[11px] text-muted-foreground leading-relaxed uppercase tracking-[0.05em] opacity-60">
+                                            Your security question will be used to verify your identity when performing sensitive account actions. Choose a question with an answer only you would know.
+                                        </p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </section>
 
                 {/* Final Save Action */}
@@ -243,7 +386,7 @@ const AccountSettings: React.FC = () => {
                         size="lg"
                         onClick={handleProfileSave}
                         isLoading={isSaving}
-                        className="w-full sm:w-[240px] h-14 text-sm uppercase tracking-[0.3em] font-black shadow-xl shadow-primary/10"
+                        className="w-full sm:w-[240px] h-14 text-sm uppercase tracking-[0.3em] font-black shadow-xl shadow-primary/10 rounded-full"
                     >
                         {saved ? (
                             <span className="flex items-center gap-2 animate-in zoom-in-50">

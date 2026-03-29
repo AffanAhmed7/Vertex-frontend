@@ -9,15 +9,18 @@ export const ChartPlaceholder: React.FC<{
     title: string;
     subtitle?: string;
     type: 'line' | 'bar' | 'donut';
+    data?: number[];
+    labels?: string[];
     multiplier?: number;
-    timeFrame?: 'All Time' | 'Month' | 'Week' | 'Day';
-}> = ({ title, subtitle, type, multiplier = 1, timeFrame = 'Month' }) => {
+    timeFrame?: 'All Time' | 'Year' | 'Month' | 'Week' | 'Day';
+}> = ({ title, subtitle, type, data, labels, multiplier = 1, timeFrame = 'Month' }) => {
     const isRevenue = title.toLowerCase().includes('revenue');
     const isCategory = title.toLowerCase().includes('category');
     const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
 
     // Full X-axis labels based on timeframe or category
     const allLabels = React.useMemo(() => {
+        if (labels) return labels;
         if (isCategory) return CATEGORIES;
 
         switch (timeFrame) {
@@ -27,12 +30,12 @@ export const ChartPlaceholder: React.FC<{
             case 'Month':
             default: return ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
         }
-    }, [timeFrame, isCategory]);
+    }, [timeFrame, isCategory, labels]);
 
     // MATHEMATICALLY SOUND NORMALIZATION ENGINE
     const { normalizedData, yAxisMax } = React.useMemo(() => {
-        const baseData = isRevenue ? REVENUE_DATA : CATEGORY_DATA;
-        const rawScaled = baseData.map((val: number) => Math.max(0, val * multiplier));
+        const baseData = data || (isRevenue ? REVENUE_DATA : CATEGORY_DATA);
+        const rawScaled = baseData.map((val: number) => Math.max(0, val * (data ? 1 : multiplier)));
         const sum = rawScaled.reduce((acc, v) => acc + v, 0);
 
         if (isCategory) {

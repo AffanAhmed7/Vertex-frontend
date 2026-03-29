@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RootState } from '../../store';
 import { setProducts, setOrders, setStats, setRecentOrders, setRecentActivity, refreshAnalytics } from '../../store/slices/adminSlice';
-import { fetchAdminProducts, fetchAdminOrders } from '../../services/adminService';
+import { fetchAdminProducts, fetchAdminOrders, fetchSalesHistory, fetchCategories } from '../../services/adminService';
 import StatCard from '../../components/admin/StatCard';
 import { ChartPlaceholder } from '../../components/admin/DashboardCharts';
 import { Filter, Download, MoreHorizontal, ArrowRight } from 'lucide-react';
@@ -12,12 +12,14 @@ import { Filter, Download, MoreHorizontal, ArrowRight } from 'lucide-react';
 const AdminOverview: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { stats, recentOrders, recentActivity, searchQuery } = useSelector((state: RootState) => state.admin);
+    const { recentOrders, recentActivity, searchQuery, orders: allOrders, products } = useSelector((state: RootState) => state.admin);
     const [isLoading, setIsLoading] = useState(true);
     const [isExporting, setIsExporting] = useState(false);
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
-    const [timeFrame, setTimeFrame] = useState<'All Time' | 'Month' | 'Week' | 'Day'>('Month');
+    const [timeFrame, setTimeFrame] = useState<'All Time' | 'Year' | 'Month' | 'Week' | 'Day'>('Month');
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+    const [salesHistory, setSalesHistory] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
 
     const getTimeAgo = (dateStr: string) => {
         const diff = Date.now() - new Date(dateStr).getTime();
@@ -32,37 +34,41 @@ const AdminOverview: React.FC = () => {
     useEffect(() => {
         const load = async () => {
             try {
-                const [prods, ords] = await Promise.all([
+                const [prods, ords, history, cats] = await Promise.all([
                     fetchAdminProducts(),
                     fetchAdminOrders(),
+                    fetchSalesHistory(30),
+                    fetchCategories()
                 ]);
                 dispatch(setProducts(prods));
                 dispatch(setOrders(ords));
+                setSalesHistory(history);
+                setCategories(cats);
 
-                // Compute stats from real data
+                // Initial stats computation (will be refined by semanticData memo)
                 const totalRevenue = ords.reduce((acc: number, o: any) => acc + (o.total || 0), 0);
                 const activeOrders = ords.filter((o: any) => o.status !== 'Delivered' && o.status !== 'Cancelled').length;
-                const uniqueCustomers = new Set(ords.map((o: any) => o.customerEmail)).size;
+                const uniqueCustomers = new Set(ords.map((o: any) => o.customerEmail || o.userId)).size;
                 const conversionRate = ords.length > 0 ? ((ords.filter((o: any) => o.status === 'Delivered').length / ords.length) * 100).toFixed(1) : '0.0';
 
                 dispatch(setStats([
-                    { label: 'Total Revenue', value: `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, trend: 0, icon: 'DollarSign', key: 'revenue' },
+                    { label: 'Total Revenue', value: `$${totalRevenue.toFixed(2)}`, trend: 0, icon: 'DollarSign', key: 'revenue' },
                     { label: 'Active Orders', value: activeOrders.toLocaleString(), trend: 0, icon: 'ShoppingBag', key: 'orders' },
                     { label: 'Platform Reach', value: uniqueCustomers.toLocaleString(), trend: 0, icon: 'Users', key: 'reach' },
                     { label: 'Conversion', value: `${conversionRate}%`, trend: 0, icon: 'Target', key: 'conversion' },
                 ]));
 
-                // Compute recent orders for the dashboard widget
-                const recent = ords.slice(0, 5).map((o: any) => ({
+                // Compute recent orders
+                const recent = [...ords].sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5).map((o: any) => ({
                     id: o.id.substring(0, 8),
-                    customer: o.customerName,
+                    customer: o.customerName || (o.user?.name || 'Customer'),
                     product: o.items?.[0]?.name || 'Multiple Items',
-                    amount: o.total,
-                    status: o.paymentStatus || o.status,
+                    amount: Number(o.total),
+                    status: o.status === 'PAID' ? 'Paid' : o.status === 'SHIPPED' ? 'Shipped' : o.status === 'CREATED' ? 'Pending' : o.status,
                 }));
                 dispatch(setRecentOrders(recent));
 
-                // Compute recent activity from orders
+                // Compute recent activity
                 const activity = ords.slice(0, 3).map((o: any, i: number) => ({
                     id: String(i + 1),
                     type: 'order' as const,
@@ -71,7 +77,6 @@ const AdminOverview: React.FC = () => {
                 }));
                 dispatch(setRecentActivity(activity));
 
-                // Trigger analytics refresh with real data
                 dispatch(refreshAnalytics());
             } catch (err) {
                 console.error('Failed to load overview data', err);
@@ -149,84 +154,113 @@ const AdminOverview: React.FC = () => {
         }, 1200);
     };
 
-    // Semantic Simulation Engine: Calculate real segment ratios from visible data
+    // REAL DATA ENGINE: Calculate real stats based on selected timeframe
     const semanticData = React.useMemo(() => {
-        const totalValue = recentOrders.reduce((acc, o) => acc + o.amount, 0);
-        const filteredValue = filteredOrders.reduce((acc, o) => acc + o.amount, 0);
-        const revenueRatio = totalValue > 0 ? filteredValue / totalValue : 0;
+        
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+ 
+        const filterByTime = (dateStr: string | undefined) => {
+            if (!dateStr) return false;
+            const date = new Date(dateStr);
+            if (timeFrame === 'Day') return date >= startOfDay;
+            if (timeFrame === 'Week') return date >= startOfWeek;
+            if (timeFrame === 'Month') return date >= startOfMonth;
+            if (timeFrame === 'Year') return date >= startOfYear;
+            return true;
+        };
 
-        const totalCount = recentOrders.length;
-        const filteredCount = filteredOrders.length;
-        const countRatio = totalCount > 0 ? filteredCount / totalCount : 0;
+        const filteredByTime = allOrders.filter((o: any) => filterByTime(o.date));
+        
+        const periodRevenue = filteredByTime.reduce((acc: number, o: any) => acc + Number(o.total || 0), 0);
+        const periodOrders = filteredByTime.length;
+        const periodReach = new Set(filteredByTime.map((o: any) => o.userId)).size;
+        const periodConversion = periodOrders > 0 
+            ? ((filteredByTime.filter((o: any) => o.status === 'DELIVERED').length / periodOrders) * 100).toFixed(1) 
+            : '0.0';
 
-        // Precise Period Weights (Monthly baseline = 1.0)
-        const periodScale = timeFrame === 'All Time' ? 12.0 : // Year scaling
-            timeFrame === 'Week' ? 0.23 : // 7/30 days
-                timeFrame === 'Day' ? 0.033 : 1.0; // 1/30 days
+        const semanticStats = [
+            { label: 'Total Revenue', value: `$${periodRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, trend: 0, icon: 'DollarSign', trendLabel: `In ${timeFrame}` },
+            { label: 'Active Orders', value: periodOrders.toLocaleString(), trend: 0, icon: 'ShoppingBag', trendLabel: `In ${timeFrame}` },
+            { label: 'Platform Reach', value: periodReach.toLocaleString(), trend: 0, icon: 'Users', trendLabel: `In ${timeFrame}` },
+            { label: 'Conversion', value: `${periodConversion}%`, trend: 0, icon: 'Target', trendLabel: `In ${timeFrame}` },
+        ];
 
-        const semanticStats = stats.map((stat: any) => {
-            let displayValue = stat.value;
-            const label = stat.label.toLowerCase();
+        // Prepare chart data: Try salesHistory snapshots first, fallback to live orders
+        let filteredHistory = salesHistory
+            .filter(s => filterByTime(s.date))
+            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-            // 1. Classification: Volume (Cumulative) vs Efficiency (Ratio)
-            const isRevenue = label.includes('revenue');
-            const isOrders = label.includes('orders');
-            const isReach = label.includes('reach') || label.includes('users');
-            const isEfficiency = label.includes('rate') || label.includes('percent') || label.includes('conversion');
-
-            // 2. Classification: Platform (Global) vs Operational (Segmented)
-            // Platform Reach (Visitors) is usually a global property.
-            const isPlatformMetric = isReach;
-
-            // 3. Determine Ratios
-            const segmentRatio = (!filterStatus || isPlatformMetric) ? 1 : (isRevenue ? revenueRatio : countRatio);
-
-            // 4. Time Scaling: Volume metrics (Revenue, Orders, Reach) grow with time. 
-            // Efficiency (Conversion) stays stable as a percentage of that volume.
-            const shouldScaleByTime = isRevenue || isOrders || isReach;
-            const finalTimeScale = shouldScaleByTime ? periodScale : 1.0;
-
-            // 5. Contextual Trends: Scaling Trend Realism
-            const trendVariance = timeFrame === 'All Time' ? 4.2 : // Lifetime growth
-                timeFrame === 'Week' ? 0.35 : // Weekly fluctuation
-                    timeFrame === 'Day' ? 0.08 : 1.0; // Daily pulse
-
-            const simulatedTrend = (stat.trend * trendVariance).toFixed(1);
-            const trendLabel = `% vs Last ${timeFrame === 'Day' ? 'Day' : timeFrame === 'Week' ? 'Week' : 'Month'}`;
-            const finalTrendLabel = timeFrame === 'All Time' ? '% Growth' : trendLabel;
-
-            if (typeof stat.value === 'string') {
-                const isCurrency = stat.value.includes('$');
-                const numeric = parseFloat(stat.value.replace(/[^0-9.]/g, ''));
-
-                if (!isNaN(numeric)) {
-                    if (isEfficiency) {
-                        const effectiveRatio = !filterStatus ? 1 : (revenueRatio + countRatio) / 2;
-                        const efficiencyVariance = 0.96 + (effectiveRatio * 0.04);
-                        displayValue = `${(numeric * efficiencyVariance).toFixed(2)}%`;
-                    } else {
-                        const newValue = numeric * segmentRatio * finalTimeScale;
-                        if (isCurrency) {
-                            displayValue = `$${newValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                        } else {
-                            displayValue = Math.floor(newValue).toLocaleString();
-                        }
-                    }
-                }
-            } else if (typeof stat.value === 'number') {
-                displayValue = Math.floor(stat.value * segmentRatio * finalTimeScale);
-            }
-
-            return { ...stat, value: displayValue, trend: parseFloat(simulatedTrend), trendLabel: finalTrendLabel };
+        let chartData = filteredHistory.map(s => Number(s.totalRevenue));
+        let chartLabels = filteredHistory.map(s => {
+            const d = new Date(s.date);
+            if (timeFrame === 'Week') return d.toLocaleDateString(undefined, { weekday: 'short' });
+            if (timeFrame === 'Day') return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+            return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
         });
+
+        // Fallback to Live Order Data if no snapshots exist OR if timeFrame is Day/Year (where snapshots might be less granular)
+        if (chartData.length === 0 || timeFrame === 'Day' || timeFrame === 'Year' || timeFrame === 'All Time') {
+            const liveMap: Record<string, number> = {};
+            filteredByTime.forEach((o: any) => {
+                const date = new Date(o.date);
+                let key = '';
+                if (timeFrame === 'Day') {
+                    key = date.toLocaleTimeString(undefined, { hour: '2-digit', hour12: false });
+                } else if (timeFrame === 'Year' || timeFrame === 'All Time') {
+                    key = date.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+                } else if (timeFrame === 'Week') {
+                    key = date.toLocaleDateString(undefined, { weekday: 'short' });
+                } else {
+                    key = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                }
+                liveMap[key] = (liveMap[key] || 0) + Number(o.total);
+            });
+
+            // Sort keys correctly based on timeframe
+            const sortedKeys = Object.keys(liveMap).sort((a, b) => {
+                if (timeFrame === 'Day') return parseInt(a) - parseInt(b);
+                if (timeFrame === 'Week') {
+                    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    return days.indexOf(a) - days.indexOf(b);
+                }
+                return new Date(a).getTime() - new Date(b).getTime();
+            });
+
+            chartData = sortedKeys.map(key => liveMap[key]);
+            chartLabels = sortedKeys.map(key => {
+                if (timeFrame === 'Day') return `${key}:00`;
+                return key;
+            });
+        }
+
+        // Prepare category distribution
+        const catMap: Record<string, number> = {};
+        filteredByTime.forEach((o: any) => {
+            o.items?.forEach((item: any) => {
+                const product = products.find((p: any) => p.id === item.id || p.id === item.productId);
+                const catName = product?.category || 'Other';
+                catMap[catName] = (catMap[catName] || 0) + Number(item.price * item.quantity || 0);
+            });
+        });
+
+        const sortedCats = Object.entries(catMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        const catData = sortedCats.map(c => c[1]);
+        const catLabels = sortedCats.map(c => c[0]);
 
         return {
             semanticStats,
-            revenueRatio: !filterStatus ? periodScale : revenueRatio * periodScale,
-            countRatio: !filterStatus ? periodScale : countRatio * periodScale,
-            distributionRatio: !filterStatus ? 1.0 : countRatio // Percentages/Ratios don't scale by time
+            chartLabels: chartLabels.length > 0 ? chartLabels : undefined,
+            chartData: chartData.length > 0 ? chartData : undefined,
+            catData: catData.length > 0 ? catData : undefined,
+            catLabels: catLabels.length > 0 ? catLabels : undefined,
+            revenueRatio: 1,
+            distributionRatio: 1
         };
-    }, [stats, recentOrders, filteredOrders, filterStatus, timeFrame]);
+    }, [allOrders, salesHistory, timeFrame, products, categories]);
 
     // Align Activity Feed with visible Deployment IDs
     const alignedActivity = React.useMemo(() => {
@@ -257,7 +291,6 @@ const AdminOverview: React.FC = () => {
         visible: { y: 0, opacity: 1 }
     };
 
-    const [isTimeMenuOpen, setIsTimeMenuOpen] = useState(false);
 
     return (
         <motion.div
@@ -272,48 +305,32 @@ const AdminOverview: React.FC = () => {
                     <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">Command Center</h1>
                     <p className="text-xs text-[#00f2ff]/60 uppercase tracking-widest font-medium">Admin Interface <span className="text-white/10 mx-2">/</span> Operational Analytics</p>
                 </div>
-                <div className="flex items-center gap-3 relative">
-                    {/* Timeframe Selector */}
-                    <div className="relative">
-                        <button
-                            onClick={() => setIsTimeMenuOpen(!isTimeMenuOpen)}
-                            className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-xs font-medium transition-all ${isTimeMenuOpen ? 'bg-white/10 border-[#00f2ff]/50 text-white shadow-[0_0_20px_rgba(0,242,255,0.1)]' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10'}`}
-                        >
-                            <span className="text-[#00f2ff]/60">Period:</span> {timeFrame}
-                        </button>
-
-                        <AnimatePresence>
-                            {isTimeMenuOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute right-0 mt-2 w-40 bg-[#1a1a1e] border border-white/10 rounded-2xl p-2 shadow-2xl z-50 overflow-hidden"
-                                >
-                                    {(['All Time', 'Month', 'Week', 'Day'] as const).map(period => (
-                                        <button
-                                            key={period}
-                                            onClick={() => {
-                                                setTimeFrame(period);
-                                                setIsTimeMenuOpen(false);
-                                            }}
-                                            className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${timeFrame === period ? 'bg-[#00f2ff]/20 text-[#00f2ff]' : 'text-muted-foreground hover:bg-white/5 hover:text-white'}`}
-                                        >
-                                            {period}
-                                        </button>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                
+                <div className="flex flex-wrap items-center gap-3">
+                    {/* Timeframe Selector Pills */}
+                    <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 backdrop-blur-sm">
+                        {(['Day', 'Week', 'Month', 'Year', 'All Time'] as const).map((period) => (
+                            <button
+                                key={period}
+                                onClick={() => setTimeFrame(period)}
+                                className={`px-3 py-1.5 rounded-xl text-[10px] font-semibold uppercase tracking-wider transition-all ${
+                                    timeFrame === period 
+                                    ? 'bg-[#00f2ff] text-black shadow-[0_0_15px_rgba(0,242,255,0.3)]' 
+                                    : 'text-white/40 hover:text-white/60 hover:bg-white/5'
+                                }`}
+                            >
+                                {period}
+                            </button>
+                        ))}
                     </div>
 
                     <div className="relative">
                         <button
                             onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-                            className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-sm font-medium transition-all ${isFilterMenuOpen ? 'bg-white/10 border-[#00f2ff]/50 text-white shadow-[0_0_20px_rgba(0,242,255,0.1)]' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10'}`}
+                            className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-xs font-medium transition-all ${isFilterMenuOpen ? 'bg-white/10 border-[#00f2ff]/50 text-white' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10'}`}
                         >
-                            <Filter size={16} className={filterStatus ? 'text-[#00f2ff]' : ''} />
-                            {filterStatus || 'Filter'}
+                            <Filter size={14} className={filterStatus ? 'text-[#00f2ff]' : ''} />
+                            {filterStatus || 'Status'}
                         </button>
 
                         <AnimatePresence>
@@ -348,13 +365,14 @@ const AdminOverview: React.FC = () => {
                             )}
                         </AnimatePresence>
                     </div>
+
                     <button
                         onClick={handleExport}
                         disabled={isExporting}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/5 text-white/70 rounded-full text-xs font-medium transition-all shadow-xl disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/5 text-white/70 rounded-xl text-xs font-medium transition-all hover:bg-white/[0.05] disabled:opacity-50"
                     >
-                        {isExporting ? <div className="w-4 h-4 border-2 border-[#00f2ff]/20 border-t-[#00f2ff] rounded-full animate-spin" /> : <Download size={16} />}
-                        {isExporting ? 'Generating...' : 'Export Data'}
+                        {isExporting ? <div className="w-4 h-4 border-2 border-[#00f2ff]/20 border-t-[#00f2ff] rounded-full animate-spin" /> : <Download size={14} />}
+                        {isExporting ? 'Exporting...' : 'Export'}
                     </button>
                 </div>
             </div>
@@ -373,22 +391,24 @@ const AdminOverview: React.FC = () => {
             </div>
 
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
                 <motion.div variants={itemVariants}>
                     <ChartPlaceholder
                         title={`Revenue Stream (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : 'All Time'})`}
-                        subtitle={`Total: ${semanticData.semanticStats.find((s: any) => s.label === 'Total Revenue')?.value} •  ${semanticData.semanticStats.find((s: any) => s.label === 'Total Revenue')?.trend > 0 ? '+' : ''}${semanticData.semanticStats.find((s: any) => s.label === 'Total Revenue')?.trend}% ${semanticData.semanticStats.find((s: any) => s.label === 'Total Revenue')?.trendLabel}`}
+                        subtitle={`Total: ${semanticData.semanticStats[0]?.value || '$0.00'} • ${timeFrame}`}
                         type="line"
-                        multiplier={semanticData.revenueRatio}
+                        data={semanticData.chartData}
+                        labels={semanticData.chartLabels}
                         timeFrame={timeFrame}
                     />
                 </motion.div>
                 <motion.div variants={itemVariants}>
                     <ChartPlaceholder
                         title={`Category Success (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : 'All Time'})`}
-                        subtitle={`System Conversion: ${semanticData.semanticStats.find((s: any) => s.label === 'Conversion')?.value} • Active Ops: ${semanticData.semanticStats.find((s: any) => s.label === 'Active Orders')?.value}`}
+                        subtitle={`System Conversion: ${semanticData.semanticStats[3]?.value || '0.0%'} • Active Ops: ${semanticData.semanticStats[1]?.value || '0'}`}
                         type="bar"
-                        multiplier={semanticData.distributionRatio}
+                        data={semanticData.catData}
+                        labels={semanticData.catLabels}
                         timeFrame={timeFrame}
                     />
                 </motion.div>

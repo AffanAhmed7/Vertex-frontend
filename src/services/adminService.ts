@@ -82,3 +82,8 @@ export const fetchAnalyticsOverview = async () => {
     const res = await api.get('/admin/analytics/overview');
     return res.data.data;
 };
+
+export const fetchSalesHistory = async (days: number = 7) => {
+    const res = await api.get(`/admin/analytics/sales?days=${days}`);
+    return res.data.data;
+};
