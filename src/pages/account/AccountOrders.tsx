@@ -1,20 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Search, ChevronRight, Clock, CheckCircle2, Truck, RefreshCcw } from 'lucide-react';
+import { Package, Search, ChevronDown, Clock, CheckCircle2, Truck, RefreshCcw } from 'lucide-react';
 import { RootState, AppDispatch } from '../../store';
 import { Card } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { fetchOrders } from '../../store/slices/userSlice';
 
 const AccountOrders: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { orders, loading } = useSelector((state: RootState) => state.user);
+    const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
     useEffect(() => {
         dispatch(fetchOrders());
     }, [dispatch]);
+
+    const toggleOrder = (id: string) => {
+        setExpandedOrderId(prev => (prev === id ? null : id));
+    };
 
     const getStatusIcon = (status: string) => {
         switch (status) {
@@ -57,9 +61,9 @@ const AccountOrders: React.FC = () => {
                     <p className="text-muted-foreground">Monitor and track your recent orders.</p>
                 </div>
                 <div className="w-full md:w-80">
-                    <Input 
-                        label="Search Orders" 
-                        placeholder="VTX-..." 
+                    <Input
+                        label="Search Orders"
+                        placeholder="VTX-..."
                         icon={<Search size={18} />}
                     />
                 </div>
@@ -71,6 +75,7 @@ const AccountOrders: React.FC = () => {
                     {orders.length > 0 ? (
                         orders.map((order, i) => {
                             const StatusIcon = getStatusIcon(order.status);
+                            const isExpanded = expandedOrderId === order.id;
                             return (
                                 <motion.div
                                     key={order.id}
@@ -78,7 +83,8 @@ const AccountOrders: React.FC = () => {
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: i * 0.05 }}
                                 >
-                                    <Card className="hover:border-primary/20 transition-all group p-0" glass>
+                                    <Card className="hover:border-primary/20 transition-all group p-0 overflow-hidden" glass>
+                                        {/* Order Summary Row */}
                                         <div className="p-6 flex flex-wrap items-center gap-8">
                                             {/* Order Identity */}
                                             <div className="min-w-[120px]">
@@ -121,15 +127,76 @@ const AccountOrders: React.FC = () => {
                                                 )}
                                             </div>
 
-                                            {/* Action */}
-                                            <Button variant="ghost" size="sm" className="group/btn">
+                                            {/* Details Toggle */}
+                                            <button
+                                                onClick={() => toggleOrder(order.id)}
+                                                className="group/btn ml-auto h-9 px-4 rounded-full bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300"
+                                            >
                                                 Details
-                                                <ChevronRight size={16} className="ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                                            </Button>
+                                                <ChevronDown
+                                                    size={14}
+                                                    className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                                                />
+                                            </button>
                                         </div>
+
+                                        {/* Expandable Detail Panel */}
+                                        <AnimatePresence>
+                                            {isExpanded && (
+                                                <motion.div
+                                                    key="detail"
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                    className="overflow-hidden"
+                                                >
+                                                    <div className="border-t border-white/5 px-6 py-6 space-y-4">
+                                                        {/* Items Table */}
+                                                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest opacity-60 mb-3">Items</p>
+                                                        <div className="space-y-3">
+                                                            {order.items.map((item, idx) => (
+                                                                <div key={idx} className="flex items-center gap-4">
+                                                                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                                                                        <img
+                                                                            src={item.product?.image || 'https://via.placeholder.com/150'}
+                                                                            alt={item.product?.name}
+                                                                            className="w-full h-full object-cover"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="flex-grow min-w-0">
+                                                                        <p className="text-sm font-semibold text-white truncate">{item.product?.name || 'Product'}</p>
+                                                                        <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                                                                    </div>
+                                                                    <p className="text-sm font-bold text-white flex-shrink-0">
+                                                                        ${(Number(item.priceAtPurchase) * item.quantity).toFixed(2)}
+                                                                    </p>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+
+                                                        {/* Cost Breakdown */}
+                                                        <div className="border-t border-white/5 pt-4 space-y-2 max-w-xs ml-auto text-sm">
+                                                            <div className="flex justify-between text-muted-foreground">
+                                                                <span>Subtotal</span>
+                                                                <span>${Number(order.subtotal ?? order.total).toFixed(2)}</span>
+                                                            </div>
+                                                            <div className="flex justify-between text-muted-foreground">
+                                                                <span>Tax</span>
+                                                                <span>${Number(order.tax ?? 0).toFixed(2)}</span>
+                                                            </div>
+                                                            <div className="flex justify-between font-black text-primary border-t border-white/5 pt-2">
+                                                                <span>Total</span>
+                                                                <span>${Number(order.total).toFixed(2)}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </Card>
                                 </motion.div>
-                            )
+                            );
                         })
                     ) : (
                         <Card className="p-20 text-center italic text-muted-foreground">

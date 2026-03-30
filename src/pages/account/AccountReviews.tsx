@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { Star, MessageSquare, AlertCircle, CheckCircle2, History, ChevronRight } from 'lucide-react';
+import { Star, MessageSquare, AlertCircle, CheckCircle2, History } from 'lucide-react';
 import { RootState, AppDispatch } from '../../store';
-import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { submitProductReview, clearReviewError, fetchUserReviews } from '../../store/slices/reviewSlice';
 
@@ -107,13 +106,12 @@ const AccountReviews: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <Button 
-                                    variant="outline" 
-                                    className="h-10 px-6 border-white/10 hover:border-primary/50 hover:bg-primary/5 text-xs font-bold uppercase tracking-[0.2em] group-hover:translate-x-1 transition-all"
+                                <button 
                                     onClick={() => handleOpenReview(item)}
+                                    className="h-10 px-6 rounded-full bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300 group-hover:translate-x-1"
                                 >
                                     Write Review
-                                </Button>
+                                </button>
                             </motion.div>
                         ))}
                     </div>
@@ -124,7 +122,12 @@ const AccountReviews: React.FC = () => {
                         </div>
                         <div className="space-y-1">
                             <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">No items awaiting feedback</p>
-                            <Button variant="link" className="text-primary text-[10px] uppercase tracking-widest mt-2 p-0 h-auto">Shop for more products</Button>
+                            <button 
+                                onClick={() => window.location.href = '/shop'}
+                                className="text-[#00f2ff] text-[10px] uppercase tracking-widest mt-2 hover:underline transition-all"
+                            >
+                                Shop for more products
+                            </button>
                         </div>
                     </div>
                 )}
@@ -254,15 +257,23 @@ const AccountReviews: React.FC = () => {
                         )}
 
                         <div className="flex gap-4 pt-4">
-                            <Button 
-                                className="flex-grow uppercase tracking-widest font-black" 
+                            <button 
+                                className="flex-grow h-12 rounded-full bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                 onClick={handleSubmitReview} 
-                                isLoading={reviewLoading}
-                                disabled={!comment.trim()}
+                                disabled={reviewLoading || !comment.trim()}
                             >
-                                Send Review
-                            </Button>
-                            <Button variant="outline" className="uppercase tracking-widest" onClick={() => setIsModalOpen(false)}>Back</Button>
+                                {reviewLoading ? (
+                                    <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>Sending...</>
+                                ) : (
+                                    "Send Review"
+                                )}
+                            </button>
+                            <button 
+                                className="px-8 h-12 rounded-full bg-white/[0.02] border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all duration-300"
+                                onClick={() => setIsModalOpen(false)}
+                            >
+                                Back
+                            </button>
                         </div>
                     </div>
                 )}

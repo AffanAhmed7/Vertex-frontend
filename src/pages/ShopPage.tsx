@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SlidersHorizontal, Search, RotateCcw, ChevronDown } from 'lucide-react';
+import { SlidersHorizontal, Search, ChevronDown } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
 import { fetchProducts, setFilters, resetFilters } from '../store/slices/productSlice';
@@ -64,7 +64,6 @@ const ShopPage = () => {
                                     value={filters.sortBy}
                                     onChange={(e) => dispatch(setFilters({ sortBy: e.target.value as any }))}
                                 >
-                                    <option value="newest" className="bg-[#0a0a0c]">Latest Arrivals</option>
                                     <option value="price-low" className="bg-[#0a0a0c]">Price: Low to High</option>
                                     <option value="price-high" className="bg-[#0a0a0c]">Price: High to Low</option>
                                     <option value="rating" className="bg-[#0a0a0c]">Highest Rated</option>
@@ -72,13 +71,7 @@ const ShopPage = () => {
                                 <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-[#00f2ff] pointer-events-none transition-colors" size={16} />
                             </div>
 
-                            <button
-                                className="p-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all text-white/40 hover:text-white"
-                                onClick={() => dispatch(resetFilters())}
-                                title="Reset Filters"
-                            >
-                                <RotateCcw size={18} />
-                            </button>
+
                         </div>
                     </div>
 

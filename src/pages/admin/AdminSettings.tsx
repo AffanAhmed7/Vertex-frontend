@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Store, CreditCard, Truck, Bell, Save, Trash2, Check, RefreshCw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Store, CreditCard, Truck, Bell, Save, Trash2, Check, RefreshCw, ShieldAlert } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { fetchSettings, updateSettings, factoryReset } from '../../services/adminService';
@@ -18,6 +18,7 @@ const AdminSettings: React.FC = () => {
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [isVaultOpen, setIsVaultOpen] = useState(false);
     const [vaultContext, setVaultContext] = useState<'save' | 'reset'>('save');
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     // Load settings from backend
     React.useEffect(() => {
@@ -41,9 +42,11 @@ const AdminSettings: React.FC = () => {
     };
 
     const handleResetInitiate = () => {
-        const confirmed = window.confirm("WARNING: This will permanently delete all store data (Orders, Products, Analytics). This action is IRREVERSIBLE. Are you sure you want to proceed?");
-        if (!confirmed) return;
-        
+        setIsConfirmModalOpen(true);
+    };
+
+    const confirmReset = () => {
+        setIsConfirmModalOpen(false);
         setVaultContext('reset');
         setIsVaultOpen(true);
     };
@@ -383,6 +386,53 @@ const AdminSettings: React.FC = () => {
                 onSuccess={handleVaultSuccess}
                 actionLabel={vaultContext === 'save' ? 'save system configuration' : 'perform full platform reset'}
             />
+
+            {/* Custom Confirmation Modal */}
+            <AnimatePresence>
+                {isConfirmModalOpen && (
+                    <div className="fixed inset-0 z-[400] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsConfirmModalOpen(false)}
+                            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-sm bg-[#0a0a0b] border border-white/10 rounded-3xl p-8 shadow-[0_0_50px_rgba(244,63,94,0.15)] space-y-8"
+                        >
+                            <div className="w-20 h-20 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 mx-auto border border-rose-500/20 shadow-[0_0_20px_rgba(244,63,94,0.1)]">
+                                <ShieldAlert size={40} />
+                            </div>
+                            
+                            <div className="text-center space-y-3">
+                                <h3 className="text-2xl font-light text-white uppercase tracking-tighter">Critical Reset</h3>
+                                <p className="text-xs text-muted-foreground leading-relaxed uppercase tracking-widest">
+                                    All platform records (Orders, Assets, Analytics) will be <span className="text-rose-500 font-black">permanently purged</span>. This action is final.
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={confirmReset}
+                                    className="w-full py-4 bg-rose-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-rose-600 transition-all shadow-xl shadow-rose-500/20 active:scale-95"
+                                >
+                                    Confirm Destruction
+                                </button>
+                                <button
+                                    onClick={() => setIsConfirmModalOpen(false)}
+                                    className="w-full py-4 bg-white/5 hover:bg-white/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-white transition-all active:scale-95"
+                                >
+                                    Abort Operation
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

@@ -140,20 +140,29 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({ isOpen, onClose, on
                                             required
                                             icon={<Package size={18} />}
                                         />
-                                        <Input 
-                                            label="Strategic Sector"
-                                            placeholder="Category..."
-                                            list="category-suggestions"
-                                            value={formData.category}
-                                            onChange={e => setFormData({ ...formData, category: e.target.value })}
-                                            required
-                                            icon={<Layers size={18} />}
-                                        />
-                                        <datalist id="category-suggestions">
-                                            {categories?.map(cat => (
-                                                <option key={cat} value={cat} />
-                                            ))}
-                                        </datalist>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2 flex items-center gap-2">
+                                                <Layers size={14} className="text-primary/60" /> Strategic Sector
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    value={formData.category}
+                                                    onChange={e => setFormData({ ...formData, category: e.target.value })}
+                                                    required
+                                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:border-primary outline-none transition-all appearance-none cursor-pointer"
+                                                >
+                                                    <option value="" disabled className="bg-[#0a0a0b] text-white/40">Select Sector...</option>
+                                                    {categories?.map(cat => (
+                                                        <option key={cat} value={cat} className="bg-[#0a0a0b] text-white">
+                                                            {cat}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                                                    <Plus size={14} className="rotate-45" />
+                                                </div>
+                                            </div>
+                                        </div>
                                         <Input 
                                             label="SKU Designator" 
                                             placeholder="VTX-0000" 

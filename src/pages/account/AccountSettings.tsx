@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Shield, Save, CheckCircle2, AlertCircle, Mail, Lock, ShieldQuestion, ChevronDown } from 'lucide-react';
+import { User, Shield, Save, CheckCircle2, AlertCircle, Mail, Lock, ShieldQuestion, ChevronDown, Camera } from 'lucide-react';
+
 import { RootState, AppDispatch } from '../../store';
-import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { updateProfile, clearError, changePassword } from '../../store/slices/userSlice';
 
@@ -20,6 +20,10 @@ const AccountSettings: React.FC = () => {
     const { currentUser, error } = useSelector((state: RootState) => state.user);
     const [isSaving, setIsSaving] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     
     // Profile Form
     const [profileData, setProfileData] = useState({
@@ -149,6 +153,39 @@ const AccountSettings: React.FC = () => {
             setIsSavingSecurity(false);
         }
     };
+    
+    const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        setIsUploadingAvatar(true);
+        try {
+            await dispatch(updateProfile(formData)).unwrap();
+            setSaved(true);
+            setTimeout(() => setSaved(false), 3000);
+        } catch (err) {
+            console.error('Failed to upload avatar:', err);
+        } finally {
+            setIsUploadingAvatar(false);
+        }
+    };
+
+    const handleRemoveAvatar = async () => {
+        setIsUploadingAvatar(true);
+        try {
+            await dispatch(updateProfile({ avatar: null })).unwrap();
+            setSaved(true);
+            setTimeout(() => setSaved(false), 3000);
+        } catch (err) {
+            console.error('Failed to remove avatar:', err);
+        } finally {
+            setIsUploadingAvatar(false);
+        }
+    };
+
 
     return (
         <div className="space-y-12 pb-20">
@@ -190,15 +227,52 @@ const AccountSettings: React.FC = () => {
                             />
                         </div>
                         <div className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 relative group overflow-hidden">
-                                <User size={32} className="text-primary group-hover:scale-110 transition-transform" />
-                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
-                                    <span className="text-[8px] font-black uppercase tracking-tighter text-white">Change</span>
+                            <input 
+                                type="file" 
+                                ref={fileInputRef} 
+                                className="hidden" 
+                                accept="image/*"
+                                onChange={handleAvatarChange}
+                            />
+                            <div 
+                                className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 relative group overflow-hidden cursor-pointer"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                {currentUser?.avatar ? (
+                                    <img 
+                                        src={currentUser.avatar.startsWith('http') ? currentUser.avatar : `${API_URL.replace(/\/api$/, '')}${currentUser.avatar}`} 
+                                        alt={currentUser.name || ''} 
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                ) : (
+                                    <User size={40} className="text-primary group-hover:scale-110 transition-transform" />
+                                )}
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity">
+                                    <Camera size={20} className="text-white mb-1" />
+                                    <span className="text-[7px] font-black uppercase tracking-tighter text-white">
+                                        {isUploadingAvatar ? 'Uploading...' : 'Update Photo'}
+                                    </span>
                                 </div>
+                                {isUploadingAvatar && (
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                    </div>
+                                )}
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-xs font-bold text-white uppercase">{currentUser?.name || 'Anonymous User'}</p>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Active Member</p>
+                            <div className="space-y-2">
+                                <div className="space-y-1">
+                                    <p className="text-xs font-bold text-white uppercase">{currentUser?.name || 'Anonymous User'}</p>
+                                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Active Member</p>
+                                </div>
+                                {currentUser?.avatar && (
+                                    <button 
+                                        onClick={handleRemoveAvatar}
+                                        disabled={isUploadingAvatar}
+                                        className="text-[10px] text-red-500/60 uppercase font-bold tracking-widest hover:text-red-500 transition-colors disabled:opacity-0"
+                                    >
+                                        Remove Photo
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -242,19 +316,19 @@ const AccountSettings: React.FC = () => {
                                     <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest">{passwordError}</p>
                                 )}
                                 
-                                <Button 
-                                    variant="primary" 
-                                    className="w-full rounded-full text-xs uppercase tracking-widest h-12 font-black"
+                                <button
                                     onClick={handlePasswordSave}
-                                    isLoading={isChangingPassword}
+                                    disabled={isChangingPassword}
+                                    className="w-full h-12 rounded-full bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {passwordSuccess ? (
-                                        <span className="flex items-center gap-2 animate-in zoom-in-50">
-                                            <CheckCircle2 size={16} />
-                                            Password Updated
-                                        </span>
-                                    ) : 'Update Password'}
-                                </Button>
+                                    {isChangingPassword ? (
+                                        <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>Updating...</>
+                                    ) : passwordSuccess ? (
+                                        <><CheckCircle2 size={16} />Password Updated</>
+                                    ) : (
+                                        <><Lock size={16} />Update Password</>
+                                    )}
+                                </button>
                             </div>
                         </div>
 
@@ -347,24 +421,19 @@ const AccountSettings: React.FC = () => {
                                                 <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest">{securityError}</p>
                                             )}
 
-                                            <Button
-                                                variant="primary"
-                                                className="w-full sm:w-auto rounded-full text-xs uppercase tracking-widest h-12 font-black px-10"
+                                            <button
                                                 onClick={handleSecurityQuestionSave}
-                                                isLoading={isSavingSecurity}
+                                                disabled={isSavingSecurity}
+                                                className="w-full sm:w-auto rounded-full bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-xs font-semibold uppercase tracking-widest h-12 px-10 flex items-center justify-center gap-2 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
-                                                {securitySaved ? (
-                                                    <span className="flex items-center gap-2 animate-in zoom-in-50">
-                                                        <CheckCircle2 size={16} />
-                                                        Saved
-                                                    </span>
+                                                {isSavingSecurity ? (
+                                                    <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>Saving...</>
+                                                ) : securitySaved ? (
+                                                    <><CheckCircle2 size={16} />Saved</>
                                                 ) : (
-                                                    <span className="flex items-center gap-2">
-                                                        <ShieldQuestion size={16} />
-                                                        Save Security Question
-                                                    </span>
+                                                    <><ShieldQuestion size={16} />Save Security Question</>
                                                 )}
-                                            </Button>
+                                            </button>
                                         </div>
 
                                         <p className="text-[11px] text-muted-foreground leading-relaxed uppercase tracking-[0.05em] opacity-60">
@@ -382,24 +451,19 @@ const AccountSettings: React.FC = () => {
                     <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-bold">
                         Ensure all information is correct before saving.
                     </p>
-                    <Button
-                        size="lg"
+                    <button
                         onClick={handleProfileSave}
-                        isLoading={isSaving}
-                        className="w-full sm:w-[240px] h-14 text-sm uppercase tracking-[0.3em] font-black shadow-xl shadow-primary/10 rounded-full"
+                        disabled={isSaving}
+                        className="w-full sm:w-[240px] h-14 rounded-full bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-sm font-semibold uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {saved ? (
-                            <span className="flex items-center gap-2 animate-in zoom-in-50">
-                                <CheckCircle2 size={18} />
-                                Updated
-                            </span>
+                        {isSaving ? (
+                            <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>Saving...</>
+                        ) : saved ? (
+                            <><CheckCircle2 size={18} />Saved</>
                         ) : (
-                            <span className="flex items-center gap-2">
-                                <Save size={18} />
-                                Save Profile
-                            </span>
+                            <><Save size={18} />Save Profile</>
                         )}
-                    </Button>
+                    </button>
                 </div>
             </div>
         </div>

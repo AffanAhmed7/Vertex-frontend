@@ -88,10 +88,10 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                         <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                             <div>
                                 <h3 className="text-xl font-light text-white uppercase tracking-tighter">
-                                    Transmission View
+                                    Order Details
                                 </h3>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
-                                    Order Data Segment <span className="text-white/10 mx-2">/</span> {order.id}
+                                    Order Information <span className="text-white/10 mx-2">/</span> {order.id}
                                 </p>
                             </div>
                             <div className="flex items-center gap-3">
@@ -99,7 +99,7 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                                     onClick={() => isEditing ? handleSaveInitiate() : setIsEditing(true)}
                                     className={`px-6 py-2.5 rounded-xl text-xs font-medium transition-all active:scale-95 border ${isEditing ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-white/[0.05] border-white/10 text-white hover:bg-white/10'}`}
                                 >
-                                    {isEditing ? 'Sync Changes' : 'Override Details'}
+                                    {isEditing ? 'Save Changes' : 'Edit Details'}
                                 </button>
                                 <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-colors">
                                     <X size={20} className="text-white/40" />
@@ -114,11 +114,11 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                                 <section className="space-y-4">
                                     <div className="flex items-center gap-2 text-primary opacity-60">
                                         <ShieldCheck size={12} />
-                                        <h4 className="text-xs font-medium text-primary/60">Identity segment</h4>
+                                        <h4 className="text-xs font-medium text-primary/60">Customer Details</h4>
                                     </div>
                                     <div className="space-y-4 bg-white/[0.01] border border-white/5 rounded-2xl p-5">
                                         <div className="space-y-1">
-                                            <label className="text-xs font-medium text-white/30">Signatory Name</label>
+                                            <label className="text-xs font-medium text-white/30">Customer Name</label>
                                             {isEditing ? (
                                                 <input
                                                     value={editedOrder.customerName}
@@ -130,7 +130,7 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                                             )}
                                         </div>
                                         <div className="space-y-1">
-                                            <label className="text-xs font-medium text-white/30">Communication Channel</label>
+                                            <label className="text-xs font-medium text-white/30">Email Address</label>
                                             {isEditing ? (
                                                 <input
                                                     value={editedOrder.customerEmail}
@@ -148,7 +148,7 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                                 <section className="space-y-4">
                                     <div className="flex items-center gap-2 text-primary opacity-60">
                                         <Clock size={12} />
-                                        <h4 className="text-xs font-medium text-primary/60">Process State</h4>
+                                        <h4 className="text-xs font-medium text-primary/60">Order Status</h4>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2">
                                         {['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map((status) => (
@@ -169,10 +169,10 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                             <section className="space-y-4">
                                 <div className="flex items-center gap-2 text-primary opacity-60">
                                     <MapPin size={12} />
-                                    <h4 className="text-xs font-medium text-primary/60">Logistics Nexus</h4>
+                                    <h4 className="text-xs font-medium text-primary/60">Shipping Information</h4>
                                 </div>
                                 <div className="bg-white/[0.01] border border-white/5 rounded-2xl p-5">
-                                    <label className="text-xs font-medium text-white/30 mb-1 block">Destination Module</label>
+                                    <label className="text-xs font-medium text-white/30 mb-1 block">Shipping Address</label>
                                     {isEditing ? (
                                         <textarea
                                             rows={2}
@@ -190,13 +190,13 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                             <section className="space-y-4">
                                 <div className="flex items-center gap-2 text-primary opacity-60">
                                     <Package size={12} />
-                                    <h4 className="text-xs font-medium text-primary/60">Payload Inventory</h4>
+                                    <h4 className="text-xs font-medium text-primary/60">Order Summary</h4>
                                 </div>
                                 <div className="bg-[#111115] border border-white/5 rounded-2xl overflow-hidden">
                                     <div className="p-3 border-b border-white/5 bg-white/[0.02]">
                                         <div className="flex justify-between items-center text-xs font-medium text-white/30">
-                                            <span>Component Asset</span>
-                                            <span>Allocation</span>
+                                            <span>Product</span>
+                                            <span>Quantity</span>
                                         </div>
                                     </div>
                                     <div className="max-h-32 overflow-y-auto hide-scrollbar">
@@ -211,7 +211,7 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                                         ))}
                                     </div>
                                     <div className="p-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-between">
-                                        <span className="text-xs font-medium text-white/40">Total Valuation</span>
+                                        <span className="text-xs font-medium text-white/40">Order Total</span>
                                         <span className="text-lg font-light text-white tracking-widest">${order.total}</span>
                                     </div>
                                 </div>
@@ -224,7 +224,7 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                                 onClick={onClose}
                                 className="px-8 py-3 bg-white/[0.03] border border-white/5 hover:border-white/10 text-white/60 hover:text-white rounded-xl text-xs font-medium transition-all"
                             >
-                                Close Segment
+                                Close
                             </button>
                         </div>
                     </motion.div>

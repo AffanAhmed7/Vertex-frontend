@@ -5,6 +5,8 @@ export interface ProductVariant {
     type: 'size' | 'color' | 'storage' | 'license' | 'material';
     label: string;
     options: string[];
+    status: 'In Stock' | 'Low Stock' | 'Out of Stock';
+    numReviews: number;
 }
 
 export interface Product {
@@ -17,6 +19,7 @@ export interface Product {
     image: string;
     images: string[];
     isAvailable: boolean;
+    numReviews: number;
     variants?: ProductVariant[];
     specs?: { label: string; value: string }[];
 }

@@ -34,7 +34,7 @@ const CompliancePage = () => {
                     </div>
 
                     <div className="pt-8 border-t border-white/5">
-                         <p className="text-[10px] text-white/20 uppercase tracking-[0.2em]">Compliance Oversight: Affan Ahmed</p>
+                         <p className="text-[10px] text-white/20 uppercase tracking-[0.2em]">Compliance Oversight: Administrator</p>
                     </div>
                 </motion.div>
             </div>

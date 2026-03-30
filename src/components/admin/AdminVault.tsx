@@ -16,19 +16,12 @@ const AdminVault: React.FC<AdminVaultProps> = ({ isOpen, onClose, onSuccess, act
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (isOpen) {
-            // Check if already verified in this session
-            const isVerified = sessionStorage.getItem('admin_otp_verified') === 'true';
-            if (isVerified) {
-                onSuccess();
-                onClose();
-                return;
-            }
-
+            // Session bypass removed for maximum security as requested.
+            // Verification is now required for EVERY sensitive action.
             setOtp('');
             setError(false);
             setTimeout(() => inputRef.current?.focus(), 100);
-        }
+
     }, [isOpen]);
 
     const handleVerify = () => {
@@ -36,7 +29,6 @@ const AdminVault: React.FC<AdminVaultProps> = ({ isOpen, onClose, onSuccess, act
         // OTP is hardcoded as 'helloque' per user requirement
         setTimeout(() => {
             if (otp.toLowerCase() === 'helloque') {
-                sessionStorage.setItem('admin_otp_verified', 'true');
                 onSuccess();
                 onClose();
             } else {
@@ -82,8 +74,8 @@ const AdminVault: React.FC<AdminVaultProps> = ({ isOpen, onClose, onSuccess, act
                                     <ShieldCheck size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-sm font-bold text-white uppercase tracking-widest">Admin Vault</h3>
-                                    <p className="text-[10px] text-[#00f2ff]/60 font-black uppercase tracking-[0.2em]">Restricted Sector Access</p>
+                                    <h3 className="text-sm font-bold text-white uppercase tracking-widest">Security Portal</h3>
+                                    <p className="text-[10px] text-[#00f2ff]/60 font-black uppercase tracking-[0.2em]">Administrative Verification</p>
                                 </div>
                             </div>
                             <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors">
@@ -107,7 +99,7 @@ const AdminVault: React.FC<AdminVaultProps> = ({ isOpen, onClose, onSuccess, act
                                     <input
                                         ref={inputRef}
                                         type="password"
-                                        placeholder="Enter Administrative OTP"
+                                        placeholder="Enter Security Code"
                                         value={otp}
                                         onChange={(e) => setOtp(e.target.value)}
                                         onKeyDown={handleKeyDown}
@@ -132,15 +124,15 @@ const AdminVault: React.FC<AdminVaultProps> = ({ isOpen, onClose, onSuccess, act
                                     className={`w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-bold uppercase tracking-widest text-xs transition-all ${otp.length > 0 ? 'bg-[#00f2ff] text-[#0e0e10] hover:shadow-[0_0_30px_rgba(0,242,255,0.3)] active:scale-95' : 'bg-white/5 text-white/20 cursor-not-allowed'}`}
                                 >
                                     {isVerifying ? (
-                                        "Verifying Identity..."
+                                        "Verifying..."
                                     ) : (
-                                        <>Proceed to Execution <ArrowRight size={14} /></>
+                                        <>Confirm & Proceed <ArrowRight size={14} /></>
                                     )}
                                 </button>
                             </div>
 
                             <p className="text-[9px] text-white/30 text-center uppercase tracking-widest leading-relaxed">
-                                Continuous monitoring active. Unauthorized access attempts are logged and reported to the primary infrastructure node.
+                                Security monitoring is active. All administrative actions are logged for your protection.
                             </p>
                         </div>
                     </motion.div>

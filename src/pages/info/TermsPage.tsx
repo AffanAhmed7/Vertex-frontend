@@ -30,7 +30,7 @@ const TermsPage = () => {
 
                         <section className="space-y-4">
                             <h2 className="text-white text-xs font-bold uppercase tracking-[0.3em] opacity-80">Contact & Support</h2>
-                            <p className="leading-relaxed">All support inquiries and legal disputes should be directed to Affan Ahmed at affanahmedkhan34@gmail.com. We aim to resolve all issues through direct professional communication.</p>
+                            <p className="leading-relaxed">All support inquiries and legal disputes should be directed to the Administrator at affanahmedkhan34@gmail.com. We aim to resolve all issues through direct professional communication.</p>
                         </section>
 
                         <div className="pt-12 border-t border-white/5 flex flex-col gap-2">

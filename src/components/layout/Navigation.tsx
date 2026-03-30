@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Moon, Sun, Menu, X } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleTheme, RootState, openAuthModal, closeAuthModal } from '../../store';
+import { RootState, openAuthModal, closeAuthModal } from '../../store';
 import { Button } from '../ui/Button';
 import { AuthModals } from '../auth/AuthModals';
 
@@ -12,7 +12,6 @@ const Navigation = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const location = useLocation();
     const dispatch = useDispatch();
-    const theme = useSelector((state: RootState) => state.ui.theme);
     const { isAuthModalOpen, authMode } = useSelector((state: RootState) => state.ui);
     const { currentUser } = useSelector((state: RootState) => state.user);
     const { items } = useSelector((state: RootState) => state.cart);
@@ -104,7 +103,7 @@ const Navigation = () => {
                                     </Button>
                                     <Button
                                         size="sm"
-                                        className="px-6 bg-[#00f2ff] text-black hover:bg-white transition-all duration-500 font-bold tracking-wider text-[12px] uppercase rounded-full text-nowrap"
+                                        className="px-6 bg-[#0a0a0b] border border-white/10 text-white hover:border-[#00f2ff]/50 transition-all duration-500 font-bold tracking-wider text-[12px] uppercase rounded-full text-nowrap"
                                         onClick={() => dispatch(openAuthModal('signup'))}
                                     >
                                         Join Now
@@ -156,7 +155,7 @@ const Navigation = () => {
                                     Login
                                 </Button>
                                 <Button
-                                    className="bg-[#00f2ff] text-black font-bold uppercase tracking-widest py-6"
+                                    className="bg-[#0a0a0b] border border-white/10 text-white font-bold uppercase tracking-widest py-6"
                                     onClick={() => dispatch(openAuthModal('signup'))}
                                 >
                                     Register

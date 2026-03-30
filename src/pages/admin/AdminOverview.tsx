@@ -456,8 +456,8 @@ const AdminOverview: React.FC = () => {
             {/* Header Area */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">Command Center</h1>
-                    <p className="text-xs text-[#00f2ff]/60 uppercase tracking-widest font-medium">Admin Interface <span className="text-white/10 mx-2">/</span> Operational Analytics</p>
+                    <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">Dashboard Overview</h1>
+                    <p className="text-xs text-[#00f2ff]/60 uppercase tracking-widest font-medium">Admin Interface <span className="text-white/10 mx-2">/</span> Store Analytics</p>
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-3">
@@ -571,12 +571,12 @@ const AdminOverview: React.FC = () => {
                 {/* Recent Orders */}
                 <motion.div variants={itemVariants} className="lg:col-span-2 bg-[#111114] border border-white/5 rounded-2xl overflow-hidden flex flex-col">
                     <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between">
-                        <h3 className="text-lg font-medium text-white">Active Deployments</h3>
+                        <h3 className="text-lg font-medium text-white">Recent Orders</h3>
                         <button
                             onClick={() => navigate('/admin/orders')}
                             className="text-primary text-xs font-medium hover:text-white transition-all flex items-center gap-2"
                         >
-                            View Logistics <ArrowRight size={14} />
+                            View All Orders <ArrowRight size={14} />
                         </button>
                     </div>
                     <div className="overflow-x-auto">
@@ -584,7 +584,7 @@ const AdminOverview: React.FC = () => {
                             <thead className="bg-white/[0.02] text-xs text-muted-foreground uppercase font-medium">
                                 <tr>
                                     <th className="px-6 py-4">ID</th>
-                                    <th className="px-6 py-4">Node / Client</th>
+                                    <th className="px-6 py-4">Customer</th>
                                     <th className="px-6 py-4 text-right">Value</th>
                                     <th className="px-6 py-4">Status</th>
                                     <th className="px-6 py-4 text-center">Action</th>
@@ -624,7 +624,7 @@ const AdminOverview: React.FC = () => {
                 {/* Activity Feed */}
                 <motion.div variants={itemVariants} className="bg-[#111114] border border-white/5 rounded-2xl flex flex-col">
                     <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between">
-                        <h3 className="text-lg font-medium text-white">Network Activity</h3>
+                        <h3 className="text-lg font-medium text-white">Recent Activity</h3>
                         <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                     </div>
                     <div className="p-6 space-y-6 flex-1">
@@ -650,7 +650,7 @@ const AdminOverview: React.FC = () => {
                         onClick={() => navigate('/admin/analytics')}
                         className="w-full py-4 text-xs font-medium text-muted-foreground hover:text-white border-t border-white/5 transition-all text-center"
                     >
-                        View Audit Log
+                        View Activity Log
                     </button>
                 </motion.div>
             </div>

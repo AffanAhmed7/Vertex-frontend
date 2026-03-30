@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Heart, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Product } from '../../store/slices/productSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
@@ -49,9 +49,6 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
                             onClick={handleAddToCart}
                         >
                             Add to Cart
-                        </button>
-                        <button className="btn-icon">
-                            <Heart size={18} />
                         </button>
                     </div>
                 </div>

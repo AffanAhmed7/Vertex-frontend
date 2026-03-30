@@ -54,7 +54,7 @@ const AdminUsers: React.FC = () => {
     const columns = [
         {
             key: 'name',
-            label: 'System Entity',
+            label: 'User Full Name',
             render: (name: string, u: AdminUser) => (
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-bold text-white group-hover:bg-primary/20 transition-all">
@@ -69,7 +69,7 @@ const AdminUsers: React.FC = () => {
         },
         {
             key: 'role',
-            label: 'Access Clearance',
+            label: 'Account Role',
             render: (role: string, u: AdminUser) => (
                 <div
                     className="flex items-center gap-2 group/select relative"
@@ -101,7 +101,7 @@ const AdminUsers: React.FC = () => {
         },
         {
             key: 'status',
-            label: 'Auth State',
+            label: 'Account Status',
             render: (status: AdminUser['status']) => {
                 const colors = {
                     'Active': 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
@@ -117,12 +117,12 @@ const AdminUsers: React.FC = () => {
         },
         {
             key: 'lastLogin',
-            label: 'Last Access',
+            label: 'Last Login',
             render: (time: string) => <span className="text-xs text-muted-foreground font-medium">{time}</span>
         },
         {
             key: 'actions',
-            label: 'Operations',
+            label: 'Actions',
             render: (_: any, u: AdminUser) => (
                 <div className="flex items-center gap-2">
                     <button
@@ -176,8 +176,8 @@ const AdminUsers: React.FC = () => {
         <div className="space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">Entity Control</h1>
-                    <p className="text-[9px] text-[#00f2ff]/40 uppercase tracking-[0.4em] font-black">Admin Access <span className="text-white/10 mx-2">/</span> User Management</p>
+                    <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">User Management</h1>
+                    <p className="text-[9px] text-[#00f2ff]/40 uppercase tracking-[0.4em] font-black">Admin Access <span className="text-white/10 mx-2">/</span> User Accounts</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 relative">
@@ -198,7 +198,7 @@ const AdminUsers: React.FC = () => {
                                     className="absolute right-0 mt-2 w-56 bg-[#1a1a1e] border border-white/10 rounded-2xl p-4 shadow-2xl z-50 space-y-4"
                                 >
                                     <div className="space-y-2">
-                                        <p className="text-xs font-medium text-muted-foreground">Clearance Level</p>
+                                        <p className="text-xs font-medium text-muted-foreground">Filter by Role</p>
                                         <div className="grid grid-cols-2 gap-1">
                                             {['All', 'Admin', 'Editor', 'Viewer', 'Customer'].map(role => (
                                                 <button
@@ -212,7 +212,7 @@ const AdminUsers: React.FC = () => {
                                         </div>
                                     </div>
                                     <div className="space-y-2 border-t border-white/5 pt-3">
-                                        <p className="text-xs font-medium text-muted-foreground">Entity Status</p>
+                                        <p className="text-xs font-medium text-muted-foreground">Account Status</p>
                                         <div className="grid grid-cols-2 gap-1">
                                             {['All', 'Active', 'Suspended'].map(status => (
                                                 <button
@@ -237,7 +237,7 @@ const AdminUsers: React.FC = () => {
                         }}
                         className="flex items-center gap-2 px-6 py-2.5 bg-white/[0.03] border border-white/5 text-white/70 rounded-full text-xs font-medium hover:bg-white/10 hover:text-white transition-all shadow-xl active:scale-95"
                     >
-                        <UserPlus size={16} /> New Entity
+                        <UserPlus size={16} /> New User
                     </button>
                 </div>
             </div>
@@ -264,7 +264,7 @@ const AdminUsers: React.FC = () => {
                         const { id, ...userData } = data;
                         dispatch(addUser({
                             ...userData,
-                            id: `ENT-${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
+                            id: `USR-${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
                             lastLogin: 'Never',
                         } as AdminUser));
                     }
@@ -292,10 +292,10 @@ const AdminUsers: React.FC = () => {
                                 <ShieldAlert size={32} />
                             </div>
                             <div className="text-center space-y-2">
-                                <h3 className="text-xl font-semibold tracking-tight">High Priority Action</h3>
+                                <h3 className="text-xl font-semibold tracking-tight">Confirm Action</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                    Are you certain you want to {confirmAction.type} clearance for <span className="text-white font-bold">{confirmAction.user.name}</span>?
-                                    This action will be logged in infrastructure protocols.
+                                    Are you certain you want to {confirmAction.type} access for <span className="text-white font-bold">{confirmAction.user.name}</span>?
+                                    This action will be recorded in the system logs.
                                 </p>
                             </div>
                             <div className="flex gap-4">

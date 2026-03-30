@@ -54,13 +54,20 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                 <span className="product-tag">{product.category}</span>
                 <h1 className="detail-name">{product.name}</h1>
 
-                <div className="flex items-center gap-4 mb-6">
-                    <div className="flex items-center gap-1 text-[#00f2ff]">
+                <div className="flex items-center gap-4 mb-8">
+                    <div className="flex items-center gap-1">
                         {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={16} fill={i < Math.floor(product.rating) ? "#00f2ff" : "transparent"} />
+                            <Star
+                                key={i}
+                                size={16}
+                                fill={i < Math.floor(product.rating) ? "#00f2ff" : "transparent"}
+                                color={i < Math.floor(product.rating) ? "#00f2ff" : "rgba(255,255,255,0.2)"}
+                            />
                         ))}
                     </div>
-                    <span className="text-white/40 text-sm">{product.rating} ({Math.floor(product.rating * 28)} Reviews)</span>
+                    <span className="text-white/40 text-sm">
+                        {product.rating} ({product.numReviews > 0 ? `${product.numReviews} Reviews` : 'No reviews yet'})
+                    </span>
                 </div>
 
                 <div className="detail-price">

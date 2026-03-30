@@ -239,7 +239,7 @@ const AdminProducts: React.FC = () => {
             {/* Deletion Confirmation Modal */}
             <AnimatePresence>
                 {confirmDelete && (
-                    <div className="fixed inset-0 z-[400] flex items-center justify-center p-4">
+                    <div className="fixed top-0 left-0 w-screen h-screen z-[9999] flex items-center justify-center p-4">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -307,6 +307,7 @@ const AdminProducts: React.FC = () => {
                                     sku: data.sku,
                                     description: data.description || undefined,
                                     image: data.image || undefined,
+                                    isActive: data.status !== 'Draft',
                                     ...(categoryId ? { categoryId } : {}),
                                 });
                             } else {
@@ -318,6 +319,7 @@ const AdminProducts: React.FC = () => {
                                     sku: data.sku,
                                     description: data.description || undefined,
                                     image: data.image || undefined,
+                                    isActive: data.status !== 'Draft',
                                     categoryId,
                                 });
                             }

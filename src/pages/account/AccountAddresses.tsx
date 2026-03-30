@@ -5,7 +5,6 @@ import { MapPin, Plus, Trash2, Edit3, ShieldCheck, AlertCircle, User, Globe, Pho
 import { RootState, AppDispatch } from '../../store';
 import { fetchAddresses, addNewAddress, deleteExistingAddress, updateExistingAddress, clearError } from '../../store/slices/userSlice';
 import { Card } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 
@@ -113,13 +112,13 @@ const AccountAddresses: React.FC = () => {
                         </h1>
                         <p className="text-xs text-muted-foreground uppercase tracking-widest font-medium mt-2">Manage your shipping and billing addresses</p>
                     </div>
-                    <Button 
+                    <button 
                         onClick={() => { dispatch(clearError()); resetForm(); setIsModalOpen(true); }} 
-                        className="group bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 h-12 px-8 uppercase tracking-widest text-[10px] font-black"
+                        className="group bg-white/[0.04] border border-[#00f2ff]/30 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 text-[#00f2ff] h-12 px-8 uppercase tracking-[0.2em] text-[10px] font-black rounded-full transition-all duration-300 flex items-center justify-center gap-2"
                     >
-                        <Plus size={16} className="mr-2 group-hover:rotate-90 transition-transform" />
+                        <Plus size={16} className="group-hover:rotate-90 transition-transform" />
                         Add New Address
-                    </Button>
+                    </button>
                 </div>
 
                 {error && (
@@ -282,10 +281,23 @@ const AccountAddresses: React.FC = () => {
                         <span className="text-xs text-muted-foreground">This address will be verified for shipping.</span>
                     </div>
                     <div className="flex gap-4 pt-4">
-                        <Button className="flex-grow" onClick={handleSaveAddress} isLoading={isSubmitting}>
-                            {editingAddressId ? "Save Changes" : "Save Address"}
-                        </Button>
-                        <Button variant="outline" onClick={() => { setIsModalOpen(false); resetForm(); }}>Cancel</Button>
+                        <button 
+                            className="flex-grow h-12 rounded-full bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={handleSaveAddress} 
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? (
+                                <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>Saving...</>
+                            ) : (
+                                editingAddressId ? "Save Changes" : "Save Address"
+                            )}
+                        </button>
+                        <button 
+                            className="px-8 h-12 rounded-full bg-white/[0.02] border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all duration-300"
+                            onClick={() => { setIsModalOpen(false); resetForm(); }}
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </Modal>
@@ -299,15 +311,18 @@ const AccountAddresses: React.FC = () => {
                 <div className="space-y-6 pt-4">
                     <p className="text-sm text-muted-foreground">Are you sure you want to delete this address? This action cannot be undone.</p>
                     <div className="flex gap-4">
-                        <Button 
-                            className="flex-grow bg-red-500 hover:bg-red-600 text-white border-0" 
+                        <button 
+                            className="flex-grow h-12 rounded-full bg-red-500/10 border border-red-500/30 text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all duration-300"
                             onClick={confirmDelete}
                         >
                             Delete
-                        </Button>
-                        <Button variant="outline" className="flex-grow" onClick={() => { setIsDeleteModalOpen(false); setAddressToDelete(null); }}>
+                        </button>
+                        <button 
+                            className="flex-grow h-12 rounded-full bg-white/[0.02] border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all duration-300"
+                            onClick={() => { setIsDeleteModalOpen(false); setAddressToDelete(null); }}
+                        >
                             Cancel
-                        </Button>
+                        </button>
                     </div>
                 </div>
             </Modal>

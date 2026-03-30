@@ -30,12 +30,12 @@ const PrivacyPage = () => {
 
                         <section className="space-y-4">
                             <h2 className="text-white text-xs font-bold uppercase tracking-[0.3em] opacity-80">Data Erasure</h2>
-                            <p className="leading-relaxed">Users maintain the right to request full account deletion and data purging. Contact Affan Ahmed directly to initiate a permanent data removal request.</p>
+                            <p className="leading-relaxed">Users maintain the right to request full account deletion and data purging. Contact the Administrator directly to initiate a permanent data removal request.</p>
                         </section>
 
                         <div className="pt-12 border-t border-white/5 flex flex-col gap-2">
                             <span className="text-[10px] font-bold text-[#00f2ff]/40 uppercase tracking-[0.5em]">Principal Administrator</span>
-                            <span className="text-xs text-white/20 uppercase tracking-[0.2em]">Affan Ahmed // March 2026</span>
+                            <span className="text-xs text-white/20 uppercase tracking-[0.2em]">Administrator // March 2026</span>
                         </div>
                     </div>
                 </motion.div>

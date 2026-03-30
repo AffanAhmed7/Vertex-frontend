@@ -48,8 +48,8 @@ const AdminTable: React.FC<AdminTableProps> = ({ columns, data, onRowClick, isLo
                             <ChevronRight size={32} className="rotate-45" />
                         </div>
                         <div className="space-y-1">
-                            <h3 className="text-sm font-medium text-white/40">No tactical records identified</h3>
-                            <p className="text-xs text-white/10">Adjust filters or search parameters</p>
+                            <h3 className="text-sm font-medium text-white/40">No users found</h3>
+                            <p className="text-xs text-white/10">Try adjusting your search or filters</p>
                         </div>
                     </div>
                 ) : (
@@ -95,7 +95,7 @@ const AdminTable: React.FC<AdminTableProps> = ({ columns, data, onRowClick, isLo
             <div className="md:hidden space-y-4">
                 {data.length === 0 ? (
                     <div className="bg-[#111114] border border-white/5 rounded-xl p-12 text-center">
-                        <p className="text-xs font-medium text-white/20">No Records Identified</p>
+                        <p className="text-xs font-medium text-white/20">No Users Found</p>
                     </div>
                 ) : (
                     paginatedData.map((item, index) => (

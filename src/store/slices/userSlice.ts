@@ -135,7 +135,8 @@ export const registerUser = createAsyncThunk(
 
 export const updateProfile = createAsyncThunk(
     'user/updateProfile',
-    async (data: { name?: string; email?: string; twoFactorEnabled?: boolean; securityQuestion?: string; securityAnswer?: string }, { rejectWithValue }: any) => {
+    async (data: any, { rejectWithValue }: any) => {
+
         try {
             const response = await userService.updateProfile(data);
             if (response.success) {
