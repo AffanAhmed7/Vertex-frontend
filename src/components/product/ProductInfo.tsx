@@ -28,6 +28,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     };
 
     const handleAddToCart = async () => {
+        if (!product.isAvailable) return;
         await dispatch(syncAddToCart({
             ...product,
             quantity: 1,
@@ -36,6 +37,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     };
 
     const handleBuyNow = async () => {
+        if (!product.isAvailable) return;
         try {
             await handleAddToCart();
             navigate('/checkout');
@@ -109,19 +111,21 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
                 <div className="product-actions">
                     <motion.button
-                        className="btn-buy-now"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        className="btn-buy-now disabled:opacity-50 disabled:cursor-not-allowed"
+                        whileHover={{ scale: product.isAvailable ? 1.02 : 1 }}
+                        whileTap={{ scale: product.isAvailable ? 0.98 : 1 }}
                         onClick={handleBuyNow}
+                        disabled={!product.isAvailable}
                     >
-                        {product.category === 'Digital' ? 'Subscribe Now' : 'Buy Now'}
+                        {product.isAvailable ? (product.category === 'Digital' ? 'Subscribe Now' : 'Buy Now') : 'Out of Stock'}
                     </motion.button>
                     <button
-                        className="btn-add-cart-outline flex items-center justify-center gap-3 transition-all active:scale-95"
+                        className="btn-add-cart-outline flex items-center justify-center gap-3 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={handleAddToCart}
+                        disabled={!product.isAvailable}
                     >
                         <ShoppingCart size={20} />
-                        Add to Cart
+                        {product.isAvailable ? 'Add to Cart' : 'Out of Stock'}
                     </button>
                 </div>
 

@@ -48,13 +48,9 @@ const CartPage: React.FC = () => {
 
             <div className="container mx-auto max-w-7xl relative z-10">
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 pt-8">
                     <div className="space-y-3">
-                        <div className="flex items-center gap-2.5 text-primary">
-                            <ShoppingCart size={16} className="text-[#00f2ff]" />
-                            <span className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-70">Your Cart</span>
-                        </div>
-                        <h1 className="text-4xl md:text-5xl font-light tracking-[0.1em] text-white uppercase leading-none">
+                        <h1 className="text-3xl md:text-4xl font-light tracking-[0.1em] text-white uppercase leading-none">
                             Review <span className="text-primary font-medium">Items</span>
                         </h1>
                         <p className="text-sm text-muted-foreground max-w-md font-medium opacity-80">
@@ -79,7 +75,7 @@ const CartPage: React.FC = () => {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="flex flex-col items-center justify-center py-20 text-center"
+                            className="flex flex-col items-center justify-center pt-4 pb-20 text-center -mt-8"
                         >
                             <div className="relative mb-8">
                                 <div className="absolute inset-0 bg-primary/20 rounded-full blur-[80px] animate-pulse" />

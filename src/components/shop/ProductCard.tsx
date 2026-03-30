@@ -17,6 +17,7 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        if (!product.isAvailable) return;
         dispatch(syncAddToCart({
             ...product,
             quantity: 1,
@@ -40,15 +41,16 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
                 viewport={{ once: true }}
                 style={{ perspective: 1000 }}
             >
-                <div className="product-image-container">
+                <div className="product-image-container flex-shrink-0">
                     <img src={product.image} alt={product.name} className="product-image" />
 
                     <div className="hover-actions">
                         <button 
-                            className="btn-primary-shop"
+                            className="btn-primary-shop disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                             onClick={handleAddToCart}
+                            disabled={!product.isAvailable}
                         >
-                            Add to Cart
+                            {product.isAvailable ? 'Add to Cart' : 'Out of Stock'}
                         </button>
                     </div>
                 </div>

@@ -35,8 +35,9 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
             <Card
                 enableTilt
                 glass
-                className="flex flex-col sm:flex-row items-center gap-6 p-6 group border-white/[0.03] hover:border-primary/30 transition-all duration-500"
+                className="group border-white/[0.03] hover:border-primary/30 transition-all duration-500"
             >
+                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 w-full">
                 {/* Product Image */}
                 <div className="relative w-32 h-32 overflow-hidden rounded-2xl bg-white/[0.02] border border-white/5 shrink-0">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -48,32 +49,33 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
                 </div>
 
                 {/* Product Info */}
-                <div className="flex-grow min-w-0 space-y-3">
+                <div className="flex-grow min-w-0">
                     <div className="space-y-1">
-                        <h3 className="text-lg font-medium text-white group-hover:text-primary transition-colors line-clamp-1">
+                        <h3 className="text-lg font-medium text-white group-hover:text-primary transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
                             {item.name}
                         </h3>
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap items-center gap-4">
                             {item.selectedVariants && Object.entries(item.selectedVariants).map(([key, value]) => (
-                                <div key={key} className="flex flex-col">
-                                    <span className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground font-black opacity-50">{key}</span>
-                                    <span className="text-xs text-white/70 font-medium">{value}</span>
+                                <div key={key} className="flex items-center gap-1.5 whitespace-nowrap">
+                                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-black opacity-60">{key}:</span>
+                                    <span className="text-xs text-white/80 font-semibold">{value}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
+                </div>
 
-                    <div className="flex items-center gap-4">
+                {/* Controls Area: Price, Quantity, Subtotal, Delete (Single Line) */}
+                <div className="flex items-center gap-4 sm:gap-6 px-4 py-3 bg-white/[0.02] border border-white/5 rounded-2xl whitespace-nowrap overflow-x-auto no-scrollbar max-w-full">
+                    
+                    {/* Price */}
+                    <div className="flex items-center gap-3 shrink-0">
                         <p className="text-base font-bold text-[#00f2ff] tracking-tight">
                             ${item.price.toLocaleString()}
                         </p>
-                        <div className="w-px h-3 bg-white/10" />
-                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">In Local Stock</span>
+                        <div className="hidden sm:block w-px h-4 bg-white/10" />
                     </div>
-                </div>
 
-                {/* Controls Area */}
-                <div className="flex items-center gap-8 px-4 py-3 bg-white/[0.02] border border-white/5 rounded-2xl">
                     {/* Quantity Selector */}
                     <div className="flex items-center gap-4">
                         <button
@@ -107,13 +109,13 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
                         </p>
                     </div>
 
-                    {/* Remove */}
                     <button
                         onClick={handleRemove}
-                        className="p-2 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all"
+                        className="p-2 shrink-0 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all ml-auto"
                     >
                         <Trash2 size={18} />
                     </button>
+                </div>
                 </div>
             </Card>
         </motion.div>

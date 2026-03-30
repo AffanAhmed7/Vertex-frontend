@@ -102,8 +102,9 @@ const Navigation = () => {
                                         Login
                                     </Button>
                                     <Button
+                                        variant="ghost"
                                         size="sm"
-                                        className="px-6 bg-[#0a0a0b] border border-white/10 text-white hover:border-[#00f2ff]/50 transition-all duration-500 font-bold tracking-wider text-[12px] uppercase rounded-full text-nowrap"
+                                        className="px-5 text-white/70 hover:text-white hover:bg-white/5 font-semibold tracking-wider text-[12px] uppercase text-nowrap"
                                         onClick={() => dispatch(openAuthModal('signup'))}
                                     >
                                         Join Now
@@ -155,7 +156,8 @@ const Navigation = () => {
                                     Login
                                 </Button>
                                 <Button
-                                    className="bg-[#0a0a0b] border border-white/10 text-white font-bold uppercase tracking-widest py-6"
+                                    variant="ghost"
+                                    className="text-white/70 hover:text-white uppercase tracking-widest py-6"
                                     onClick={() => dispatch(openAuthModal('signup'))}
                                 >
                                     Register

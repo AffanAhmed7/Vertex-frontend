@@ -89,6 +89,12 @@ const ShopPage = () => {
                                 <X size={12} className="cursor-pointer ml-2" onClick={() => dispatch(setFilters({ maxPrice: 5000 }))} />
                             </span>
                         )}
+                        {filters.onlyInStock && (
+                            <span className="chip">
+                                In Stock Only
+                                <X size={12} className="cursor-pointer ml-2" onClick={() => dispatch(setFilters({ onlyInStock: false }))} />
+                            </span>
+                        )}
                     </div>
 
                     {/* Results Grid */}

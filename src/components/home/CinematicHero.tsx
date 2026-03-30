@@ -72,23 +72,9 @@ const CinematicHero = () => {
                 </motion.div>
             </div>
 
-            {/* Floating Visual Accent */}
-            <motion.div
-                className="hero-visual-accent"
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1.5, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-                <div className="accent-bloom" />
-            </motion.div>
 
-            <div className="hero-scroll-indicator">
-                <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="scroll-dot"
-                />
-            </div>
+
+
         </section>
     );
 };

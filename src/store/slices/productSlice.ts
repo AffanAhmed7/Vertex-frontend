@@ -31,6 +31,7 @@ interface ProductFilters extends ServiceFilters {
     minRating: number;
     sortBy: string;
     search: string;
+    onlyInStock: boolean;
 }
 
 interface ProductState {
@@ -50,6 +51,7 @@ const initialFilters: ProductFilters = {
     minRating: 0,
     sortBy: 'newest',
     search: '',
+    onlyInStock: false,
 };
 
 const initialState: ProductState = {
@@ -66,9 +68,13 @@ export const fetchProducts = createAsyncThunk(
     'products/fetchAll',
     async (filters: Partial<ProductFilters>, { rejectWithValue }) => {
         try {
-            const apiFilters = { ...filters };
+            const apiFilters: ServiceFilters = { ...filters };
             if (apiFilters.maxPrice === 5000) {
                 delete apiFilters.maxPrice;
+            }
+            // Map onlyInStock to the API parameter inStock
+            if (filters.onlyInStock !== undefined) {
+                apiFilters.inStock = filters.onlyInStock;
             }
             return await productService.getAll(apiFilters);
         } catch (error: any) {

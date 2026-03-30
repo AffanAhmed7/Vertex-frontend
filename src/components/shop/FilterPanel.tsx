@@ -87,9 +87,9 @@ const FilterPanel = ({ isOpen, onClose, isMobile }: FilterPanelProps) => {
             {/* Availability */}
             <div className="filter-section">
                 <h3 className="filter-title">Availability</h3>
-                <div className="filter-option" onClick={() => dispatch(setFilters({ search: filters.search === 'available' ? '' : 'available' }))}>
-                    <div className={`w-10 h-5 rounded-full relative transition-colors ${filters.search === 'available' ? 'bg-white' : 'bg-white/10'}`}>
-                        <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${filters.search === 'available' ? 'left-6' : 'left-1'}`} />
+                <div className="filter-option" onClick={() => dispatch(setFilters({ onlyInStock: !filters.onlyInStock }))}>
+                    <div className={`w-10 h-5 rounded-full relative transition-colors ${filters.onlyInStock ? 'bg-white' : 'bg-white/10'}`}>
+                        <div className={`absolute top-1 w-3 h-3 rounded-full transition-all ${filters.onlyInStock ? 'bg-black left-6' : 'bg-white left-1'}`} />
                     </div>
                     <span>In Stock Only</span>
                 </div>

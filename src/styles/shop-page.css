@@ -29,8 +29,28 @@
 .filter-panel {
     position: sticky;
     top: 120px;
-    height: fit-content;
+    height: calc(100vh - 160px);
+    overflow-y: auto;
     padding: 2.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.filter-panel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filter-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.filter-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.filter-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 242, 255, 0.3);
 }
 
 .filter-section {
@@ -38,13 +58,14 @@
 }
 
 .filter-title {
+    font-family: 'Inter', sans-serif;
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.05em;
     color: #fff;
-    opacity: 0.8;
-    margin-bottom: 1.5rem;
-    font-weight: 700;
+    opacity: 0.4;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
 }
 
 .filter-option {

@@ -77,42 +77,9 @@ h3 {
         linear-gradient(to top, transparent 60%, #050505 100%);
 }
 
-.hero-visual-accent {
-    position: absolute;
-    top: 50%;
-    right: 5%;
-    transform: translateY(-50%);
-    width: 400px;
-    height: 600px;
-    z-index: 2;
-    pointer-events: none;
-    opacity: 0.6;
-}
 
-.accent-bloom {
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, var(--lp-primary) 0%, transparent 70%);
-    filter: blur(80px);
-    opacity: 0.2;
-}
 
-.hero-scroll-indicator {
-    position: absolute;
-    bottom: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.1);
-    z-index: 10;
-}
 
-.scroll-dot {
-    width: 2px;
-    height: 8px;
-    background: var(--lp-primary);
-}
 
 /* Redefine overlay for cinematic context */
 .hero-overlay {
@@ -169,7 +136,7 @@ h3 {
 }
 
 .shadow-glow {
-    box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.05);
 }
 
 .cta-primary:hover {

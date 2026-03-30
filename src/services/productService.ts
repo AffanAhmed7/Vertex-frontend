@@ -6,6 +6,7 @@ export interface ProductFilters {
     sortBy?: string;
     minPrice?: number;
     maxPrice?: number;
+    inStock?: boolean;
 }
 
 const productService = {
