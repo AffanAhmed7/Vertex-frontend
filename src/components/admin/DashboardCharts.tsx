@@ -108,30 +108,30 @@ export const ChartPlaceholder: React.FC<{
     };
 
     return (
-        <div className="bg-[#0c0c0e]/50 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] p-8 flex flex-col relative group overflow-hidden shadow-2xl">
+        <div className="bg-[#0c0c0e]/50 backdrop-blur-3xl border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-8 flex flex-col relative group overflow-hidden shadow-2xl h-full">
             {/* Cinematic Gradient Background */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[120px] -mr-32 -mt-32 pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 blur-[120px] -ml-32 -mb-32 pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
 
-            <div className="mb-8 flex flex-col items-center gap-1">
-                <h3 className="text-xl font-medium text-white flex items-center gap-3 tracking-wide">
-                    <span className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_15px_#00f2ff] animate-pulse" />
+            <div className="mb-6 md:mb-8 flex flex-col items-center gap-1">
+                <h3 className="text-lg md:text-xl font-medium text-white flex items-center gap-3 tracking-wide text-center">
+                    <span className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_15px_#00f2ff] animate-pulse hidden xs:block" />
                     {title}
                 </h3>
                 {subtitle && (
-                    <p className="text-sm font-medium text-muted-foreground mt-1 text-center">{subtitle}</p>
+                    <p className="text-[10px] md:text-sm font-medium text-muted-foreground mt-1 text-center opacity-60">{subtitle}</p>
                 )}
             </div>
 
-            <div className="flex-1 flex min-h-[220px] relative">
+            <div className="flex-1 flex min-h-[180px] md:min-h-[220px] relative">
                 {/* Y-Axis Labels */}
-                <div className="w-12 flex flex-col justify-between pb-8 border-r border-white/5 pr-3 mr-2">
+                <div className="w-10 md:w-12 flex flex-col justify-between pb-8 border-r border-white/5 pr-2 md:pr-3 mr-2">
                     {[100, 75, 50, 25, 0].map(percent => {
                         const displayVal = yAxisMax * (percent / 100);
 
                         return (
-                            <span key={percent} className="text-[10px] font-medium text-white/40 text-right leading-none">
-                                {isCategory ? `${Math.round(displayVal)}%` : displayVal >= 1000 ? `${(displayVal / 1000).toFixed(1)}k` : Math.round(displayVal)}
+                            <span key={percent} className="text-[9px] md:text-[10px] font-medium text-white/40 text-right leading-none">
+                                {isCategory ? `${Math.round(displayVal)}%` : displayVal >= 1000 ? `${(displayVal / 1000).toFixed(displayVal >= 10000 ? 0 : 1)}k` : Math.round(displayVal)}
                             </span>
                         );
                     })}
@@ -146,15 +146,15 @@ export const ChartPlaceholder: React.FC<{
                     {/* Empty state when no data for selected period */}
                     {normalizedData.length === 0 && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pb-8">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="opacity-20">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="opacity-20">
                                 <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" stroke="#00f2ff" strokeWidth="1.5" strokeLinejoin="round"/>
                             </svg>
-                            <p className="text-[11px] text-white/20 font-medium uppercase tracking-widest">No data for this period</p>
+                            <p className="text-[9px] text-white/20 font-medium uppercase tracking-widest">No metrics</p>
                         </div>
                     )}
 
                     {type === 'bar' && (
-                        <div className="w-full h-[180px] relative z-10 px-2 mt-auto">
+                        <div className="w-full h-full relative z-10 px-1 md:px-2 mt-auto">
                             <svg width="100%" height="100%" viewBox="0 0 400 100" preserveAspectRatio="none" className="overflow-visible">
                                 <defs>
                                     <linearGradient id="bar-gradient-ultra" x1="0" y1="0" x2="0" y2="1">
@@ -173,7 +173,7 @@ export const ChartPlaceholder: React.FC<{
                                                 width={barWidth}
                                                 height="100"
                                                 fill="rgba(255,255,255,0.02)"
-                                                rx="6"
+                                                rx="4"
                                                 className="transition-all duration-300 group-hover/bar:fill-white/8"
                                             />
                                             <motion.rect
@@ -186,7 +186,7 @@ export const ChartPlaceholder: React.FC<{
                                                     fill: hoveredIndex === i ? '#00f2ff' : 'url(#bar-gradient-ultra)'
                                                 }}
                                                 transition={{ delay: i * 0.04, duration: 1, ease: [0.23, 1, 0.32, 1] }}
-                                                rx="6"
+                                                rx="4"
                                                 className={`transition-all duration-300 ${hoveredIndex === i ? 'opacity-100' : 'opacity-80'}`}
                                             />
 
@@ -198,10 +198,10 @@ export const ChartPlaceholder: React.FC<{
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, y: 5 }}
                                                     >
-                                                        <foreignObject x={x - 25} y={100 - val - 48} width={barWidth + 50} height="38" className="overflow-visible">
-                                                            <div className="bg-[#111]/80 backdrop-blur-xl border border-white/10 rounded-lg px-2 py-1 flex flex-col items-center justify-center h-full shadow-2xl">
-                                                                {allLabels[i] && <span className="text-white/50 text-[9px] font-medium leading-none mb-0.5">{allLabels[i]}</span>}
-                                                                <span className="text-white text-xs font-semibold">
+                                                        <foreignObject x={x - 30} y={100 - val - 48} width={barWidth + 60} height="38" className="overflow-visible">
+                                                            <div className="bg-[#111]/90 backdrop-blur-2xl border border-white/10 rounded-lg px-2 py-1 flex flex-col items-center justify-center h-full shadow-2xl">
+                                                                {allLabels[i] && <span className="text-white/50 text-[8px] font-medium leading-none mb-0.5 truncate w-full text-center">{allLabels[i]}</span>}
+                                                                <span className="text-white text-[10px] font-semibold">
                                                                     {isCategory ? `${Math.round(item.relativeShare)}%` : `$${Math.round(item.scaled).toLocaleString()}`}
                                                                 </span>
                                                             </div>
@@ -215,7 +215,7 @@ export const ChartPlaceholder: React.FC<{
                                                     x={x + barWidth / 2}
                                                     y="120"
                                                     textAnchor="middle"
-                                                    className={`text-[10px] font-medium transition-all duration-300 ${hoveredIndex === i ? 'fill-primary' : 'fill-white/40'}`}
+                                                    className={`text-[9px] font-medium transition-all duration-300 ${hoveredIndex === i ? 'fill-primary' : 'fill-white/40'}`}
                                                 >
                                                     {allLabels[i] ?? ''}
                                                 </text>
@@ -228,7 +228,7 @@ export const ChartPlaceholder: React.FC<{
                     )}
 
                     {type === 'line' && (
-                        <div className="w-full h-[180px] relative z-10 px-2 mt-auto">
+                        <div className="w-full h-full relative z-10 px-1 md:px-2 mt-auto">
                             <svg width="100%" height="100%" viewBox="0 0 400 100" preserveAspectRatio="none" className="overflow-visible">
                                 <defs>
                                     <linearGradient id="area-fade-minimal" x1="0" y1="0" x2="0" y2="1">
@@ -288,9 +288,9 @@ export const ChartPlaceholder: React.FC<{
                                                         exit={{ opacity: 0, scale: 0.9, y: 12 }}
                                                     >
                                                         <foreignObject x={x - 45} y={100 - val - 52} width="90" height="40" className="overflow-visible">
-                                                            <div className="bg-[#111]/80 backdrop-blur-xl border border-white/10 rounded-lg px-2 py-1 flex flex-col items-center justify-center h-full shadow-2xl">
-                                                                {allLabels[i] && <span className="text-white/50 text-[9px] font-medium leading-none mb-0.5 text-center truncate w-full">{allLabels[i]}</span>}
-                                                                <span className="text-white text-xs font-semibold">
+                                                            <div className="bg-[#111]/90 backdrop-blur-2xl border border-white/10 rounded-lg px-2 py-1 flex flex-col items-center justify-center h-full shadow-2xl">
+                                                                {allLabels[i] && <span className="text-white/50 text-[8px] font-medium leading-none mb-0.5 text-center truncate w-full">{allLabels[i]}</span>}
+                                                                <span className="text-white text-[10px] font-semibold">
                                                                     ${Math.round(item.scaled).toLocaleString()}
                                                                 </span>
                                                             </div>
@@ -307,21 +307,20 @@ export const ChartPlaceholder: React.FC<{
                 </div>
             </div>
 
-            <div className="mt-10 flex justify-between items-center text-xs font-medium text-muted-foreground border-t border-white/5 pt-6 min-h-[46px]">
+            <div className="mt-8 flex justify-between items-center text-[10px] md:text-sm font-medium text-muted-foreground border-t border-white/5 pt-5 min-h-[40px] overflow-hidden">
                 {!isCategory ? (
-                    <>
-                        {allLabels.map((label: string, i: number) => (
-                            <div key={i} className="flex items-center gap-1.5 text-white/40 group-hover:text-white/70 transition-all duration-700">
-                                {i === 0 && <span className="w-1 h-1 rounded-full bg-primary/40 shadow-[0_0_8px_#00f2ff]/20" />}
+                    <div className="flex w-full justify-between gap-2 overflow-x-auto no-scrollbar">
+                        {allLabels.slice(0, 7).map((label: string, i: number) => (
+                            <div key={i} className="flex items-center gap-1.5 text-white/30 whitespace-nowrap">
+                                <span className="w-1 h-1 rounded-full bg-primary/20" />
                                 {label}
-                                {i === allLabels.length - 1 && <span className="w-1 h-1 rounded-full bg-primary/20" />}
                             </div>
                         ))}
-                    </>
+                    </div>
                 ) : (
-                    <div className="flex items-center gap-2 text-white/20">
-                        <span className="w-1 h-1 rounded-full bg-white/5" />
-                        Distribution Meta
+                    <div className="flex items-center gap-2 text-white/20 uppercase tracking-[0.2em] text-[8px]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-pulse" />
+                        Infrastructure Intelligence
                     </div>
                 )}
             </div>

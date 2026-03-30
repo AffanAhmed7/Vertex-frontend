@@ -454,85 +454,87 @@ const AdminOverview: React.FC = () => {
             className="space-y-8"
         >
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">Dashboard Overview</h1>
-                    <p className="text-xs text-[#00f2ff]/60 uppercase tracking-widest font-medium">Admin Interface <span className="text-white/10 mx-2">/</span> Store Analytics</p>
+                    <h1 className="text-2xl md:text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">Dashboard Overview</h1>
+                    <p className="text-[10px] md:text-xs text-[#00f2ff]/60 uppercase tracking-widest font-medium">Infrastructure <span className="text-white/10 mx-2">/</span> Operational Analytics</p>
                 </div>
                 
-                <div className="flex flex-wrap items-center gap-3">
-                    {/* Timeframe Selector Pills */}
-                    <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 backdrop-blur-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
+                    {/* Timeframe Selector Pills - Full-width distribution on mobile */}
+                    <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 backdrop-blur-sm w-full sm:w-auto overflow-hidden">
                         {(['Day', 'Week', 'Month', 'Year', 'All Time'] as const).map((period) => (
                             <button
                                 key={period}
                                 onClick={() => setTimeFrame(period)}
-                                className={`px-3 py-1.5 rounded-xl text-[10px] font-semibold uppercase tracking-wider transition-all ${
+                                className={`flex-1 sm:flex-none px-2 md:px-3 py-1.5 rounded-xl text-[9px] md:text-[10px] font-semibold uppercase tracking-wider transition-all text-center whitespace-nowrap ${
                                     timeFrame === period 
                                     ? 'bg-[#00f2ff] text-black shadow-[0_0_15px_rgba(0,242,255,0.3)]' 
                                     : 'text-white/40 hover:text-white/60 hover:bg-white/5'
                                 }`}
                             >
-                                {period}
+                                {period === 'All Time' ? 'All' : period}
                             </button>
                         ))}
                     </div>
 
-                    <div className="relative">
+                    <div className="flex items-center gap-2">
+                        <div className="relative flex-1 sm:flex-none">
+                            <button
+                                onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
+                                className={`w-full flex items-center justify-center gap-2 px-4 py-2 border rounded-xl text-xs font-medium transition-all ${isFilterMenuOpen ? 'bg-white/10 border-[#00f2ff]/50 text-white' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10'}`}
+                            >
+                                <Filter size={14} className={filterStatus ? 'text-[#00f2ff]' : ''} />
+                                {filterStatus || 'Status'}
+                            </button>
+
+                            <AnimatePresence>
+                                {isFilterMenuOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        className="absolute right-0 mt-2 w-48 bg-[#1a1a1e] border border-white/10 rounded-2xl p-2 shadow-2xl z-50 overflow-hidden"
+                                    >
+                                        {['Paid', 'Shipped', 'Pending'].map(status => (
+                                            <button
+                                                key={status}
+                                                onClick={() => {
+                                                    setFilterStatus(filterStatus === status ? null : status);
+                                                    setIsFilterMenuOpen(false);
+                                                }}
+                                                className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${filterStatus === status ? 'bg-[#00f2ff]/20 text-[#00f2ff]' : 'text-muted-foreground hover:bg-white/5 hover:text-white'}`}
+                                            >
+                                                {status}
+                                            </button>
+                                        ))}
+                                        {filterStatus && (
+                                            <button
+                                                onClick={() => { setFilterStatus(null); setIsFilterMenuOpen(false); }}
+                                                className="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-rose-500/60 hover:text-rose-500 hover:bg-rose-500/5 transition-all mt-1 border-t border-white/5 pt-3"
+                                            >
+                                                Clear Filter
+                                            </button>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
                         <button
-                            onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-                            className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-xs font-medium transition-all ${isFilterMenuOpen ? 'bg-white/10 border-[#00f2ff]/50 text-white' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10'}`}
+                            onClick={handleExport}
+                            disabled={isExporting}
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/5 text-white/70 rounded-xl text-xs font-medium transition-all hover:bg-white/[0.05] disabled:opacity-50"
                         >
-                            <Filter size={14} className={filterStatus ? 'text-[#00f2ff]' : ''} />
-                            {filterStatus || 'Status'}
+                            {isExporting ? <div className="w-4 h-4 border-2 border-[#00f2ff]/20 border-t-[#00f2ff] rounded-full animate-spin" /> : <Download size={14} />}
+                            <span className="hidden xs:inline">{isExporting ? 'Exporting...' : 'Export'}</span>
                         </button>
-
-                        <AnimatePresence>
-                            {isFilterMenuOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute right-0 mt-2 w-48 bg-[#1a1a1e] border border-white/10 rounded-2xl p-2 shadow-2xl z-50 overflow-hidden"
-                                >
-                                    {['Paid', 'Shipped', 'Pending'].map(status => (
-                                        <button
-                                            key={status}
-                                            onClick={() => {
-                                                setFilterStatus(filterStatus === status ? null : status);
-                                                setIsFilterMenuOpen(false);
-                                            }}
-                                            className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${filterStatus === status ? 'bg-[#00f2ff]/20 text-[#00f2ff]' : 'text-muted-foreground hover:bg-white/5 hover:text-white'}`}
-                                        >
-                                            {status}
-                                        </button>
-                                    ))}
-                                    {filterStatus && (
-                                        <button
-                                            onClick={() => { setFilterStatus(null); setIsFilterMenuOpen(false); }}
-                                            className="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-rose-500/60 hover:text-rose-500 hover:bg-rose-500/5 transition-all mt-1 border-t border-white/5 pt-3"
-                                        >
-                                            Clear Filter
-                                        </button>
-                                    )}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
                     </div>
-
-                    <button
-                        onClick={handleExport}
-                        disabled={isExporting}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/5 text-white/70 rounded-xl text-xs font-medium transition-all hover:bg-white/[0.05] disabled:opacity-50"
-                    >
-                        {isExporting ? <div className="w-4 h-4 border-2 border-[#00f2ff]/20 border-t-[#00f2ff] rounded-full animate-spin" /> : <Download size={14} />}
-                        {isExporting ? 'Exporting...' : 'Export'}
-                    </button>
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {semanticData.semanticStats.map((stat: any) => (
                     <motion.div key={stat.label} variants={itemVariants} layout>
                         <StatCard
@@ -544,21 +546,21 @@ const AdminOverview: React.FC = () => {
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-                <motion.div variants={itemVariants}>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8 mb-8">
+                <motion.div variants={itemVariants} className="min-h-[300px]">
                     <ChartPlaceholder
                         title={`Revenue Stream (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : timeFrame === 'Year' ? '1Y' : 'All Time'})`}
-                        subtitle={`Total: ${semanticData.semanticStats[0]?.value || '$0.00'} • ${timeFrame === 'Month' ? new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) : timeFrame}`}
+                        subtitle={`Total: ${semanticData.semanticStats[0]?.value || '$0.00'}`}
                         type="line"
                         data={semanticData.chartData}
                         labels={semanticData.chartLabels}
                         timeFrame={timeFrame}
                     />
                 </motion.div>
-                <motion.div variants={itemVariants}>
+                <motion.div variants={itemVariants} className="min-h-[300px]">
                     <ChartPlaceholder
-                        title={`Category Success (${timeFrame === 'Day' ? 'Today' : timeFrame === 'Week' ? '7D' : timeFrame === 'Month' ? '30D' : timeFrame === 'Year' ? '1Y' : 'All Time'})`}
-                        subtitle={`System Conversion: ${semanticData.semanticStats[3]?.value || '0.0%'} • Active Ops: ${semanticData.semanticStats[1]?.value || '0'}`}
+                        title={`Category Success`}
+                        subtitle={`System Conversion: ${semanticData.semanticStats[3]?.value || '0.0%'}`}
                         type="bar"
                         data={semanticData.catData}
                         labels={semanticData.catLabels}
@@ -570,43 +572,43 @@ const AdminOverview: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recent Orders */}
                 <motion.div variants={itemVariants} className="lg:col-span-2 bg-[#111114] border border-white/5 rounded-2xl overflow-hidden flex flex-col">
-                    <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between">
-                        <h3 className="text-lg font-medium text-white">Recent Orders</h3>
+                    <div className="px-5 md:px-6 py-4 md:py-5 border-b border-white/5 flex items-center justify-between">
+                        <h3 className="text-base md:text-lg font-medium text-white">Recent Orders</h3>
                         <button
                             onClick={() => navigate('/admin/orders')}
-                            className="text-primary text-xs font-medium hover:text-white transition-all flex items-center gap-2"
+                            className="text-[#00f2ff] text-[10px] md:text-xs font-medium hover:text-white transition-all flex items-center gap-2"
                         >
-                            View All Orders <ArrowRight size={14} />
+                            View All <ArrowRight size={14} />
                         </button>
                     </div>
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead className="bg-white/[0.02] text-xs text-muted-foreground uppercase font-medium">
+                        <table className="w-full text-left min-w-[500px] md:min-w-0">
+                            <thead className="bg-white/[0.02] text-[10px] md:text-xs text-muted-foreground uppercase font-medium">
                                 <tr>
-                                    <th className="px-6 py-4">ID</th>
-                                    <th className="px-6 py-4">Customer</th>
-                                    <th className="px-6 py-4 text-right">Value</th>
-                                    <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4 text-center">Action</th>
+                                    <th className="px-4 md:px-6 py-3 md:py-4">ID</th>
+                                    <th className="px-4 md:px-6 py-3 md:py-4">Source / Entity</th>
+                                    <th className="px-4 md:px-6 py-3 md:py-4 text-right">Value</th>
+                                    <th className="px-4 md:px-6 py-3 md:py-4">Status</th>
+                                    <th className="px-4 md:px-6 py-3 md:py-4 text-center hidden sm:table-cell">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
                                 {filteredOrders.map((order: any) => (
                                     <tr key={order.id} className="hover:bg-white/[0.02] transition-colors group">
-                                        <td className="px-6 py-4 text-xs font-medium text-muted-foreground">{order.id}</td>
-                                        <td className="px-6 py-4">
-                                            <div className="text-sm font-medium text-white">{order.customer}</div>
-                                            <div className="text-xs font-medium text-muted-foreground truncate max-w-[150px]">{order.product}</div>
+                                        <td className="px-4 md:px-6 py-3 md:py-4 text-[10px] md:text-xs font-medium text-muted-foreground">{order.id}</td>
+                                        <td className="px-4 md:px-6 py-3 md:py-4">
+                                            <div className="text-xs md:text-sm font-medium text-white">{order.customer}</div>
+                                            <div className="hidden md:block text-[10px] md:text-xs font-medium text-muted-foreground truncate max-w-[150px]">{order.product}</div>
                                         </td>
-                                        <td className="px-6 py-4 text-sm font-medium text-right text-white">${order.amount}</td>
-                                        <td className="px-6 py-4">
-                                            <span className={`text-xs font-medium px-2 py-1 rounded-md ${order.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-500' :
+                                        <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-right text-white">${order.amount}</td>
+                                        <td className="px-4 md:px-6 py-3 md:py-4">
+                                            <span className={`text-[10px] md:text-xs font-semibold px-2 py-0.5 md:py-1 rounded-md ${order.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-500' :
                                                 order.status === 'Shipped' ? 'bg-blue-500/10 text-blue-500' : 'bg-amber-500/10 text-amber-500'
                                                 }`}>
                                                 {order.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-center">
+                                        <td className="px-4 md:px-6 py-3 md:py-4 text-center hidden sm:table-cell">
                                             <button
                                                 onClick={() => navigate('/admin/orders')}
                                                 className="p-1.5 text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-all"

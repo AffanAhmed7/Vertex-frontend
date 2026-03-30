@@ -34,32 +34,33 @@ const AccountOverview: React.FC = () => {
     }
 
     return (
-        <div className="space-y-12">
+        <div className="space-y-8 md:space-y-12">
             {/* Header */}
             <header className="space-y-2">
-                <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">
+                <h1 className="text-2xl md:text-3xl font-light tracking-[0.1em] text-white uppercase leading-tight md:leading-none">
                     Account <span className="text-primary">Overview</span>
                 </h1>
-                <p className="text-muted-foreground">Welcome back, {currentUser?.name}. Manage your orders and account information here.</p>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">Welcome back, {currentUser?.name}. Manage your orders and account information here.</p>
             </header>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                 {stats.map((stat, i) => (
                     <motion.div
                         key={stat.label}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
+                        className={i === 2 ? 'col-span-2 md:col-span-1' : ''}
                     >
-                        <Card className="p-6 bg-card/40 border-white/5" glass>
+                        <Card className="p-5 md:p-6 bg-card/40 border-white/5 h-full" glass>
                             <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center ${stat.color}`}>
-                                    <stat.icon size={24} />
+                                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 flex items-center justify-center ${stat.color} shrink-0`}>
+                                    <stat.icon size={20} className="md:w-6 md:h-6" />
                                 </div>
-                                <div>
-                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</p>
-                                    <p className="text-2xl font-black text-foreground">{stat.value}</p>
+                                <div className="min-w-0">
+                                    <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest truncate">{stat.label}</p>
+                                    <p className="text-xl md:text-2xl font-black text-foreground">{stat.value}</p>
                                 </div>
                             </div>
                         </Card>
@@ -67,48 +68,48 @@ const AccountOverview: React.FC = () => {
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                 {/* Recent Order Preview */}
-                <Card className="p-0 bg-card/40 border-white/5 flex flex-col" glass>
-                    <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                <Card className="p-0 bg-card/40 border-white/5 flex flex-col overflow-hidden" glass>
+                    <div className="p-5 md:p-6 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="space-y-1">
                             <h2 className="text-xs font-bold text-white uppercase tracking-widest opacity-60">Recent Order</h2>
                             <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Last Order Placed</p>
                         </div>
-                        <Link to="/account/orders" className="text-[10px] font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors flex items-center gap-2">
+                        <Link to="/account/orders" className="text-[10px] font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors flex items-center gap-2 w-fit">
                             Order History <span className="text-lg leading-none">&rarr;</span>
                         </Link>
                     </div>
-                    <div className="p-8 flex-grow">
+                    <div className="p-6 md:p-8 flex-grow">
                         {recentOrder ? (
                             <div className="space-y-6">
-                                <div className="flex justify-between items-start">
+                                <div className="flex justify-between items-start gap-4">
                                     <div className="space-y-1">
-                                        <p className="text-xs font-bold font-mono text-white/40">VTX-{recentOrder.id.slice(-8).toUpperCase()}</p>
-                                        <p className="text-sm font-medium text-white">{new Date(recentOrder.createdAt).toLocaleDateString()}</p>
+                                        <p className="text-[10px] md:text-xs font-bold font-mono text-white/40">VTX-{recentOrder.id.slice(-8).toUpperCase()}</p>
+                                        <p className="text-xs md:text-sm font-medium text-white">{new Date(recentOrder.createdAt).toLocaleDateString()}</p>
                                     </div>
-                                    <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">
+                                    <span className="px-2 md:px-3 py-1 rounded-full bg-primary/10 text-primary text-[9px] md:text-[10px] font-black uppercase tracking-widest border border-primary/20 shrink-0">
                                         {recentOrder.status}
                                     </span>
                                 </div>
-                                <div className="flex items-center gap-6 pt-6 border-t border-white/5">
-                                    <div className="w-16 h-16 rounded-xl bg-white/5 overflow-hidden shrink-0 border border-white/5">
+                                <div className="flex items-center gap-4 md:gap-6 pt-6 border-t border-white/5">
+                                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-white/5 overflow-hidden shrink-0 border border-white/5">
                                         <img src={recentOrder.items[0]?.product.image || 'https://via.placeholder.com/150'} alt="" className="w-full h-full object-cover" />
                                     </div>
-                                    <div className="flex-grow min-w-0 pr-4">
-                                        <p className="text-base font-bold leading-tight text-white mb-1">{recentOrder.items[0]?.product.name}</p>
-                                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-pulse" />
-                                            {recentOrder.items.length > 1 ? `+ ${recentOrder.items.length - 1} Additional Items` : 'Single Item'}
+                                    <div className="flex-grow min-w-0">
+                                        <p className="text-sm md:text-base font-bold leading-tight text-white mb-1 truncate">{recentOrder.items[0]?.product.name}</p>
+                                        <p className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-bold flex items-center gap-2">
+                                            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-primary/40 animate-pulse" />
+                                            {recentOrder.items.length > 1 ? `+ ${recentOrder.items.length - 1} More` : 'Single Item'}
                                         </p>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-lg font-black text-primary">${Number(recentOrder.total).toFixed(2)}</p>
+                                    <div className="text-right shrink-0">
+                                        <p className="text-base md:text-lg font-black text-primary">${Number(recentOrder.total).toFixed(2)}</p>
                                     </div>
                                 </div>
                             </div>
                         ) : (
-                            <div className="h-full flex flex-grow items-center justify-center italic text-muted-foreground text-sm opacity-50">
+                            <div className="h-full flex flex-grow items-center justify-center italic text-muted-foreground text-xs md:text-sm opacity-50 py-8">
                                 No recent orders found in history.
                             </div>
                         )}
@@ -116,42 +117,42 @@ const AccountOverview: React.FC = () => {
                 </Card>
 
                 {/* Default Address Preview */}
-                <Card className="p-0 bg-card/40 border-white/5 flex flex-col" glass>
-                    <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                <Card className="p-0 bg-card/40 border-white/5 flex flex-col overflow-hidden" glass>
+                    <div className="p-5 md:p-6 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="space-y-1">
                             <h2 className="text-xs font-bold text-white uppercase tracking-widest opacity-60">Shipping Default</h2>
                             <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Primary Shipping Address</p>
                         </div>
-                        <Link to="/account/addresses" className="text-[10px] font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors flex items-center gap-2">
+                        <Link to="/account/addresses" className="text-[10px] font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors flex items-center gap-2 w-fit">
                             Manage <span className="text-lg leading-none">&rarr;</span>
                         </Link>
                     </div>
-                    <div className="p-8 flex-grow">
+                    <div className="p-6 md:p-8 flex-grow">
                         {defaultAddress ? (
                             <div className="space-y-6">
                                 <div className="flex items-center gap-3 text-primary/40">
-                                    <MapPin size={18} />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Default Shipping Address</span>
+                                    <MapPin size={16} className="md:w-[18px] md:h-[18px]" />
+                                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] truncate">Default Shipping Address</span>
                                 </div>
-                                <div className="space-y-4">
-                                    <p className="text-lg font-bold text-white uppercase tracking-tight">{defaultAddress.fullName}</p>
+                                <div className="space-y-3 md:space-y-4">
+                                    <p className="text-base md:text-lg font-bold text-white uppercase tracking-tight truncate">{defaultAddress.fullName}</p>
                                     <div className="space-y-1">
-                                        <p className="text-base text-muted-foreground leading-relaxed">
+                                        <p className="text-sm md:text-base text-muted-foreground leading-relaxed truncate">
                                             {defaultAddress.street}
                                         </p>
-                                        <p className="text-base text-muted-foreground leading-relaxed">
+                                        <p className="text-sm md:text-base text-muted-foreground leading-relaxed truncate">
                                             {defaultAddress.city}, {defaultAddress.postalCode}
                                         </p>
                                     </div>
                                     <div className="pt-4 mt-4 border-t border-white/5">
-                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.4em]">
+                                        <p className="text-[9px] md:text-[10px] font-black text-primary uppercase tracking-[0.2em] md:tracking-[0.4em] truncate">
                                             {defaultAddress.country}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         ) : (
-                            <div className="h-full flex flex-grow items-center justify-center italic text-muted-foreground text-sm opacity-50">
+                            <div className="h-full flex flex-grow items-center justify-center italic text-muted-foreground text-xs md:text-sm opacity-50 py-8">
                                 No default address saved.
                             </div>
                         )}

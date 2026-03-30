@@ -48,7 +48,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        className={`relative w-full max-h-[90vh] overflow-y-auto glass-panel rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 ${maxWidth === 'sm' ? 'max-w-sm' :
+                        className={`relative w-full max-h-[95vh] md:max-h-[90vh] overflow-y-auto overflow-x-hidden glass-panel rounded-2xl md:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 ${maxWidth === 'sm' ? 'max-w-sm' :
                             maxWidth === 'md' ? 'max-w-md' :
                                 maxWidth === 'lg' ? 'max-w-lg' :
                                     maxWidth === 'xl' ? 'max-w-xl' :
@@ -57,21 +57,21 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
                     >
                         {/* Header */}
                         {title && (
-                            <div className="flex items-center justify-between p-8 pb-4">
-                                <h2 className="text-2xl font-light tracking-[0.2em] uppercase text-white/90">{title}</h2>
+                            <div className="flex items-center justify-between p-4 md:p-8 pb-3 md:pb-4 border-b border-white/5 md:border-0">
+                                <h2 className="text-lg md:text-2xl font-light tracking-[0.2em] uppercase text-white/90">{title}</h2>
                                 {showCloseButton && (
                                     <button
                                         onClick={onClose}
-                                        className="p-2 transition-all duration-300 rounded-full hover:bg-white/10 text-white/30 hover:text-white"
+                                        className="p-1.5 md:p-2 transition-all duration-300 rounded-full hover:bg-white/10 text-white/30 hover:text-white"
                                     >
-                                        <X size={20} />
+                                        <X size={18} className="md:w-5 md:h-5" />
                                     </button>
                                 )}
                             </div>
                         )}
 
                         {/* Body */}
-                        <div className="p-6 overflow-visible relative z-10">
+                        <div className="p-4 md:p-8 pt-4 md:pt-4 overflow-visible relative z-10">
                             {children}
                         </div>
 

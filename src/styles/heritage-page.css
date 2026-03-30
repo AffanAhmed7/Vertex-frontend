@@ -1,0 +1,187 @@
+/* Heritage Page Premium Styles */
+
+:root {
+    --heritage-primary: #00f2ff;
+    --heritage-text-dim: rgba(255, 255, 255, 0.6);
+    --heritage-border: rgba(255, 255, 255, 0.08);
+}
+
+.heritage-container {
+    background: #050505;
+    color: #fff;
+    min-height: 100vh;
+}
+
+/* Custom Mobile Clearance */
+@media (max-width: 1024px) {
+    .heritage-container {
+        padding-top: 0 !important;
+    }
+}
+
+/* Sections */
+.heritage-section {
+    padding: 120px 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .heritage-section {
+        padding: 60px 1.5rem;
+    }
+}
+
+/* Hero Section */
+.heritage-hero {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .heritage-hero {
+        height: 100dvh;
+        padding: 0 1.5rem;
+    }
+}
+
+.heritage-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.75rem, 8vw, 7rem);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.heritage-hero-sub {
+    color: var(--heritage-text-dim);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 300;
+    max-width: 750px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Genesis Section */
+.genesis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+}
+
+@media (max-width: 1024px) {
+    .genesis-grid {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+}
+
+.genesis-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+}
+
+.genesis-text {
+    color: var(--heritage-text-dim);
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 1.8;
+}
+
+/* Genesis Image with "Safe" Offset Boarder */
+.genesis-image-wrapper {
+    position: relative;
+    padding: 0 0 2rem 2rem; /* Safe padding for offset */
+}
+
+@media (max-width: 640px) {
+    .genesis-image-wrapper {
+        padding: 0 0 1.5rem 1.5rem;
+    }
+}
+
+.genesis-image-main {
+    aspect-ratio: 4/5;
+    background: #000;
+    position: relative;
+    z-index: 2;
+    border: 1px solid var(--heritage-border);
+}
+
+.genesis-image-offset {
+    position: absolute;
+    bottom: -1rem;
+    left: -1rem;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(0, 242, 255, 0.15);
+    z-index: 1;
+}
+
+/* Curation Grid */
+.curation-section {
+    background: #0a0a0a;
+    border-top: 1px solid var(--heritage-border);
+}
+
+.curation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+}
+
+@media (max-width: 1024px) {
+    .curation-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    /* 2-1 Grid: Third item spans full width */
+    .curation-grid > div:nth-child(3) {
+        grid-column: span 2;
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .curation-grid > div:nth-child(3) .aspect-\[3\/4\] {
+        aspect-ratio: 16/9; /* Wider cinematic look for the featured bottom card */
+    }
+}
+
+@media (max-width: 640px) {
+    .curation-grid {
+        gap: 1.5rem;
+    }
+
+    .curation-grid > div:nth-child(3) {
+        margin: 0;
+        text-align: left;
+    }
+}
+
+
+.card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 1.5rem 0 1rem;
+}
+
+.card-text {
+    color: var(--heritage-text-dim);
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.7;
+}

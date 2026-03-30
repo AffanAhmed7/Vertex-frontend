@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Store, CreditCard, Truck, Bell, Save, Trash2, Check, RefreshCw, ShieldAlert } from 'lucide-react';
+import { Store, CreditCard, Truck, Bell, Save, Trash2, Check, RefreshCw, ShieldAlert, ChevronDown } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { fetchSettings, updateSettings, factoryReset } from '../../services/adminService';
@@ -176,11 +176,11 @@ const AdminSettings: React.FC = () => {
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                    className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"
                 >
                 {/* Store Details */}
                 <motion.div variants={itemVariants}>
-                    <Card className="p-6 bg-[#111114] border-white/5 h-full flex flex-col">
+                    <Card className="p-4 sm:p-6 bg-[#111114] border-white/5 h-full flex flex-col">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="p-2 rounded-lg bg-[#00f2ff]/10 text-[#00f2ff]">
                                 <Store size={20} />
@@ -194,17 +194,17 @@ const AdminSettings: React.FC = () => {
                                     type="text"
                                     value={settings.storeName}
                                     onChange={(e) => handleChange('storeName', e.target.value)}
-                                    className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
+                                    className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
                                 />
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-white/40">Contact Email</label>
                                     <input
                                         type="email"
                                         value={settings.contactEmail}
                                         onChange={(e) => handleChange('contactEmail', e.target.value)}
-                                        className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
+                                        className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -213,23 +213,28 @@ const AdminSettings: React.FC = () => {
                                         type="text"
                                         value={settings.supportPhone}
                                         onChange={(e) => handleChange('supportPhone', e.target.value)}
-                                        className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
+                                        className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
                                     />
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-white/40">Store Currency</label>
-                                <select
-                                    value={settings.currency}
-                                    onChange={(e) => handleChange('currency', e.target.value)}
-                                    className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium appearance-none"
-                                >
-                                    <option value="USD">USD ($)</option>
-                                    <option value="EUR">EUR (€)</option>
-                                    <option value="GBP">GBP (£)</option>
-                                    <option value="JPY">JPY (¥)</option>
-                                    <option value="PKR">PKR (₨)</option>
-                                </select>
+                                <label className="text-[10px] sm:text-xs font-medium text-white/40">Store Currency</label>
+                                <div className="relative">
+                                    <select
+                                        value={settings.currency}
+                                        onChange={(e) => handleChange('currency', e.target.value)}
+                                        className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium appearance-none pr-10"
+                                    >
+                                        <option value="USD">USD ($)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="GBP">GBP (£)</option>
+                                        <option value="JPY">JPY (¥)</option>
+                                        <option value="PKR">PKR (₨)</option>
+                                    </select>
+                                    <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                                        <ChevronDown size={14} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -238,7 +243,7 @@ const AdminSettings: React.FC = () => {
 
                 {/* Payment Processing */}
                 <motion.div variants={itemVariants}>
-                    <Card className="p-6 bg-[#111114] border-white/5 h-full flex flex-col">
+                    <Card className="p-4 sm:p-6 bg-[#111114] border-white/5 h-full flex flex-col">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="p-2 rounded-lg bg-[#00f2ff]/10 text-[#00f2ff]">
                                 <CreditCard size={20} />
@@ -274,7 +279,7 @@ const AdminSettings: React.FC = () => {
 
                 {/* Shipping & Delivery */}
                 <motion.div variants={itemVariants}>
-                    <Card className="p-6 bg-[#111114] border-white/5 h-full flex flex-col">
+                    <Card className="p-4 sm:p-6 bg-[#111114] border-white/5 h-full flex flex-col">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="p-2 rounded-lg bg-[#00f2ff]/10 text-[#00f2ff]">
                                 <Truck size={20} />
@@ -282,7 +287,7 @@ const AdminSettings: React.FC = () => {
                             <h3 className="text-sm font-bold uppercase tracking-widest text-white">Shipping & Delivery</h3>
                         </div>
                         <div className="space-y-5 flex-1">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-white/40">Standard Rate ({settings.currency})</label>
                                     <div className="relative">
@@ -291,7 +296,7 @@ const AdminSettings: React.FC = () => {
                                             type="text"
                                             value={settings.shippingRate}
                                             onChange={(e) => handleChange('shippingRate', e.target.value)}
-                                            className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl pl-8 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
+                                            className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl pl-8 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
                                         />
                                     </div>
                                 </div>
@@ -303,7 +308,7 @@ const AdminSettings: React.FC = () => {
                                             type="text"
                                             value={settings.freeShippingThreshold}
                                             onChange={(e) => handleChange('freeShippingThreshold', e.target.value)}
-                                            className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl pl-8 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
+                                            className="w-full bg-[#1a1a1e] border border-white/10 rounded-xl pl-8 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm text-white focus:outline-none focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/50 transition-all font-medium"
                                         />
                                     </div>
                                 </div>
@@ -321,7 +326,7 @@ const AdminSettings: React.FC = () => {
 
                 {/* Notifications & Alerts */}
                 <motion.div variants={itemVariants}>
-                    <Card className="p-6 bg-[#111114] border-white/5 h-full flex flex-col">
+                    <Card className="p-4 sm:p-6 bg-[#111114] border-white/5 h-full flex flex-col">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="p-2 rounded-lg bg-[#00f2ff]/10 text-[#00f2ff]">
                                 <Bell size={20} />

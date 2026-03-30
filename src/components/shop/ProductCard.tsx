@@ -28,7 +28,7 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
     return (
         <Link to={`/product/${product.id}`}>
             <motion.div
-                className="glass-card product-card"
+                className="glass-card product-card group"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -44,7 +44,7 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
                 <div className="product-image-container flex-shrink-0">
                     <img src={product.image} alt={product.name} className="product-image" />
 
-                    <div className="hover-actions">
+                    <div className="hover-actions md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                         <button 
                             className="btn-primary-shop disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                             onClick={handleAddToCart}

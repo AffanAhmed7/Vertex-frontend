@@ -5,6 +5,7 @@ interface UIState {
     isCartOpen: boolean;
     isAuthModalOpen: boolean;
     authMode: 'login' | 'signup';
+    isAccountSidebarOpen: boolean;
 }
 
 const initialUIState: UIState = {
@@ -12,6 +13,7 @@ const initialUIState: UIState = {
     isCartOpen: false,
     isAuthModalOpen: false,
     authMode: 'login',
+    isAccountSidebarOpen: false,
 };
 
 const uiSlice = createSlice({
@@ -34,6 +36,15 @@ const uiSlice = createSlice({
         closeAuthModal: (state) => {
             state.isAuthModalOpen = false;
         },
+        toggleAccountSidebar: (state) => {
+            state.isAccountSidebarOpen = !state.isAccountSidebarOpen;
+        },
+        openAccountSidebar: (state) => {
+            state.isAccountSidebarOpen = true;
+        },
+        closeAccountSidebar: (state) => {
+            state.isAccountSidebarOpen = false;
+        },
     },
 });
 
@@ -44,7 +55,7 @@ import adminReducer from './slices/adminSlice';
 import toastReducer from './slices/toastSlice';
 import reviewReducer from './slices/reviewSlice';
 
-export const { toggleTheme, setTheme, toggleCart, openAuthModal, closeAuthModal } = uiSlice.actions;
+export const { toggleTheme, setTheme, toggleCart, openAuthModal, closeAuthModal, toggleAccountSidebar, openAccountSidebar, closeAccountSidebar } = uiSlice.actions;
 
 export const store = configureStore({
     reducer: {

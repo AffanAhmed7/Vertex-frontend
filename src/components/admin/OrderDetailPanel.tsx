@@ -82,80 +82,80 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         onClick={(e) => e.stopPropagation()}
-                        className="relative w-full max-w-2xl h-fit max-h-[90vh] bg-[#0a0a0b] border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl flex flex-col"
+                        className="relative w-[95%] sm:w-full max-w-xl h-fit max-h-[90vh] bg-[#0a0a0b] border border-white/5 rounded-3xl overflow-hidden shadow-2xl flex flex-col"
                     >
                         {/* Header */}
-                        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                        <div className="p-4 sm:p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                             <div>
-                                <h3 className="text-xl font-light text-white uppercase tracking-tighter">
+                                <h3 className="text-base sm:text-xl font-light text-white uppercase tracking-tighter">
                                     Order Details
                                 </h3>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
-                                    Order Information <span className="text-white/10 mx-2">/</span> {order.id}
+                                <p className="text-[8px] sm:text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
+                                    Order Information <span className="text-white/10 mx-1 sm:mx-2">/</span> <span className="text-white/60">{order.id}</span>
                                 </p>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 sm:gap-3">
                                 <button
                                     onClick={() => isEditing ? handleSaveInitiate() : setIsEditing(true)}
-                                    className={`px-6 py-2.5 rounded-xl text-xs font-medium transition-all active:scale-95 border ${isEditing ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-white/[0.05] border-white/10 text-white hover:bg-white/10'}`}
+                                    className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[9px] sm:text-xs font-medium transition-all active:scale-95 border ${isEditing ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-white/[0.05] border-white/10 text-white hover:bg-white/10'}`}
                                 >
-                                    {isEditing ? 'Save Changes' : 'Edit Details'}
+                                    {isEditing ? 'Confirm' : 'Edit'}
                                 </button>
-                                <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-colors">
-                                    <X size={20} className="text-white/40" />
+                                <button onClick={onClose} className="p-1.5 sm:p-2 hover:bg-white/5 rounded-xl transition-colors">
+                                    <X size={18} className="text-white/40 sm:w-5 sm:h-5" />
                                 </button>
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto hide-scrollbar p-8 space-y-8">
+                        <div className="flex-1 overflow-y-auto no-scrollbar p-4 sm:p-8 space-y-6 sm:space-y-8">
                             {/* Content Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Identity Module */}
-                                <section className="space-y-4">
-                                    <div className="flex items-center gap-2 text-primary opacity-60">
+                                <section className="space-y-3 sm:space-y-4">
+                                    <div className="flex items-center gap-2 text-[#00f2ff] opacity-60">
                                         <ShieldCheck size={12} />
-                                        <h4 className="text-xs font-medium text-primary/60">Customer Details</h4>
+                                        <h4 className="text-[10px] font-medium uppercase tracking-widest">Protocol Metadata</h4>
                                     </div>
-                                    <div className="space-y-4 bg-white/[0.01] border border-white/5 rounded-2xl p-5">
+                                    <div className="space-y-3 sm:space-y-4 bg-white/[0.01] border border-white/5 rounded-2xl p-4 sm:p-5">
                                         <div className="space-y-1">
-                                            <label className="text-xs font-medium text-white/30">Customer Name</label>
+                                            <label className="text-[9px] font-medium text-white/30 uppercase tracking-tighter">Originator</label>
                                             {isEditing ? (
                                                 <input
                                                     value={editedOrder.customerName}
                                                     onChange={e => setEditedOrder({ ...editedOrder, customerName: e.target.value })}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-primary outline-none transition-all"
+                                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs sm:text-sm text-white focus:border-[#00f2ff]/50 outline-none transition-all"
                                                 />
                                             ) : (
-                                                <div className="text-sm text-white font-bold">{order.customerName}</div>
+                                                <div className="text-xs sm:text-sm text-white font-bold">{order.customerName}</div>
                                             )}
                                         </div>
                                         <div className="space-y-1">
-                                            <label className="text-xs font-medium text-white/30">Email Address</label>
+                                            <label className="text-[9px] font-medium text-white/30 uppercase tracking-tighter">Communication Vector</label>
                                             {isEditing ? (
                                                 <input
                                                     value={editedOrder.customerEmail}
                                                     onChange={e => setEditedOrder({ ...editedOrder, customerEmail: e.target.value })}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-primary outline-none transition-all"
+                                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs sm:text-sm text-white focus:border-[#00f2ff]/50 outline-none transition-all"
                                                 />
                                             ) : (
-                                                <div className="text-sm text-white/60 tracking-wide">{order.customerEmail}</div>
+                                                <div className="text-xs sm:text-sm text-white/60 tracking-tight truncate">{order.customerEmail}</div>
                                             )}
                                         </div>
                                     </div>
                                 </section>
 
                                 {/* Process Module */}
-                                <section className="space-y-4">
-                                    <div className="flex items-center gap-2 text-primary opacity-60">
+                                <section className="space-y-3 sm:space-y-4">
+                                    <div className="flex items-center gap-2 text-[#00f2ff] opacity-60">
                                         <Clock size={12} />
-                                        <h4 className="text-xs font-medium text-primary/60">Order Status</h4>
+                                        <h4 className="text-[10px] font-medium uppercase tracking-widest">Process State</h4>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-2">
+                                    <div className="grid grid-cols-2 sm:grid-cols-2 gap-2">
                                         {['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map((status) => (
                                             <button
                                                 key={status}
                                                 onClick={() => handleStatusInitiate(status as AdminOrder['status'])}
-                                                className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition-all ${order.status === status ? statusColors[status as keyof typeof statusColors] : 'border-white/5 bg-white/[0.01] text-white/20 hover:bg-white/5'}`}
+                                                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[9px] sm:text-xs font-medium transition-all ${order.status === status ? statusColors[status as keyof typeof statusColors] : 'border-white/5 bg-white/[0.01] text-white/20 hover:bg-white/5'}`}
                                             >
                                                 {statusIcons[status as keyof typeof statusIcons]}
                                                 {status}
@@ -166,63 +166,65 @@ const OrderDetailPanel: React.FC<OrderDetailPanelProps> = ({
                             </div>
 
                             {/* Logistics Overview */}
-                            <section className="space-y-4">
-                                <div className="flex items-center gap-2 text-primary opacity-60">
+                             <section className="space-y-3 sm:space-y-4">
+                                <div className="flex items-center gap-2 text-[#00f2ff] opacity-60">
                                     <MapPin size={12} />
-                                    <h4 className="text-xs font-medium text-primary/60">Shipping Information</h4>
+                                    <h4 className="text-[10px] font-medium uppercase tracking-widest">Logistics Coordinates</h4>
                                 </div>
-                                <div className="bg-white/[0.01] border border-white/5 rounded-2xl p-5">
-                                    <label className="text-xs font-medium text-white/30 mb-1 block">Shipping Address</label>
+                                <div className="bg-white/[0.01] border border-white/5 rounded-2xl p-4 sm:p-5">
+                                    <label className="text-[9px] font-medium text-white/30 uppercase tracking-tighter mb-1.5 block">Destination</label>
                                     {isEditing ? (
                                         <textarea
                                             rows={2}
                                             value={editedOrder.shippingAddress}
                                             onChange={e => setEditedOrder({ ...editedOrder, shippingAddress: e.target.value })}
-                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-primary outline-none transition-all resize-none"
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-white focus:border-[#00f2ff]/50 outline-none transition-all resize-none"
                                         />
                                     ) : (
-                                        <p className="text-sm text-white/60 leading-relaxed">{order.shippingAddress}</p>
+                                        <p className="text-xs sm:text-sm text-white/60 leading-relaxed">{order.shippingAddress}</p>
                                     )}
                                 </div>
                             </section>
 
                             {/* Payload Summary */}
-                            <section className="space-y-4">
-                                <div className="flex items-center gap-2 text-primary opacity-60">
+                             <section className="space-y-3 sm:space-y-4">
+                                <div className="flex items-center gap-2 text-[#00f2ff] opacity-60">
                                     <Package size={12} />
-                                    <h4 className="text-xs font-medium text-primary/60">Order Summary</h4>
+                                    <h4 className="text-[10px] font-medium uppercase tracking-widest">Payload Manifest</h4>
                                 </div>
-                                <div className="bg-[#111115] border border-white/5 rounded-2xl overflow-hidden">
-                                    <div className="p-3 border-b border-white/5 bg-white/[0.02]">
-                                        <div className="flex justify-between items-center text-xs font-medium text-white/30">
-                                            <span>Product</span>
+                                <div className="bg-[#111115] border border-white/5 rounded-2xl overflow-hidden shadow-inner shadow-black/40">
+                                    <div className="p-2.5 sm:p-3 border-b border-white/5 bg-white/[0.02]">
+                                        <div className="flex justify-between items-center text-[8px] sm:text-[10px] font-bold text-white/20 uppercase tracking-widest">
+                                            <span>Component</span>
                                             <span>Quantity</span>
                                         </div>
                                     </div>
-                                    <div className="max-h-32 overflow-y-auto hide-scrollbar">
+                                    <div className="max-h-40 overflow-y-auto no-scrollbar">
                                         {order.items.map((item, idx) => (
-                                            <div key={idx} className="p-3 flex items-center justify-between border-b border-white/[0.02] last:border-0">
-                                                <div className="space-y-0.5">
-                                                    <p className="text-xs font-bold text-white">{item.name}</p>
-                                                    <p className="text-[9px] text-white/40 tracking-wide">${item.price}</p>
+                                            <div key={idx} className="p-3 flex items-center justify-between border-b border-white/[0.02] last:border-0 hover:bg-white/[0.01] transition-colors">
+                                                <div className="space-y-0.5 min-w-0 flex-1">
+                                                    <p className="text-[11px] sm:text-xs font-bold text-white truncate">{item.name}</p>
+                                                    <p className="text-[9px] text-[#00f2ff]/40 tracking-tight font-medium">${item.price}</p>
                                                 </div>
-                                                <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-md">x{item.quantity}</span>
+                                                <span className="text-[10px] font-black text-[#00f2ff] bg-[#00f2ff]/10 px-2 py-0.5 rounded-lg shrink-0 ml-4 border border-[#00f2ff]/20 uppercase">
+                                                    x{item.quantity}
+                                                </span>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="p-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-between">
-                                        <span className="text-xs font-medium text-white/40">Order Total</span>
-                                        <span className="text-lg font-light text-white tracking-widest">${order.total}</span>
+                                    <div className="p-4 sm:p-5 bg-white/[0.03] border-t border-white/5 flex items-center justify-between">
+                                        <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Aggregate Total</span>
+                                        <span className="text-lg sm:text-xl font-light text-white tracking-widest">${order.total}</span>
                                     </div>
                                 </div>
                             </section>
                         </div>
 
                         {/* Footer */}
-                        <div className="p-6 border-t border-white/5 bg-white/[0.01] flex items-center justify-end">
+                        <div className="p-4 sm:p-6 border-t border-white/5 bg-white/[0.01] flex items-center justify-end">
                             <button
                                 onClick={onClose}
-                                className="px-8 py-3 bg-white/[0.03] border border-white/5 hover:border-white/10 text-white/60 hover:text-white rounded-xl text-xs font-medium transition-all"
+                                className="w-full sm:w-auto px-8 py-3 bg-white/[0.03] border border-white/5 hover:border-white/10 text-white/60 hover:text-white rounded-xl text-[10px] sm:text-xs font-medium transition-all uppercase tracking-widest"
                             >
                                 Close
                             </button>

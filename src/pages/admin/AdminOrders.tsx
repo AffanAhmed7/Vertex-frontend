@@ -101,14 +101,40 @@ const AdminOrders: React.FC = () => {
     ];
 
     const mobileRender = (o: AdminOrder) => (
-        <div className="flex items-center justify-between">
-            <div>
-                <h4 className="text-sm font-bold text-white">{o.customerName}</h4>
-                <p className="text-xs font-sans text-muted-foreground">{o.id}</p>
+        <div className="space-y-4">
+            <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">{o.customerName}</h4>
+                    <p className="text-[10px] sm:text-xs font-sans text-muted-foreground truncate uppercase tracking-tighter">{o.id}</p>
+                </div>
+                <div className="text-right shrink-0">
+                    <p className="text-xs sm:text-sm font-medium text-white tracking-tight">${o.subtotal}</p>
+                    <p className={`text-[10px] sm:text-xs font-semibold uppercase tracking-widest ${o.status === 'Delivered' ? 'text-emerald-500' :
+                            o.status === 'Pending' ? 'text-amber-500' :
+                                o.status === 'Cancelled' ? 'text-rose-500' :
+                                    'text-blue-500'
+                        }`}>
+                        {o.status}
+                    </p>
+                </div>
             </div>
-            <div className="text-right">
-                <p className="text-sm font-medium text-white">${o.subtotal}</p>
-                <p className="text-xs font-semibold text-primary">{o.status}</p>
+            
+            <div className="flex items-center justify-between pt-3 border-t border-white/[0.03]">
+                <div className="flex flex-col">
+                    <span className="text-[10px] text-white/40 uppercase tracking-widest">Received</span>
+                    <span className="text-[10px] text-white font-medium">
+                        {new Date(o.date).toLocaleDateString([], { month: 'short', day: 'numeric' })} @ {new Date(o.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                </div>
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedOrder(o);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-[10px] font-medium text-white transition-all shadow-lg active:scale-95 group/btn"
+                >
+                    <Eye size={12} className="group-hover/btn:text-primary transition-colors" /> View Operations
+                </button>
             </div>
         </div>
     );
@@ -146,23 +172,23 @@ const AdminOrders: React.FC = () => {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 md:gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">Order Stream</h1>
-                    <p className="text-[9px] text-[#00f2ff]/40 uppercase tracking-[0.4em] font-black">Mission Control <span className="text-white/10 mx-2">/</span> Transactions</p>
+                    <h1 className="text-2xl sm:text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">Order Stream</h1>
+                    <p className="text-[8px] sm:text-[10px] text-[#00f2ff]/40 uppercase tracking-[0.3em] sm:tracking-[0.4em] font-black italic">
+                        Node Management <span className="text-white/10 mx-1 sm:mx-2 not-italic">/</span> Transactions
+                    </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                    <div className="h-10 w-px bg-white/5 mx-2 hidden md:block" />
-
+                <div className="flex items-center gap-2 sm:gap-3">
                     <div className="relative">
                         <button
                             onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-                            className={`p-2.5 bg-white/5 border border-white/10 rounded-xl text-muted-foreground hover:text-white transition-all shadow-lg active:scale-95 ${isFilterMenuOpen ? 'border-primary/50 text-primary' : ''}`}
+                            className={`p-2.5 bg-[#111114] border border-white/10 rounded-xl text-muted-foreground hover:text-white transition-all shadow-xl active:scale-95 ${isFilterMenuOpen ? 'border-[#00f2ff]/50 text-[#00f2ff]' : ''}`}
                         >
-                            <Filter size={20} />
+                            <Filter size={18} className="sm:w-5 sm:h-5" />
                         </button>
 
                         <AnimatePresence>
@@ -171,7 +197,7 @@ const AdminOrders: React.FC = () => {
                                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute right-0 mt-2 w-48 bg-[#1a1a1e] border border-white/10 rounded-2xl p-2 shadow-2xl z-50 overflow-hidden"
+                                    className="absolute left-0 mt-2 w-40 md:w-48 bg-[#111114] border border-white/10 rounded-2xl p-1.5 md:p-2 shadow-2xl z-50 overflow-hidden glass-panel"
                                 >
                                     {['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map(status => (
                                         <button
@@ -180,7 +206,7 @@ const AdminOrders: React.FC = () => {
                                                 setFilterStatus(status as any);
                                                 setIsFilterMenuOpen(false);
                                             }}
-                                            className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${filterStatus === status ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-white'}`}
+                                            className={`w-full text-left px-3 py-2 rounded-lg text-[10px] md:text-xs font-medium transition-all ${filterStatus === status ? 'bg-[#00f2ff]/20 text-[#00f2ff]' : 'text-white/40 hover:bg-white/5 hover:text-white'}`}
                                         >
                                             {status}
                                         </button>
@@ -193,9 +219,10 @@ const AdminOrders: React.FC = () => {
                     <button
                         onClick={handleExport}
                         disabled={isExporting}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-white/[0.03] border border-white/5 text-white/70 rounded-full text-xs font-medium hover:bg-white/10 hover:text-white transition-all shadow-xl disabled:opacity-50"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-white/[0.03] border border-white/5 text-white/70 rounded-xl text-[10px] sm:text-xs font-medium hover:bg-white/10 hover:text-white transition-all shadow-xl disabled:opacity-50 min-w-0"
                     >
-                        <Download size={18} className={isExporting ? 'animate-bounce' : ''} /> {isExporting ? 'Generating...' : 'Manifest'}
+                        <Download size={16} className={`${isExporting ? 'animate-bounce' : ''} shrink-0`} /> 
+                        <span className="truncate">{isExporting ? 'Encoding...' : 'Manifest'}</span>
                     </button>
                 </div>
             </div>

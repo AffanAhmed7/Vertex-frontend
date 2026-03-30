@@ -40,29 +40,29 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, trend, trendDirection
     return (
         <motion.div
             whileHover={{ y: -4 }}
-            className="bg-[#111114] border border-white/5 rounded-2xl p-6 hover:border-primary/20 transition-all group overflow-hidden relative"
+            className="bg-[#111114] border border-white/5 rounded-2xl p-5 md:p-6 hover:border-primary/20 transition-all group overflow-hidden relative h-full"
         >
             {/* Background Decorative Element */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
 
             <div className="flex justify-between items-start relative z-10">
-                <div className="w-11 h-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-                    <Icon size={22} />
+                <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                    <Icon size={20} className="md:w-[22px] md:h-[22px]" />
                 </div>
 
                 <div className="flex flex-col items-end gap-1">
-                    <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg ${trendDirection === 'up' ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'
+                    <div className={`flex items-center gap-1 text-[10px] md:text-xs font-bold px-1.5 md:py-1 rounded-lg ${trendDirection === 'up' ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'
                         }`}>
                         {trendDirection === 'up' ? '+' : '-'}
                         {trend}%
                     </div>
-                    {trendLabel && <span className="text-[10px] text-muted-foreground font-medium">{trendLabel}</span>}
+                    {trendLabel && <span className="text-[9px] md:text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{trendLabel}</span>}
                 </div>
             </div>
 
-            <div className="mt-6 relative z-10">
-                <p className="text-sm font-medium text-muted-foreground">{label}</p>
-                <h3 className="text-2xl font-semibold mt-1 text-white">{value}</h3>
+            <div className="mt-4 md:mt-6 relative z-10">
+                <p className="text-[11px] md:text-sm font-medium text-muted-foreground uppercase tracking-widest">{label}</p>
+                <h3 className="text-xl md:text-2xl font-bold mt-1 text-white tracking-tight">{value}</h3>
             </div>
         </motion.div>
     );

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SlidersHorizontal, Search, ChevronDown } from 'lucide-react';
+import { Search, ChevronDown, Menu } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
 import { fetchProducts, setFilters, resetFilters } from '../store/slices/productSlice';
@@ -37,41 +37,37 @@ const ShopPage = () => {
                 {/* Main Content */}
                 <main>
                     {/* Header Actions */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                        <div className="relative w-full md:w-[400px]">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={18} />
+                    <div className="shop-header-actions flex flex-row items-center gap-2 md:gap-4 mb-8 lg:mb-12">
+                        {/* Filter Hamburger for Mobile */}
+                        <button 
+                            className="lg:hidden flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors shrink-0"
+                            onClick={() => setIsMobileFilterOpen(true)}
+                        >
+                            <Menu size={18} className="text-[#00f2ff]" />
+                        </button>
+
+                        <div className="relative flex-1">
+                            <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-white/30" size={14} />
                             <input
                                 type="text"
-                                placeholder="Search our collection..."
-                                className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-12 pr-6 focus:border-[#00f2ff] outline-none transition-all placeholder:text-white/20"
+                                placeholder="Search..."
+                                className="w-full bg-white/5 border border-white/10 rounded-full py-2.5 md:py-3 pl-10 md:pl-12 pr-4 focus:border-[#00f2ff] outline-none transition-all placeholder:text-white/20 text-xs md:text-sm"
                                 value={filters.search}
                                 onChange={(e) => dispatch(setFilters({ search: e.target.value }))}
                             />
                         </div>
 
-                        <div className="flex items-center gap-4 w-full md:w-auto">
-                            <button
-                                className="lg:hidden flex-1 flex items-center justify-center gap-2 bg-white/5 border border-white/10 rounded-full py-3 px-6 hover:bg-white/10 transition-all"
-                                onClick={() => setIsMobileFilterOpen(true)}
+                        <div className="relative group shrink-0">
+                            <select
+                                className="w-[120px] md:w-auto bg-white/5 border border-white/10 rounded-full py-2.5 md:py-3 pl-4 md:pl-6 pr-8 md:pr-12 outline-none hover:bg-white/10 transition-all cursor-pointer appearance-none text-[10px] md:text-sm font-medium focus:border-[#00f2ff]/50 min-w-[100px] md:min-w-[200px] text-white/70"
+                                value={filters.sortBy}
+                                onChange={(e) => dispatch(setFilters({ sortBy: e.target.value as any }))}
                             >
-                                <SlidersHorizontal size={18} />
-                                <span>Filters</span>
-                            </button>
-
-                            <div className="relative group">
-                                <select
-                                    className="bg-white/5 border border-white/10 rounded-full py-3 pl-6 pr-12 outline-none hover:bg-white/10 transition-all cursor-pointer appearance-none text-sm font-medium focus:border-[#00f2ff]/50 min-w-[200px]"
-                                    value={filters.sortBy}
-                                    onChange={(e) => dispatch(setFilters({ sortBy: e.target.value as any }))}
-                                >
-                                    <option value="price-low" className="bg-[#0a0a0c]">Price: Low to High</option>
-                                    <option value="price-high" className="bg-[#0a0a0c]">Price: High to Low</option>
-                                    <option value="rating" className="bg-[#0a0a0c]">Highest Rated</option>
-                                </select>
-                                <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-[#00f2ff] pointer-events-none transition-colors" size={16} />
-                            </div>
-
-
+                                <option value="price-low" className="bg-[#0a0a0c]">Low to High</option>
+                                <option value="price-high" className="bg-[#0a0a0c]">High to Low</option>
+                                <option value="rating" className="bg-[#0a0a0c]">Top Rated</option>
+                            </select>
+                            <ChevronDown className="absolute right-3 md:right-5 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-[#00f2ff] pointer-events-none transition-colors" size={14} />
                         </div>
                     </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -8,21 +8,19 @@ import {
     Star,
     Settings,
     LogOut,
-    Menu,
     X,
     ChevronRight,
     UserCircle
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState, closeAccountSidebar } from '../../store';
 import { logout } from '../../store/slices/userSlice';
-import { Button } from '../ui/Button';
 
 const AccountLayout: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: RootState) => state.user);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { isAccountSidebarOpen } = useSelector((state: RootState) => state.ui);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -38,7 +36,7 @@ const AccountLayout: React.FC = () => {
     ];
 
     const SidebarContent = () => (
-        <div className="flex flex-col h-full py-8 px-6 space-y-8">
+        <div className="flex flex-col h-full py-8 px-6 space-y-8 bg-[#0a0a0b]">
             {/* User Profile Summary */}
             <div className="flex items-center gap-4 px-2">
                 <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/10">
@@ -57,11 +55,11 @@ const AccountLayout: React.FC = () => {
                         key={item.path}
                         to={item.path}
                         end={item.end}
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        onClick={() => dispatch(closeAccountSidebar())}
                         className={({ isActive }) => `
                             flex items-center justify-between px-4 py-3 rounded-xl transition-all group
                             ${isActive
-                                ? 'bg-primary/10 text-primary border border-primary/10'
+                                ? 'bg-primary/10 text-primary border border-primary/10 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]'
                                 : 'text-muted-foreground hover:text-foreground hover:bg-white/5 border border-transparent'}
                         `}
                     >
@@ -75,41 +73,30 @@ const AccountLayout: React.FC = () => {
             </nav>
 
             {/* Logout Button */}
-            <button
-                onClick={handleLogout}
-                className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl transition-all"
-            >
-                <LogOut size={18} />
-                Logout
-            </button>
+            <div className="pt-6 border-t border-white/5">
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl transition-all"
+                >
+                    <LogOut size={18} />
+                    Logout
+                </button>
+            </div>
         </div>
     );
 
     return (
-        <div className="min-h-screen pt-20" style={{ fontFamily: "'Outfit', sans-serif" }}>
-            <div className="container mx-auto max-w-7xl px-6 py-12">
+        <div className="min-h-screen bg-[#050505]" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <div className="container mx-auto max-w-7xl px-4 md:px-6 pt-32 md:pt-28 pb-12">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
                     {/* Desktop Sidebar */}
-                    <aside className="hidden lg:block lg:col-span-3 sticky top-28 bg-card/40 border border-white/5 rounded-3xl backdrop-blur-xl shrink-0 overflow-hidden">
+                    <aside className="hidden lg:block lg:col-span-3 sticky top-28 bg-[#0a0a0b]/40 border border-white/5 rounded-3xl backdrop-blur-xl shrink-0 overflow-hidden">
                         <SidebarContent />
                     </aside>
 
-                    {/* Mobile Menu Toggle */}
-                    <div className="lg:hidden flex items-center justify-between mb-8 p-4 bg-card/40 border border-white/5 rounded-2xl backdrop-blur-xl">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                                <UserCircle size={24} />
-                            </div>
-                            <span className="text-sm font-bold">{currentUser?.name}</span>
-                        </div>
-                        <Button variant="ghost" size="sm" onClick={() => setIsMobileMenuOpen(true)}>
-                            <Menu size={20} />
-                        </Button>
-                    </div>
-
                     {/* Content Panel */}
-                    <main className="lg:col-span-9">
+                    <main className="lg:col-span-9 min-w-0">
                         <Outlet />
                     </main>
                 </div>
@@ -117,26 +104,29 @@ const AccountLayout: React.FC = () => {
 
             {/* Mobile Sidebar Drawer */}
             <AnimatePresence>
-                {isMobileMenuOpen && (
+                {isAccountSidebarOpen && (
                     <>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] lg:hidden"
+                            onClick={() => dispatch(closeAccountSidebar())}
+                            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] lg:hidden"
                         />
                         <motion.aside
                             initial={{ x: '-100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '-100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="fixed inset-y-0 left-0 w-80 bg-background border-r border-white/5 z-[101] lg:hidden"
+                            className="fixed inset-y-0 left-0 w-[280px] bg-[#0a0a0b] border-r border-white/5 z-[101] lg:hidden shadow-2xl"
                         >
-                            <div className="absolute top-6 right-6">
-                                <Button variant="ghost" size="sm" onClick={() => setIsMobileMenuOpen(false)}>
+                            <div className="absolute top-5 right-5">
+                                <button
+                                    onClick={() => dispatch(closeAccountSidebar())}
+                                    className="p-2 text-white/20 hover:text-white transition-colors"
+                                >
                                     <X size={20} />
-                                </Button>
+                                </button>
                             </div>
                             <SidebarContent />
                         </motion.aside>

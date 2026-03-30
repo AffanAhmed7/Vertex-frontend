@@ -155,38 +155,73 @@ const AdminUsers: React.FC = () => {
             'Pending': 'text-amber-500 bg-amber-500/10 border-amber-500/20'
         };
         return (
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center font-bold text-white">
-                        {u.name[0]}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center font-bold text-white shrink-0 border border-white/10 group-hover:bg-primary/20 transition-all">
+                            {u.name[0]}
+                        </div>
+                        <div className="min-w-0">
+                            <h4 className="text-xs sm:text-sm font-bold text-white truncate">{u.name}</h4>
+                            <p className="text-[10px] sm:text-xs text-muted-foreground truncate tracking-tighter uppercase">{u.role}</p>
+                        </div>
                     </div>
-                    <div>
-                        <h4 className="text-sm font-bold text-white">{u.name}</h4>
-                        <p className="text-xs text-muted-foreground">{u.role}</p>
+                    <div className={`px-2.5 py-0.5 rounded-full border text-[10px] font-semibold tracking-widest uppercase shrink-0 ${colors[u.status]}`}>
+                        {u.status}
                     </div>
                 </div>
-                <div className={`px-2.5 py-0.5 rounded-full border text-xs font-semibold ${colors[u.status]}`}>
-                    {u.status}
+
+                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.03]">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedUser(u);
+                            setIsModalOpen(true);
+                        }}
+                        className="flex-1 flex items-center justify-center gap-2 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] text-white/60 hover:text-white transition-all border border-white/5 active:scale-95"
+                    >
+                        Edit Profile
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setConfirmAction({ type: 'suspend', user: u });
+                        }}
+                        className="p-2 bg-amber-500/10 hover:bg-amber-500 border border-amber-500/20 rounded-xl text-amber-500 hover:text-white transition-all active:scale-95 shadow-lg shadow-amber-500/10"
+                    >
+                        <ShieldAlert size={14} />
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setConfirmAction({ type: 'delete', user: u });
+                        }}
+                        className="p-2 bg-rose-500/10 hover:bg-rose-500 border border-rose-500/20 rounded-xl text-rose-500 hover:text-white transition-all active:scale-95 shadow-lg shadow-rose-500/10"
+                    >
+                        <Trash2 size={14} />
+                    </button>
                 </div>
             </div>
         );
     };
 
     return (
-        <div className="space-y-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-6 md:space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 md:gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">User Management</h1>
-                    <p className="text-[9px] text-[#00f2ff]/40 uppercase tracking-[0.4em] font-black">Admin Access <span className="text-white/10 mx-2">/</span> User Accounts</p>
+                    <h1 className="text-2xl sm:text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">User Management</h1>
+                    <p className="text-[8px] sm:text-[10px] text-[#00f2ff]/40 uppercase tracking-[0.3em] sm:tracking-[0.4em] font-black italic">
+                        Access Control <span className="text-white/10 mx-1 sm:mx-2 not-italic">/</span> User Accounts
+                    </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 relative">
+                <div className="flex items-center gap-2 sm:gap-3">
                     <div className="relative">
                         <button
                             onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-                            className={`p-2.5 bg-white/5 border border-white/10 rounded-xl text-muted-foreground hover:text-white transition-all shadow-lg active:scale-95 ${isFilterMenuOpen ? 'border-primary/50 text-primary' : ''}`}
+                            className={`p-2.5 bg-[#111114] border border-white/10 rounded-xl text-muted-foreground hover:text-white transition-all shadow-xl active:scale-95 ${isFilterMenuOpen ? 'border-[#00f2ff]/50 text-[#00f2ff]' : ''}`}
                         >
-                            <Filter size={20} />
+                            <Filter size={18} className="sm:w-5 sm:h-5" />
                         </button>
 
                         <AnimatePresence>
@@ -195,30 +230,30 @@ const AdminUsers: React.FC = () => {
                                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute right-0 mt-2 w-56 bg-[#1a1a1e] border border-white/10 rounded-2xl p-4 shadow-2xl z-50 space-y-4"
+                                    className="absolute left-0 mt-2 w-56 bg-[#111114] border border-white/10 rounded-2xl p-4 shadow-2xl z-50 space-y-4 glass-panel"
                                 >
                                     <div className="space-y-2">
-                                        <p className="text-xs font-medium text-muted-foreground">Filter by Role</p>
-                                        <div className="grid grid-cols-2 gap-1">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-[#00f2ff]/40">Filter by Role</p>
+                                        <div className="grid grid-cols-2 gap-1.5">
                                             {['All', 'Admin', 'Editor', 'Viewer', 'Customer'].map(role => (
                                                 <button
                                                     key={role}
                                                     onClick={() => setFilterRole(role as any)}
-                                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${filterRole === role ? 'bg-primary/20 text-primary shadow-lg shadow-primary/10' : 'bg-white/5 text-muted-foreground hover:bg-white/10'}`}
+                                                    className={`px-3 py-2 rounded-lg text-[10px] font-medium transition-all ${filterRole === role ? 'bg-[#00f2ff]/20 text-[#00f2ff] shadow-lg shadow-[#00f2ff]/10' : 'bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-white'}`}
                                                 >
                                                     {role}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="space-y-2 border-t border-white/5 pt-3">
-                                        <p className="text-xs font-medium text-muted-foreground">Account Status</p>
-                                        <div className="grid grid-cols-2 gap-1">
+                                    <div className="space-y-2 border-t border-white/[0.05] pt-3">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-[#00f2ff]/40">Account Status</p>
+                                        <div className="grid grid-cols-2 gap-1.5">
                                             {['All', 'Active', 'Suspended'].map(status => (
                                                 <button
                                                     key={status}
                                                     onClick={() => setFilterStatus(status as any)}
-                                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${filterStatus === status ? 'bg-primary/20 text-primary shadow-lg shadow-primary/10' : 'bg-white/5 text-muted-foreground hover:bg-white/10'}`}
+                                                    className={`px-3 py-2 rounded-lg text-[10px] font-medium transition-all ${filterStatus === status ? 'bg-[#00f2ff]/20 text-[#00f2ff] shadow-lg shadow-[#00f2ff]/10' : 'bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-white'}`}
                                                 >
                                                     {status}
                                                 </button>
@@ -235,9 +270,9 @@ const AdminUsers: React.FC = () => {
                             setSelectedUser(null);
                             setIsModalOpen(true);
                         }}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-white/[0.03] border border-white/5 text-white/70 rounded-full text-xs font-medium hover:bg-white/10 hover:text-white transition-all shadow-xl active:scale-95"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-white/[0.03] border border-white/5 text-white/70 rounded-xl text-[10px] sm:text-xs font-medium hover:bg-white/10 hover:text-white transition-all shadow-xl active:scale-95"
                     >
-                        <UserPlus size={16} /> New User
+                        <UserPlus size={16} className="shrink-0" /> <span className="truncate">New Account</span>
                     </button>
                 </div>
             </div>
@@ -286,24 +321,24 @@ const AdminUsers: React.FC = () => {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="relative w-full max-w-sm bg-[#0a0a0b] border border-white/5 rounded-3xl p-8 shadow-2xl space-y-6"
+                            className="relative w-[92%] sm:w-full max-w-sm bg-[#0a0a0b] border border-white/5 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6"
                         >
-                            <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 mx-auto">
+                            <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 mx-auto border border-rose-500/20">
                                 <ShieldAlert size={32} />
                             </div>
                             <div className="text-center space-y-2">
-                                <h3 className="text-xl font-semibold tracking-tight">Confirm Action</h3>
-                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                <h3 className="text-lg sm:text-xl font-light text-white uppercase tracking-tighter">Confirm Authorization</h3>
+                                <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed uppercase tracking-widest">
                                     Are you certain you want to {confirmAction.type} access for <span className="text-white font-bold">{confirmAction.user.name}</span>?
                                     This action will be recorded in the system logs.
                                 </p>
                             </div>
-                            <div className="flex gap-4">
+                            <div className="flex gap-3 sm:gap-4">
                                 <button
                                     onClick={() => setConfirmAction(null)}
-                                    className="flex-1 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-medium transition-all text-white/50 hover:text-white"
+                                    className="flex-1 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] sm:text-xs font-medium transition-all text-white/50 hover:text-white border border-white/5"
                                 >
-                                    Cancel
+                                    Abort
                                 </button>
                                 <button
                                     onClick={async () => {
@@ -319,9 +354,9 @@ const AdminUsers: React.FC = () => {
                                         }
                                         setConfirmAction(null);
                                     }}
-                                    className="flex-1 px-4 py-3 bg-rose-500 text-white rounded-xl text-xs font-semibold hover:opacity-90 transition-all shadow-lg shadow-rose-500/20"
+                                    className="flex-1 px-4 py-3 bg-rose-500 text-white rounded-xl text-[10px] sm:text-xs font-semibold hover:opacity-90 transition-all shadow-xl shadow-rose-500/20 uppercase tracking-widest"
                                 >
-                                    Confirm
+                                    Authorize
                                 </button>
                             </div>
                         </motion.div>

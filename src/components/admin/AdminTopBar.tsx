@@ -19,37 +19,37 @@ const AdminTopBar: React.FC<AdminTopBarProps> = ({ onMenuClick }) => {
     return (
         <header className="h-20 bg-[#070708] border-b border-white/5 flex items-center justify-between px-6 shrink-0 sticky top-0 z-40">
             {/* Left: Mobile Menu & Search */}
-            <div className="flex items-center gap-4 flex-1">
+            <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
                 <button
                     onClick={onMenuClick}
-                    className="p-2 -ml-2 text-white/40 hover:text-white lg:hidden transition-colors"
+                    className="p-2 -ml-2 text-white/40 hover:text-white lg:hidden transition-colors shrink-0"
                 >
-                    <Menu size={20} />
+                    <Menu size={18} className="md:w-5 md:h-5" />
                 </button>
 
-                <div className="relative group max-w-md w-full hidden sm:block">
-                    <Search className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${searchQuery ? 'text-[#00f2ff]' : 'text-white/20 group-focus-within:text-[#00f2ff]/50'}`} size={16} />
+                <div className="relative group max-w-md w-full flex-1 min-w-0">
+                    <Search className={`absolute left-3 md:left-4 top-1/2 -translate-y-1/2 transition-colors md:w-4 md:h-4 ${searchQuery ? 'text-[#00f2ff]' : 'text-white/20 group-focus-within:text-[#00f2ff]/50'}`} size={14} />
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-                        placeholder="Search infrastructure..."
-                        className="w-full bg-white/[0.03] border border-white/5 rounded-full py-2 pl-10 pr-10 text-sm focus:outline-none focus:border-[#00f2ff]/30 focus:bg-white/[0.05] transition-all placeholder:text-white/20"
+                        placeholder="Search..."
+                        className="w-full bg-white/[0.03] border border-white/5 rounded-full py-1.5 md:py-2 pl-9 md:pl-10 pr-8 md:pr-10 text-[11px] md:text-sm focus:outline-none focus:border-[#00f2ff]/30 focus:bg-white/[0.05] transition-all placeholder:text-white/20"
                     />
                     {searchQuery && (
                         <button
                             onClick={() => dispatch(setSearchQuery(''))}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors"
+                            className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors"
                         >
-                            <X size={14} />
+                            <X size={12} className="md:w-[14px] md:h-[14px]" />
                         </button>
                     )}
                 </div>
             </div>
 
             {/* Right: Actions & Profile */}
-            <div className="flex items-center gap-6">
-                <div className="relative">
+            <div className="flex items-center gap-2 md:gap-6 ml-2">
+                <div className="relative shrink-0">
                     <button
                         onClick={() => setShowNotifications(!showNotifications)}
                         className={`relative p-2 transition-colors ${showNotifications ? 'text-[#00f2ff]' : 'text-white/30 hover:text-white/60'}`}
@@ -66,7 +66,7 @@ const AdminTopBar: React.FC<AdminTopBarProps> = ({ onMenuClick }) => {
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute right-0 mt-4 w-80 bg-[#111114] border border-white/5 rounded-2xl shadow-2xl overflow-hidden glass-panel"
+                                className="absolute right-[-2.5rem] md:right-0 mt-4 w-72 md:w-80 bg-[#111114] border border-white/5 rounded-2xl shadow-2xl overflow-hidden glass-panel"
                             >
                                 <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
                                     <span className="text-xs font-medium text-white/40">Status Updates {unreadCount > 0 && `(${unreadCount})`}</span>
@@ -108,10 +108,10 @@ const AdminTopBar: React.FC<AdminTopBarProps> = ({ onMenuClick }) => {
                     </AnimatePresence>
                 </div>
 
-                <div className="flex items-center gap-3 pl-6 border-l border-white/5">
+                <div className="flex items-center gap-2 md:gap-3 pl-3 md:pl-6 border-l border-white/5 shrink-0">
                     <div className="text-right hidden sm:block">
-                        <div className="text-xs font-medium text-white/90 leading-none">Instance Prime</div>
-                        <div className="text-xs text-[#00f2ff]/40 font-medium mt-1">Authorized</div>
+                        <div className="text-[10px] md:text-xs font-medium text-white/90 leading-none">Instance Prime</div>
+                        <div className="text-[9px] md:text-xs text-[#00f2ff]/40 font-medium mt-1 uppercase tracking-widest leading-none">Admin</div>
                     </div>
                     <button className="flex items-center gap-2 p-1 rounded-full hover:bg-white/[0.03] transition-all group">
                         <div className="w-8 h-8 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/40 group-hover:text-[#00f2ff] transition-colors overflow-hidden">

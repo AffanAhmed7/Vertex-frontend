@@ -28,7 +28,7 @@ const CartSummary: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <div className="bg-[#111114]/60 border border-white/5 rounded-3xl p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+            <div className="bg-[#111114]/60 border border-white/5 rounded-3xl p-6 lg:p-8 space-y-6 lg:space-y-8 backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl pointer-events-none" />
 
                 <div className="space-y-1 relative z-10">

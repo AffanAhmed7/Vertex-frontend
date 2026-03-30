@@ -78,7 +78,7 @@ const CheckoutPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen pt-24 pb-20 px-6 bg-[#0a0a0c]" style={{ fontFamily: "'Outfit', sans-serif" }}>
+        <div className="min-h-screen pt-32 md:pt-24 pb-20 px-4 md:px-6 bg-[#0a0a0c]" style={{ fontFamily: "'Outfit', sans-serif" }}>
             <div className="container mx-auto max-w-7xl">
                 <AnimatePresence mode="wait">
                     {orderSuccess ? (
@@ -106,14 +106,14 @@ const CheckoutPage: React.FC = () => {
                                     </h1>
                                 </div>
 
-                                <div className="bg-[#111114]/60 border border-white/5 rounded-3xl p-8 backdrop-blur-3xl shadow-2xl">
+                                <div className="bg-[#111114]/60 border border-white/5 rounded-3xl p-6 lg:p-8 backdrop-blur-3xl shadow-2xl">
                                     <CheckoutForm formData={shippingData} setFormData={setShippingData} addresses={addresses} />
                                 </div>
                             </div>
 
                             {/* Right Column: Sticky Summary */}
                             <div className="lg:col-span-4 sticky top-28 space-y-6">
-                                <div className="bg-[#111114]/60 border border-white/5 rounded-3xl p-8 backdrop-blur-3xl shadow-2xl space-y-8">
+                                <div className="bg-[#111114]/60 border border-white/5 rounded-3xl p-6 lg:p-8 backdrop-blur-3xl shadow-2xl space-y-6 lg:space-y-8">
                                     <h2 className="text-[10px] font-black tracking-[0.4em] text-white/40 uppercase">
                                         Order Summary
                                     </h2>

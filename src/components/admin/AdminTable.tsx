@@ -114,32 +114,43 @@ const AdminTable: React.FC<AdminTableProps> = ({ columns, data, onRowClick, isLo
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-                <div className="flex items-center justify-between px-2">
-                    <p className="text-xs font-medium text-muted-foreground">
-                        Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, data.length)} of {data.length}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+                    <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-widest">
+                        Dispensing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, data.length)} <span className="text-white/20">of</span> {data.length}
                     </p>
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                         <button
                             disabled={currentPage === 1}
                             onClick={() => setCurrentPage(p => p - 1)}
-                            className="p-2 bg-white/5 border border-white/5 rounded-lg disabled:opacity-30 hover:bg-white/10 transition-colors"
+                            className="p-2 bg-white/5 border border-white/5 rounded-lg disabled:opacity-20 hover:bg-white/10 transition-colors text-white/60 hover:text-white"
                         >
                             <ChevronLeft size={16} />
                         </button>
-                        {[...Array(totalPages)].map((_, i) => (
-                            <button
-                                key={i}
-                                onClick={() => setCurrentPage(i + 1)}
-                                className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${currentPage === i + 1 ? 'bg-primary text-white' : 'bg-white/5 text-muted-foreground hover:bg-white/10'
-                                    }`}
-                            >
-                                {i + 1}
-                            </button>
-                        ))}
+                        
+                        <div className="flex items-center gap-1">
+                            {/* Mobile: only show current/total. Tablet+: show list */}
+                            <div className="sm:hidden flex items-center px-3 h-8 bg-white/5 border border-white/5 rounded-lg text-[10px] font-black text-white uppercase tracking-tighter">
+                                {currentPage} <span className="mx-1.5 text-white/20">/</span> {totalPages}
+                            </div>
+                            
+                            <div className="hidden sm:flex items-center gap-1">
+                                {[...Array(totalPages)].map((_, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => setCurrentPage(i + 1)}
+                                        className={`w-8 h-8 rounded-lg text-[10px] font-bold transition-all ${currentPage === i + 1 ? 'bg-[#00f2ff]/20 text-[#00f2ff] border border-[#00f2ff]/50' : 'bg-white/5 text-muted-foreground hover:bg-white/10 border border-transparent'
+                                            }`}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
                         <button
                             disabled={currentPage === totalPages}
                             onClick={() => setCurrentPage(p => p + 1)}
-                            className="p-2 bg-white/5 border border-white/5 rounded-lg disabled:opacity-30 hover:bg-white/10 transition-colors"
+                            className="p-2 bg-white/5 border border-white/5 rounded-lg disabled:opacity-20 hover:bg-white/10 transition-colors text-white/60 hover:text-white"
                         >
                             <ChevronRight size={16} />
                         </button>

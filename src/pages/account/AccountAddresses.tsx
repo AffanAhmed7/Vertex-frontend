@@ -105,16 +105,16 @@ const AccountAddresses: React.FC = () => {
         <div className="space-y-12">
             {/* Main Header Card */}
             <Card className="p-0 bg-card/40 border-white/5" glass>
-                <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-1">
-                        <h1 className="text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">
+                <div className="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="space-y-1 text-center md:text-left">
+                        <h1 className="text-2xl md:text-3xl font-light tracking-[0.1em] text-white uppercase leading-none">
                             Address <span className="text-primary">Book</span>
                         </h1>
-                        <p className="text-xs text-muted-foreground uppercase tracking-widest font-medium mt-2">Manage your shipping and billing addresses</p>
+                        <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-widest font-medium mt-2">Manage your shipping and billing addresses</p>
                     </div>
                     <button 
                         onClick={() => { dispatch(clearError()); resetForm(); setIsModalOpen(true); }} 
-                        className="group bg-white/[0.04] border border-[#00f2ff]/30 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 text-[#00f2ff] h-12 px-8 uppercase tracking-[0.2em] text-[10px] font-black rounded-full transition-all duration-300 flex items-center justify-center gap-2"
+                        className="group w-full md:w-auto bg-white/[0.04] border border-[#00f2ff]/30 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 text-[#00f2ff] h-12 px-6 md:px-8 uppercase tracking-[0.2em] text-[10px] font-black rounded-full transition-all duration-300 flex items-center justify-center gap-2"
                     >
                         <Plus size={16} className="group-hover:rotate-90 transition-transform" />
                         Add New Address
@@ -139,7 +139,7 @@ const AccountAddresses: React.FC = () => {
                                 No addresses found.
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
                                 <AnimatePresence mode="popLayout">
                                     {addresses.map((address, i) => (
                                         <motion.div
@@ -150,7 +150,7 @@ const AccountAddresses: React.FC = () => {
                                             transition={{ delay: i * 0.05 }}
                                         >
                                             <Card className="p-0 bg-white/5 border-white/5 space-y-0 group hover:border-primary/40 transition-all hover:bg-white/[0.07]" glass={false}>
-                                                <div className="p-6 border-b border-white/5 flex justify-between items-center">
+                                                <div className="p-4 md:p-6 border-b border-white/5 flex justify-between items-center">
                                                     <div className="flex items-center gap-3 text-primary/60">
                                                         <MapPin size={16} />
                                                         <span className="text-[10px] font-black uppercase tracking-[0.2em]">{address.type} ADDRESS</span>
@@ -162,7 +162,7 @@ const AccountAddresses: React.FC = () => {
                                                     )}
                                                 </div>
 
-                                                <div className="p-6 space-y-4">
+                                                <div className="p-4 md:p-6 space-y-4">
                                                     <div className="space-y-1">
                                                         <p className="text-base font-bold text-white uppercase tracking-tight">{address.fullName}</p>
                                                         <div className="space-y-1">
@@ -186,7 +186,7 @@ const AccountAddresses: React.FC = () => {
                                                     )}
                                                 </div>
 
-                                                <div className="px-6 py-4 bg-white/5 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="px-4 md:px-6 py-4 bg-white/5 flex gap-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button 
                                                         onClick={() => handleEdit(address)}
                                                         className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-primary transition-colors flex items-center gap-2"
@@ -216,12 +216,12 @@ const AccountAddresses: React.FC = () => {
                 onClose={() => { setIsModalOpen(false); resetForm(); }}
                 title={editingAddressId ? "Edit Address" : "Add New Address"}
             >
-                <div className="space-y-6 pt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4 md:space-y-6 pt-2">
+                    <div className="grid grid-cols-2 gap-3 md:gap-4">
                         <Input 
                             label="Full Name" 
                             placeholder="Alex Sterling" 
-                            className="md:col-span-2" 
+                            className="col-span-2" 
                             value={newAddress.fullName}
                             onChange={(e) => setNewAddress({...newAddress, fullName: e.target.value})}
                             icon={<User size={18} />}
@@ -229,7 +229,7 @@ const AccountAddresses: React.FC = () => {
                         <Input 
                             label="Street Address" 
                             placeholder="128 Tech Plaza" 
-                            className="md:col-span-2" 
+                            className="col-span-2" 
                             value={newAddress.street}
                             onChange={(e) => setNewAddress({...newAddress, street: e.target.value})}
                             icon={<MapPin size={18} />}
@@ -237,6 +237,7 @@ const AccountAddresses: React.FC = () => {
                         <Input 
                             label="City" 
                             placeholder="San Francisco" 
+                            className="col-span-1" 
                             value={newAddress.city}
                             onChange={(e) => setNewAddress({...newAddress, city: e.target.value})}
                             icon={<MapPin size={18} />}
@@ -244,6 +245,7 @@ const AccountAddresses: React.FC = () => {
                         <Input 
                             label="Postal Code" 
                             placeholder="94103" 
+                            className="col-span-1"
                             value={newAddress.postalCode}
                             onChange={(e) => setNewAddress({...newAddress, postalCode: e.target.value})}
                             icon={<MapPin size={18} />}
@@ -251,7 +253,7 @@ const AccountAddresses: React.FC = () => {
                         <Input 
                             label="Country" 
                             placeholder="USA" 
-                            className="md:col-span-2" 
+                            className="col-span-2" 
                             value={newAddress.country}
                             onChange={(e) => setNewAddress({...newAddress, country: e.target.value})}
                             icon={<Globe size={18} />}
@@ -259,12 +261,12 @@ const AccountAddresses: React.FC = () => {
                         <Input 
                             label="Phone Number" 
                             placeholder="+1 (555) 000-0000" 
-                            className="md:col-span-2" 
+                            className="col-span-2" 
                             value={newAddress.phone}
                             onChange={(e) => setNewAddress({...newAddress, phone: e.target.value})}
                             icon={<Phone size={18} />}
                         />
-                        <div className="md:col-span-2 flex items-center gap-4">
+                        <div className="col-span-2 flex items-center gap-4">
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input 
                                     type="checkbox" 
@@ -272,7 +274,7 @@ const AccountAddresses: React.FC = () => {
                                     checked={newAddress.isDefault}
                                     onChange={(e) => setNewAddress({...newAddress, isDefault: e.target.checked})}
                                 />
-                                <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Set as Default Address</span>
+                                <span className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-widest font-bold">Set as Default Address</span>
                             </label>
                         </div>
                     </div>
@@ -280,9 +282,9 @@ const AccountAddresses: React.FC = () => {
                         <ShieldCheck size={18} className="text-primary" />
                         <span className="text-xs text-muted-foreground">This address will be verified for shipping.</span>
                     </div>
-                    <div className="flex gap-4 pt-4">
+                    <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
                         <button 
-                            className="flex-grow h-12 rounded-full bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full sm:flex-grow h-12 rounded-[1.5rem] bg-white/[0.04] border border-[#00f2ff]/30 text-[#00f2ff] text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#00f2ff]/10 hover:border-[#00f2ff]/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                             onClick={handleSaveAddress} 
                             disabled={isSubmitting}
                         >
@@ -293,7 +295,7 @@ const AccountAddresses: React.FC = () => {
                             )}
                         </button>
                         <button 
-                            className="px-8 h-12 rounded-full bg-white/[0.02] border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all duration-300"
+                            className="w-full sm:w-auto px-8 h-12 rounded-[1.5rem] bg-white/[0.02] border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all duration-300 shrink-0"
                             onClick={() => { setIsModalOpen(false); resetForm(); }}
                         >
                             Cancel
@@ -310,15 +312,15 @@ const AccountAddresses: React.FC = () => {
             >
                 <div className="space-y-6 pt-4">
                     <p className="text-sm text-muted-foreground">Are you sure you want to delete this address? This action cannot be undone.</p>
-                    <div className="flex gap-4">
+                    <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                         <button 
-                            className="flex-grow h-12 rounded-full bg-red-500/10 border border-red-500/30 text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all duration-300"
+                            className="w-full sm:flex-grow h-12 rounded-[1.5rem] bg-red-500/10 border border-red-500/30 text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all duration-300 shrink-0"
                             onClick={confirmDelete}
                         >
                             Delete
                         </button>
                         <button 
-                            className="flex-grow h-12 rounded-full bg-white/[0.02] border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all duration-300"
+                            className="w-full sm:w-auto px-8 h-12 rounded-[1.5rem] bg-white/[0.02] border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all duration-300 shrink-0"
                             onClick={() => { setIsDeleteModalOpen(false); setAddressToDelete(null); }}
                         >
                             Cancel

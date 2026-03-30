@@ -77,17 +77,13 @@ h3 {
         linear-gradient(to top, transparent 60%, #050505 100%);
 }
 
-
-
-
-
 /* Redefine overlay for cinematic context */
 .hero-overlay {
     position: relative;
     z-index: 5;
     text-align: center;
     max-width: 1000px;
-    padding: 4rem 2rem 0;
+    padding: 6rem 1.5rem 0; /* Slightly more top pad for navbar wrap */
     pointer-events: none;
 }
 
@@ -96,15 +92,15 @@ h3 {
 }
 
 .hero-headline {
-    font-size: clamp(4rem, 10vw, 8rem);
+    font-size: clamp(3rem, 10vw, 8rem); /* Slightly smaller min for mobile */
     line-height: 0.95;
     margin-bottom: 2rem;
 }
 
 .hero-subheading {
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-size: clamp(1.1rem, 2.5vw, 1.75rem); /* Slightly smaller min */
     color: var(--lp-text-dim);
-    margin-bottom: 4rem;
+    margin-bottom: 3rem; /* Reduced for mobile */
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
@@ -113,7 +109,7 @@ h3 {
 
 .hero-ctas {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     justify-content: center;
 }
 
@@ -159,7 +155,7 @@ h3 {
 
 /* Core Content Sections */
 .section-wrapper {
-    padding: 80px 0px 0px 20px;
+    padding: 100px 20px 0; /* Balanced horizontal padding */
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -168,7 +164,7 @@ h3 {
     color: var(--lp-primary);
     text-transform: uppercase;
     letter-spacing: 0.3em;
-    font-size: 0.875rem;
+    font-size: 0.75rem; /* Slightly smaller for mobile */
     font-weight: 600;
     display: block;
     margin-bottom: 1.5rem;
@@ -176,20 +172,20 @@ h3 {
 }
 
 .section-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(2.2rem, 5vw, 4rem); /* Slightly smaller min */
     text-align: center;
-    margin-bottom: 6rem;
+    margin-bottom: 4rem; /* Reduced for mobile */
 }
 
 /* Value Cards */
 .value-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3rem;
+    gap: 2rem; /* Reduced gap for desktop, will stack on mobile */
 }
 
 .v-card {
-    padding: 4rem;
+    padding: 3rem; /* Reduced from 4rem */
     background: var(--lp-surface);
     border: 1px solid var(--lp-glass-border);
     border-radius: 0;
@@ -222,12 +218,12 @@ h3 {
     width: 56px;
     height: 56px;
     color: var(--lp-primary);
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 .v-card h3 {
-    font-size: 1.75rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
     text-align: center;
     font-weight: 300;
     letter-spacing: 0.15em;
@@ -238,7 +234,7 @@ h3 {
 .v-card p {
     color: var(--lp-text-dim);
     font-weight: 300;
-    font-size: 1.125rem;
+    font-size: 1.05rem;
     text-align: center;
 }
 
@@ -246,7 +242,7 @@ h3 {
 .cat-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .cat-item {
@@ -272,14 +268,14 @@ h3 {
 
 .cat-content {
     position: absolute;
-    bottom: 3rem;
-    left: 3rem;
-    right: 3rem;
+    bottom: 2rem; /* Reduced */
+    left: 2rem; /* Reduced */
+    right: 2rem; /* Reduced */
     z-index: 10;
 }
 
 .cat-label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: var(--lp-primary);
     text-transform: uppercase;
     margin-bottom: 0.5rem;
@@ -287,25 +283,25 @@ h3 {
 }
 
 .cat-name {
-    font-size: 2.5rem;
+    font-size: 2rem; /* Reduced */
     font-weight: 600;
 }
 
 /* Trust Section Redesign */
 .trust-section {
-    padding-top: 8rem;
-    padding-bottom: 8rem;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
     border-top: 1px solid var(--lp-glass-border);
 }
 
 .trust-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .trust-card {
-    padding: 2.5rem;
+    padding: 2rem; /* Reduced */
     background: var(--lp-surface);
     border: 1px solid var(--lp-glass-border);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -334,7 +330,7 @@ h3 {
 }
 
 .trust-card h4 {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 400;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -344,7 +340,7 @@ h3 {
 }
 
 .trust-card p {
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     color: var(--lp-text-dim);
     line-height: 1.5;
     margin: 0;
@@ -352,43 +348,26 @@ h3 {
     text-align: center;
 }
 
-@media (max-width: 1200px) {
-    .trust-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 640px) {
-    .trust-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .trust-section {
-        padding-top: 6rem;
-        padding-bottom: 6rem;
-    }
-}
-
 /* Dark CTA */
 .premium-cta {
     background: #fff;
     color: #000;
-    padding: 10rem 2rem;
+    padding: 8rem 1.5rem;
     text-align: center;
     border-radius: 0;
 }
 
 .premium-cta h2 {
-    font-size: clamp(3rem, 7vw, 6rem);
-    margin-bottom: 3rem;
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    margin-bottom: 2rem;
 }
 
 .premium-cta-btn {
     background: #000;
     color: #fff;
     border: none;
-    padding: 1.5rem 5rem;
-    font-size: 1.25rem;
+    padding: 1.25rem 4rem;
+    font-size: 1.1rem;
     letter-spacing: 0.2em;
     cursor: pointer;
     transition: 0.3s;
@@ -399,9 +378,21 @@ h3 {
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
+    .trust-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 
-    .value-grid,
+@media (max-width: 1024px) {
+    .value-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .value-grid > *:last-child {
+        grid-column: span 2;
+    }
+
     .cat-grid {
         grid-template-columns: 1fr;
     }
@@ -409,15 +400,75 @@ h3 {
     .cat-item {
         height: 400px;
     }
+
+    .v-card {
+        padding: 2.5rem;
+    }
 }
 
 @media (max-width: 768px) {
     :root {
-        --lp-section-pad: 8rem;
+        --lp-section-pad: 6rem;
+    }
+
+    .cinematic-hero {
+        height: 100dvh; /* Dynamic viewport height to handle mobile browser chrome */
+        padding-bottom: 20px; /* Slight buffer at bottom */
+    }
+
+    .hero-overlay {
+        padding-top: 8rem; /* Account for wrapped navbar */
+        padding-bottom: 4rem; /* Reduce bottom space to pull content up */
+    }
+
+    .hero-headline {
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-subheading {
+        margin-bottom: 2rem;
+        padding: 0 1rem;
     }
 
     .hero-ctas {
         flex-direction: column;
         gap: 1rem;
+        padding: 0 2rem;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .cta-btn {
+        width: 100%; /* Full width buttons on mobile */
+        text-align: center;
+        padding: 0.75rem 2rem;
+    }
+
+    .section-wrapper {
+        padding: 60px 1.5rem 0;
+    }
+
+    .premium-cta {
+        padding: 6rem 1.25rem;
     }
 }
+
+@media (max-width: 640px) {
+    .trust-grid {
+        grid-template-columns: repeat(2, 1fr); /* Keep 2 items per row */
+    }
+
+    .trust-section {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+
+    .v-card {
+        padding: 2rem;
+    }
+
+    .value-grid {
+        gap: 1.5rem;
+    }
+}

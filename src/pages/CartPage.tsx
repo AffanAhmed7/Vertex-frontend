@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, ArrowLeft, ShoppingCart } from 'lucide-react';
+import { ShoppingBag, ArrowLeft } from 'lucide-react';
 import { RootState } from '../store';
 import CartItem from '../components/cart/CartItem';
 import CartSummary from '../components/cart/CartSummary';
@@ -13,7 +13,7 @@ const CartPage: React.FC = () => {
     const { items } = useSelector((state: RootState) => state.cart);
 
     return (
-        <div className="relative min-h-screen pt-24 pb-20 px-6 overflow-hidden">
+        <div className="relative min-h-screen pt-32 md:pt-24 pb-20 px-4 md:px-6 overflow-hidden">
             {/* ── Procedural Background ── */}
             <div className="absolute inset-0 pointer-events-none">
                 {/* Subtle Grid Pattern */}

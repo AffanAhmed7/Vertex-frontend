@@ -87,25 +87,25 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
         >
             <div className="relative w-full py-1">
                 {/* Header */}
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-4 md:mb-6 font-['Outfit']">
                     <div className="space-y-1">
-                        <h2 className="text-3xl font-light tracking-[0.15em] uppercase text-white leading-none">
+                        <h2 className="text-xl md:text-3xl font-light tracking-[0.15em] uppercase text-white leading-none">
                             {requires2FA ? 'Verification' : (mode === 'login' ? 'Sign In' : 'Join')}
                         </h2>
-                        <p className="text-[10px] text-[#00f2ff]/60 uppercase tracking-[0.3em] font-medium transition-all duration-500">
+                        <p className="text-[8px] md:text-[10px] text-[#00f2ff]/60 uppercase tracking-[0.3em] font-medium transition-all duration-500 mt-1 md:mt-2">
                             {requires2FA ? 'Additional Security Required' : (mode === 'login' ? 'Premium access to Vertex' : 'Become a part of the future')}
                         </p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 -mr-2 transition-all duration-300 rounded-full hover:bg-white/5 text-white/20 hover:text-[#00f2ff]"
+                        className="p-1 md:p-2 -mr-2 transition-all duration-300 rounded-full hover:bg-white/5 text-white/20 hover:text-[#00f2ff]"
                     >
-                        <X size={20} />
+                        <X size={18} />
                     </button>
                 </div>
 
                 {/* Form Area */}
-                <div className="space-y-5">
+                <div className="space-y-3 md:space-y-5">
                     <AnimatePresence mode="wait">
                         {requires2FA ? (
                             <motion.div
@@ -125,7 +125,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                                     </p>
                                 </div>
 
-                                <form onSubmit={handle2FAVerify} className="space-y-4">
+                                <form onSubmit={handle2FAVerify} className="space-y-3 md:space-y-4">
                                     <Input
                                         label="Your Answer"
                                         type="text"
@@ -142,7 +142,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                                             animate={{ opacity: 1, y: 0 }}
                                             className="p-3 rounded-lg border border-red-500/20 bg-red-500/5"
                                         >
-                                            <p className="text-red-400 text-xs font-medium uppercase tracking-wider text-center">
+                                            <p className="text-red-400 text-[10px] md:text-xs font-medium uppercase tracking-wider text-center">
                                                 {error}
                                             </p>
                                         </motion.div>
@@ -177,7 +177,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                                 exit={{ opacity: 0, x: 20 }}
                                 className="space-y-5"
                             >
-                                <form onSubmit={handleAuth} className="space-y-4">
+                                <form onSubmit={handleAuth} className="space-y-3 md:space-y-4">
                                     <AnimatePresence mode="wait">
                                         {mode === 'signup' && (
                                             <motion.div
@@ -222,9 +222,9 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                                         <motion.div 
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="p-3 rounded-lg border border-red-500/20 bg-red-500/5"
+                                            className="p-2.5 md:p-3 rounded-lg border border-red-500/20 bg-red-500/5"
                                         >
-                                            <p className="text-red-400 text-xs font-medium uppercase tracking-wider text-center">
+                                            <p className="text-red-400 text-[10px] md:text-xs font-medium uppercase tracking-wider text-center">
                                                 {error}
                                             </p>
                                         </motion.div>
@@ -235,19 +235,19 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose, initial
                                         whileHover={{ scale: 1.01, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
                                         whileTap={{ scale: 0.99 }}
                                         disabled={isLoading}
-                                        className="w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/[0.02] transition-all duration-500 group mt-4"
+                                        className="w-full h-11 md:h-12 flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/[0.02] transition-all duration-500 group mt-2 md:mt-4"
                                     >
-                                        <span className="text-[11px] font-medium text-white/60 tracking-[0.2em] uppercase group-hover:text-white transition-colors">
+                                        <span className="text-[10px] md:text-[11px] font-medium text-white/60 tracking-[0.2em] uppercase group-hover:text-white transition-colors">
                                             {isLoading ? 'Authenticating...' : (mode === 'login' ? 'Proceed' : 'Create')}
                                         </span>
                                     </motion.button>
                                 </form>
 
-                                <div className="relative py-3">
+                                <div className="relative py-2 md:py-3">
                                     <div className="absolute inset-0 flex items-center">
                                         <div className="w-full border-t border-white/5"></div>
                                     </div>
-                                    <div className="relative flex justify-center text-[9px] uppercase tracking-[0.4em] text-white/20">
+                                    <div className="relative flex justify-center text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-white/20">
                                         <span className="bg-[#0c0c0c] px-4">Secure Gateway</span>
                                     </div>
                                 </div>

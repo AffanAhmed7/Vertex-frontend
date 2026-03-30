@@ -71,7 +71,7 @@ const AdminAnalytics: React.FC = () => {
             </div>
 
             {/* ── Summary Cards ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Avg Order Value Card */}
                 <motion.div
                     initial={{ opacity: 0, y: 12 }}
@@ -93,7 +93,7 @@ const AdminAnalytics: React.FC = () => {
                             )}
                         </div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Avg Order Value</p>
-                        <p className="text-3xl font-semibold text-white tracking-tight">{aovKpi?.value || '$0'}</p>
+                        <p className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">{aovKpi?.value || '$0'}</p>
                     </div>
                 </motion.div>
 
@@ -112,7 +112,7 @@ const AdminAnalytics: React.FC = () => {
                             </div>
                         </div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Total Product Revenue</p>
-                        <p className="text-3xl font-semibold text-white tracking-tight">${totalRevenue.toLocaleString()}</p>
+                        <p className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">${totalRevenue.toLocaleString()}</p>
                     </div>
                 </motion.div>
 
@@ -121,7 +121,7 @@ const AdminAnalytics: React.FC = () => {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="bg-[#111114] border border-white/5 rounded-2xl p-6 hover:border-violet-500/20 transition-all group relative overflow-hidden"
+                    className="bg-[#111114] border border-white/5 rounded-2xl p-6 hover:border-violet-500/20 transition-all group relative overflow-hidden col-span-2 lg:col-span-1"
                 >
                     <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 blur-[60px] pointer-events-none" />
                     <div className="relative z-10">
@@ -131,7 +131,7 @@ const AdminAnalytics: React.FC = () => {
                             </div>
                         </div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Total Units Sold</p>
-                        <p className="text-3xl font-semibold text-white tracking-tight">{totalUnitsSold.toLocaleString()}</p>
+                        <p className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">{totalUnitsSold.toLocaleString()}</p>
                     </div>
                 </motion.div>
             </div>
@@ -142,36 +142,36 @@ const AdminAnalytics: React.FC = () => {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25 }}
-                    className="bg-gradient-to-r from-[#111114] via-[#111114] to-[#0e1a1f] border border-[#00f2ff]/10 rounded-2xl p-6 relative overflow-hidden"
+                    className="bg-gradient-to-r from-[#111114] via-[#111114] to-[#0e1a1f] border border-[#00f2ff]/10 rounded-2xl p-5 sm:p-6 relative overflow-hidden"
                 >
                     <div className="absolute top-0 left-0 w-64 h-64 bg-[#00f2ff]/5 blur-[100px] -ml-32 -mt-32 pointer-events-none" />
                     <div className="absolute bottom-0 right-0 w-48 h-48 bg-emerald-500/5 blur-[80px] -mr-24 -mb-24 pointer-events-none" />
-                    <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00f2ff]/20 to-emerald-500/10 border border-[#00f2ff]/20 flex items-center justify-center shrink-0 shadow-lg shadow-[#00f2ff]/5">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#00f2ff]/20 to-emerald-500/10 border border-[#00f2ff]/20 flex items-center justify-center shrink-0 shadow-lg shadow-[#00f2ff]/5">
                                 <Crown size={24} className="text-[#00f2ff]" />
                             </div>
                             <div>
                                 <div className="flex items-center gap-2 mb-1">
                                     <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#00f2ff]/60">Top Performing Product</span>
                                 </div>
-                                <h3 className="text-xl font-semibold text-white tracking-tight">{bestProduct.name}</h3>
+                                <h3 className="text-lg sm:text-xl font-semibold text-white tracking-tight">{bestProduct.name}</h3>
                             </div>
                         </div>
-                        <div className="flex items-center gap-6 sm:gap-8">
-                            <div className="text-right">
-                                <p className="text-xs font-medium text-muted-foreground mb-0.5">Revenue</p>
-                                <p className="text-lg font-semibold text-white">${bestProduct.revenue?.toLocaleString()}</p>
+                        <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:flex lg:items-center lg:justify-end">
+                            <div className="text-left lg:text-right">
+                                <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5">Revenue</p>
+                                <p className="text-base sm:text-lg font-semibold text-white">${bestProduct.revenue?.toLocaleString()}</p>
                             </div>
-                            <div className="w-px h-10 bg-white/10" />
-                            <div className="text-right">
-                                <p className="text-xs font-medium text-muted-foreground mb-0.5">Units Sold</p>
-                                <p className="text-lg font-semibold text-white">{bestProduct.sales?.toLocaleString()}</p>
+                            <div className="hidden lg:block w-px h-10 bg-white/10" />
+                            <div className="text-left lg:text-right">
+                                <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5">Units Sold</p>
+                                <p className="text-base sm:text-lg font-semibold text-white">{bestProduct.sales?.toLocaleString()}</p>
                             </div>
-                            <div className="w-px h-10 bg-white/10" />
-                            <div className="text-right">
-                                <p className="text-xs font-medium text-muted-foreground mb-0.5">Growth</p>
-                                <p className={`text-lg font-semibold ${bestProduct.growth > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                            <div className="hidden lg:block w-px h-10 bg-white/10" />
+                            <div className="text-left lg:text-right">
+                                <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5">Growth</p>
+                                <p className={`text-base sm:text-lg font-semibold ${bestProduct.growth > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                                     {bestProduct.growth > 0 ? '+' : ''}{bestProduct.growth}%
                                 </p>
                             </div>
@@ -186,7 +186,9 @@ const AdminAnalytics: React.FC = () => {
                     <p className="text-sm text-muted-foreground font-medium mb-4">Product Performance Breakdown</p>
                     <div className="bg-[#111114] border border-white/5 rounded-2xl overflow-hidden relative">
                         <div className="absolute top-0 left-0 w-64 h-64 bg-[#00f2ff]/3 blur-[120px] -ml-32 -mt-32 pointer-events-none" />
-                        <div className="overflow-x-auto">
+                        
+                        {/* Desktop Table View */}
+                        <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-left border-collapse min-w-[600px]">
                                 <thead>
                                     <tr className="border-b border-white/10 text-xs text-muted-foreground font-semibold tracking-wider uppercase">
@@ -241,6 +243,59 @@ const AdminAnalytics: React.FC = () => {
                                     ))}
                                 </tbody>
                             </table>
+                        </div>
+
+                        {/* Mobile Card View */}
+                        <div className="md:hidden divide-y divide-white/5">
+                            {topProducts.map((product: any, idx: number) => (
+                                <motion.div
+                                    key={product.name}
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.08, duration: 0.4 }}
+                                    className="p-6 space-y-5 hover:bg-white/[0.02] transition-colors"
+                                >
+                                    <div className="flex flex-col gap-3">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <span className={`text-[10px] font-bold w-5 h-5 rounded-md flex items-center justify-center ${idx === 0 ? 'bg-[#00f2ff]/10 text-[#00f2ff] border border-[#00f2ff]/20' : 'bg-white/5 text-white/40 border border-white/5'}`}>
+                                                    {idx + 1}
+                                                </span>
+                                                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#00f2ff]/40">Product Performance</span>
+                                            </div>
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase border ${product.status?.toLowerCase().includes('stock') && !product.status?.toLowerCase().includes('low') || product.status?.toLowerCase() === 'active' ? 'bg-teal-500/10 text-teal-400 border-teal-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20'}`}>
+                                                <span className={`w-1 h-1 rounded-full ${product.status?.toLowerCase().includes('stock') && !product.status?.toLowerCase().includes('low') || product.status?.toLowerCase() === 'active' ? 'bg-teal-400 shadow-[0_0_6px_#2dd4bf]' : 'bg-rose-400 shadow-[0_0_6px_#fb7185]'}`} />
+                                                {product.status || 'Active'}
+                                            </span>
+                                        </div>
+                                        <h4 className="text-base font-semibold text-white leading-tight break-words pr-4">{product.name}</h4>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-2 gap-4 pt-1">
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Units Sold</p>
+                                            <p className="text-sm font-semibold text-white/90">{product.sales?.toLocaleString() || 0} items</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Revenue</p>
+                                            <p className="text-sm font-bold text-[#00f2ff]">${product.revenue?.toLocaleString() || 0}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Growth Rate</p>
+                                            <div className="flex items-center gap-2">
+                                                {product.growth > 0 ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-rose-400" />}
+                                                <p className={`text-sm font-bold ${product.growth > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                                    {Math.abs(product.growth)}%
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Market Share</p>
+                                            <p className="text-sm font-semibold text-white/60">Top tier performance</p>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
                         </div>
                     </div>
                 </div>

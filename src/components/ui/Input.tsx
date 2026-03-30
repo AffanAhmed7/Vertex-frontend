@@ -64,9 +64,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         className={cn(
-                            'w-full bg-white/[0.03] border border-white/10 rounded-lg pb-3 transition-all duration-300 focus:outline-none text-white text-sm placeholder:opacity-0',
-                            icon ? 'pl-12' : 'px-4',
-                            'pt-7',
+                            'w-full bg-white/[0.03] border border-white/10 rounded-lg pb-2 md:pb-3 transition-all duration-300 focus:outline-none text-white text-sm placeholder:opacity-0',
+                            icon ? 'pl-11 md:pl-12' : 'px-4',
+                            'pt-6 md:pt-7',
                             isFocused && 'border-[#00f2ff]/30 bg-white/[0.05]',
                             !isFocused && isActive && 'border-white/15',
                             error && 'border-red-500/50 focus:border-red-500',

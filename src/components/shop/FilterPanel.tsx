@@ -20,9 +20,17 @@ const FilterPanel = ({ isOpen, onClose, isMobile }: FilterPanelProps) => {
     const content = (
         <div className={isMobile ? "filter-content-mobile" : "filter-panel glass-card"}>
             {isMobile && (
-                <div className="flex justify-between items-center mb-10">
-                    <h2 className="text-2xl font-bold tracking-widest uppercase">Filters</h2>
-                    <button onClick={onClose}><X size={24} /></button>
+                <div className="flex justify-between items-center mb-8 pb-6 border-b border-white/5">
+                    <div>
+                        <h2 className="text-xl font-bold tracking-[0.2em] uppercase text-white">Filters</h2>
+                        <p className="text-[10px] uppercase tracking-[0.1em] text-white/40 mt-1">Refine Selection</p>
+                    </div>
+                    <button 
+                        onClick={onClose}
+                        className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                    >
+                        <X size={20} className="text-white/60" />
+                    </button>
                 </div>
             )}
 
@@ -111,9 +119,9 @@ const FilterPanel = ({ isOpen, onClose, isMobile }: FilterPanelProps) => {
                         />
                         <motion.div
                             className="drawer-content"
-                            initial={{ x: '100%' }}
+                            initial={{ x: '-100%' }}
                             animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
+                            exit={{ x: '-100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                         >
                             {content}

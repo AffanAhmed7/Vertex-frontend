@@ -56,10 +56,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, setFormData, addr
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                     <Input 
                         label="Email" 
                         name="email" 
+                        className="col-span-2 md:col-span-1"
                         value={formData.email || ''} 
                         onChange={handleChange} 
                         placeholder="Email Address" 
@@ -69,6 +70,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, setFormData, addr
                     <Input 
                         label="Phone" 
                         name="shippingPhone" 
+                        className="col-span-2 md:col-span-1"
                         value={formData.shippingPhone || ''} 
                         onChange={handleChange} 
                         placeholder="Phone Number" 
@@ -89,8 +91,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, setFormData, addr
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2">
                         <Input 
                             label="Full Name" 
                             name="shippingName" 
@@ -101,7 +103,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, setFormData, addr
                             icon={<User size={18} />}
                         />
                     </div>
-                    <div className="md:col-span-2">
+                    <div className="col-span-2">
                         <Input 
                             label="Address" 
                             name="shippingAddress" 
@@ -115,6 +117,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, setFormData, addr
                     <Input 
                         label="City" 
                         name="shippingCity" 
+                        className="col-span-1"
                         value={formData.shippingCity || ''} 
                         onChange={handleChange} 
                         placeholder="City" 
@@ -124,13 +127,14 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, setFormData, addr
                     <Input 
                         label="Zip Code" 
                         name="shippingZip" 
+                        className="col-span-1"
                         value={formData.shippingZip || ''} 
                         onChange={handleChange} 
                         placeholder="Zip Code" 
                         autoComplete="postal-code"
                         icon={<MapPin size={18} />}
                     />
-                    <div className="md:col-span-2">
+                    <div className="col-span-2">
                         <Input 
                             label="Country" 
                             name="shippingCountry" 

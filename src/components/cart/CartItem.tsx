@@ -37,9 +37,9 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
                 glass
                 className="group border-white/[0.03] hover:border-primary/30 transition-all duration-500"
             >
-                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 w-full">
+                <div className="flex flex-row items-center gap-4 sm:gap-6 p-4 sm:p-6 w-full">
                 {/* Product Image */}
-                <div className="relative w-32 h-32 overflow-hidden rounded-2xl bg-white/[0.02] border border-white/5 shrink-0">
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 overflow-hidden rounded-2xl bg-white/[0.02] border border-white/5 shrink-0">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     <img
                         src={item.image}
@@ -65,8 +65,8 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
                     </div>
                 </div>
 
-                {/* Controls Area: Price, Quantity, Subtotal, Delete (Single Line) */}
-                <div className="flex items-center gap-4 sm:gap-6 px-4 py-3 bg-white/[0.02] border border-white/5 rounded-2xl whitespace-nowrap overflow-x-auto no-scrollbar max-w-full">
+                {/* Controls Area: Price, Quantity, Subtotal, Delete */}
+                <div className="flex flex-wrap items-center justify-between gap-4 sm:gap-6 px-4 py-3 bg-white/[0.02] border border-white/5 rounded-2xl max-w-full">
                     
                     {/* Price */}
                     <div className="flex items-center gap-3 shrink-0">
