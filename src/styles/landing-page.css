@@ -452,6 +452,14 @@ h3 {
     .premium-cta {
         padding: 6rem 1.25rem;
     }
+
+    .value-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .value-grid > *:last-child {
+        grid-column: span 1;
+    }
 }
 
 @media (max-width: 640px) {
