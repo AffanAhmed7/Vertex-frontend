@@ -68,7 +68,7 @@ const CinematicHero = () => {
                     variants={fadeUp}
                 >
                     <Link to="/shop" className="cta-btn cta-primary shadow-glow">Begin Exploration</Link>
-                    <button className="cta-btn cta-secondary">Our Heritage</button>
+                    <Link to="/heritage" className="cta-btn cta-secondary">Our Heritage</Link>
                 </motion.div>
             </div>
 
