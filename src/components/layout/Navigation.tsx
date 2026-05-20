@@ -37,7 +37,7 @@ const Navigation = () => {
         >
             <div className="container mx-auto px-4 md:px-8">
                 <div
-                    className={`relative flex flex-col lg:flex-row items-center justify-between px-6 py-3 md:px-10 md:py-4 rounded-[1.5rem] md:rounded-full transition-all duration-500 gap-y-2 md:gap-y-4 lg:gap-y-0 pointer-events-auto ${isScrolled
+                    className={`relative flex flex-col lg:flex-row items-center justify-between px-3 py-3 md:px-10 md:py-4 rounded-[1.5rem] md:rounded-full transition-all duration-500 gap-y-2 md:gap-y-4 lg:gap-y-0 pointer-events-auto ${isScrolled
                         ? 'bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]'
                         : 'bg-transparent'
                         }`}
@@ -55,8 +55,8 @@ const Navigation = () => {
                                 </button>
                             )}
 
-                            <Link to="/" className="flex items-center gap-4 group">
-                                <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
+                            <Link to="/" className="flex items-center gap-2 md:gap-4 group">
+                                <div className="relative w-8 h-8 md:w-12 md:h-12 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
                                     <img src="/logo.svg" alt="Vertex Logo" className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(0,242,255,0.2)]" />
                                 </div>
                                 <div className="flex flex-col items-start text-left">
@@ -101,20 +101,7 @@ const Navigation = () => {
 
                     {/* Navbar Actions/Links Row (Mobile) / Actions (Desktop) */}
                     <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-8">
-                        {/* Mobile Links (Hidden on LG) */}
-                        <div className="flex lg:hidden items-center gap-8">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-all duration-300 hover:text-[#00f2ff] ${location.pathname === link.path ? 'text-[#00f2ff]' : 'text-white/70'
-                                        }`}
-                                >
-                                    {link.name}
-                                </Link>
-                            ))}
-                        </div>
-
+                        {/* Mobile Links removed as per user request */}
                         {/* Actions: Account/Auth */}
                         <div className="flex items-center gap-3 md:gap-4">
                             {currentUser ? (
