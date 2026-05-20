@@ -59,11 +59,11 @@ const Navigation = () => {
                                 <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
                                     <img src="/logo.svg" alt="Vertex Logo" className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(0,242,255,0.2)]" />
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xl md:text-2xl font-light tracking-[0.3em] text-white leading-none uppercase">
+                                <div className="flex flex-col items-start text-left">
+                                    <span className="text-xl md:text-2xl font-light tracking-[0.3em] text-white leading-none uppercase text-left whitespace-nowrap">
                                         Vertex
                                     </span>
-                                    <span className="text-[8px] md:text-[9px] tracking-[0.5em] text-[#00f2ff]/80 font-medium uppercase mt-1 md:mt-2 border-t border-white/10 pt-1">
+                                    <span className="text-[8px] md:text-[9px] tracking-[0.3em] md:tracking-[0.5em] text-[#00f2ff]/80 font-medium uppercase mt-1 md:mt-2 border-t border-white/10 pt-1 text-left whitespace-nowrap">
                                         Haute Commerce
                                     </span>
                                 </div>
