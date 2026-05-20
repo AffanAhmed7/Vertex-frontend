@@ -1,16 +1,16 @@
-# Vertex E-Commerce Frontend 🛍️
+# Vertex E-Commerce Frontend 
 
 **Live Demo:** [Vertex Alpha](https://vertex-frontend-alpha.vercel.app/)
 
 Vertex is an immersive, modern e-commerce storefront that blends a pixel-perfect user interface with high-fidelity 3D product visualizations to create an engaging user experience. 
 
-## ✨ Key Features
+##  Key Features
 - **3D Product Visualization:** Built with Three.js and React Three Fiber to allow users to interact with products in 3D space.
 - **Responsive & Animated UI:** Beautiful micro-interactions powered by Framer Motion and styled with Tailwind CSS.
 - **Advanced State Management:** Robust cart and user session handling utilizing Redux Toolkit.
 - **Admin Dashboard Integration:** Seamlessly connects with the backend to render dynamic Recharts data for administrative users.
 
-## 🛠️ Technical Stack
+##  Technical Stack
 - **Framework:** React 18, TypeScript, Vite
 - **State Management:** Redux Toolkit
 - **Routing:** React Router DOM
@@ -19,7 +19,7 @@ Vertex is an immersive, modern e-commerce storefront that blends a pixel-perfect
 - **Data Visualization:** Recharts
 - **HTTP Client:** Axios
 
-## 🚀 Getting Started Locally
+##  Getting Started Locally
 
 ### Prerequisites
 Make sure you have Node.js installed.
@@ -46,7 +46,7 @@ Make sure you have Node.js installed.
    npm run dev
    ```
 
-## 📜 Scripts
+## Scripts
 - `npm run dev` - Starts the Vite development server
 - `npm run build` - Builds the app for production
 - `npm run preview` - Locally preview the production build
