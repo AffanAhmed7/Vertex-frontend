@@ -24,7 +24,7 @@ const AccountSettings: React.FC = () => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-    
+
     // Profile Form
     const [profileData, setProfileData] = useState({
         name: currentUser?.name || '',
@@ -65,7 +65,7 @@ const AccountSettings: React.FC = () => {
     const handleProfileSave = async () => {
         setIsSaving(true);
         dispatch(clearError());
-        
+
         try {
             const resultAction = await dispatch(updateProfile(profileData));
             if (updateProfile.fulfilled.match(resultAction)) {
@@ -92,7 +92,7 @@ const AccountSettings: React.FC = () => {
 
         setIsChangingPassword(true);
         setPasswordError(null);
-        
+
         try {
             const resultAction = await dispatch(changePassword({
                 currentPassword: passwordData.currentPassword,
@@ -116,7 +116,7 @@ const AccountSettings: React.FC = () => {
     const toggle2FA = async () => {
         const nextValue = !profileData.twoFactorEnabled;
         setProfileData(prev => ({ ...prev, twoFactorEnabled: nextValue }));
-        
+
         // Auto-save 2FA preference
         await dispatch(updateProfile({ twoFactorEnabled: nextValue }));
     };
@@ -153,7 +153,7 @@ const AccountSettings: React.FC = () => {
             setIsSavingSecurity(false);
         }
     };
-    
+
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -210,15 +210,15 @@ const AccountSettings: React.FC = () => {
                     <h2 className="text-xl font-light text-white uppercase tracking-widest border-b border-white/5 pb-4">Personal Information</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-6">
-                            <Input 
-                                label="Full Name" 
+                            <Input
+                                label="Full Name"
                                 value={profileData.name}
                                 onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
                                 icon={<User size={18} />}
                                 placeholder="Enter your full name"
                             />
-                             <Input 
-                                label="Email Address" 
+                            <Input
+                                label="Email Address"
                                 value={profileData.email}
                                 readOnly
                                 icon={<Mail size={18} />}
@@ -227,21 +227,21 @@ const AccountSettings: React.FC = () => {
                             />
                         </div>
                         <div className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col items-center justify-center text-center space-y-4">
-                            <input 
-                                type="file" 
-                                ref={fileInputRef} 
-                                className="hidden" 
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
                                 accept="image/*"
                                 onChange={handleAvatarChange}
                             />
-                            <div 
+                            <div
                                 className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 relative group overflow-hidden cursor-pointer"
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 {currentUser?.avatar ? (
-                                    <img 
-                                        src={currentUser.avatar.startsWith('http') ? currentUser.avatar : `${API_URL.replace(/\/api$/, '')}${currentUser.avatar}`} 
-                                        alt={currentUser.name || ''} 
+                                    <img
+                                        src={currentUser.avatar.startsWith('http') ? currentUser.avatar : `${API_URL.replace(/\/api$/, '')}${currentUser.avatar}`}
+                                        alt={currentUser.name || ''}
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     />
                                 ) : (
@@ -265,7 +265,7 @@ const AccountSettings: React.FC = () => {
                                     <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Active Member</p>
                                 </div>
                                 {currentUser?.avatar && (
-                                    <button 
+                                    <button
                                         onClick={handleRemoveAvatar}
                                         disabled={isUploadingAvatar}
                                         className="text-[10px] text-red-500/60 uppercase font-bold tracking-widest hover:text-red-500 transition-colors disabled:opacity-0"
@@ -281,7 +281,7 @@ const AccountSettings: React.FC = () => {
                 {/* Security Section */}
                 <section className="space-y-8">
                     <h2 className="text-xl font-light text-white uppercase tracking-widest border-b border-white/5 pb-4">Security & Authentication</h2>
-                    
+
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* Password Change */}
                         <div className="space-y-6">
@@ -290,32 +290,32 @@ const AccountSettings: React.FC = () => {
                                 Change Password
                             </h3>
                             <div className="space-y-4">
-                                <Input 
-                                    label="Current Password" 
-                                    type="password" 
+                                <Input
+                                    label="Current Password"
+                                    type="password"
                                     value={passwordData.currentPassword}
                                     onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                                     placeholder="••••••••"
                                 />
-                                <Input 
-                                    label="New Password" 
-                                    type="password" 
+                                <Input
+                                    label="New Password"
+                                    type="password"
                                     value={passwordData.newPassword}
                                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                                     placeholder="••••••••"
                                 />
-                                <Input 
-                                    label="Confirm New Password" 
-                                    type="password" 
+                                <Input
+                                    label="Confirm New Password"
+                                    type="password"
                                     value={passwordData.confirmPassword}
                                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
                                     placeholder="••••••••"
                                 />
-                                
+
                                 {passwordError && (
                                     <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest">{passwordError}</p>
                                 )}
-                                
+
                                 <button
                                     onClick={handlePasswordSave}
                                     disabled={isChangingPassword}
@@ -346,11 +346,11 @@ const AccountSettings: React.FC = () => {
                                             {profileData.twoFactorEnabled ? 'Shield Active' : 'Unprotected'}
                                         </p>
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={toggle2FA}
                                         className={`w-14 h-7 rounded-full transition-all duration-500 p-1 flex items-center ${profileData.twoFactorEnabled ? 'bg-primary justify-end' : 'bg-white/10 justify-start'}`}
                                     >
-                                        <motion.div 
+                                        <motion.div
                                             layout
                                             className="w-5 h-5 bg-white rounded-full shadow-lg"
                                         />
@@ -385,7 +385,7 @@ const AccountSettings: React.FC = () => {
                                                 Security question is set
                                             </div>
                                         )}
-                                        
+
                                         <div className="space-y-4">
                                             {/* Custom Select */}
                                             <div className="space-y-2">
@@ -408,7 +408,7 @@ const AccountSettings: React.FC = () => {
                                                 </div>
                                             </div>
 
-                                            <Input 
+                                            <Input
                                                 label="Your Answer"
                                                 type="password"
                                                 value={securityAnswer}
